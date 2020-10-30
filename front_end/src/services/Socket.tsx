@@ -1,0 +1,47 @@
+import socketIOClient from 'socket.io-client';
+
+const ENDPOINT = "http://127.0.0.1:4001";
+let socket: SocketIOClient.Socket;
+
+export const initSocket = (cb: any) => {
+    socket = socketIOClient(ENDPOINT);
+
+    socket.on('active rooms', (rooms: any) => {
+        cb(rooms)
+    })
+
+    socket.on('disconnect', () => console.log("disconnected"))
+}
+
+export const addRoom = (room_id: string) => {
+    if (room_id !== "")
+        return socket.emit('add room', room_id);
+}
+
+export const disconnectSocket = () => {
+    return socket.disconnect();
+}
+
+export const listenRooms = (cb: any) => {
+    socket.on('new room', (room_id: string) => {
+        return cb(room_id);
+    });
+}
+
+export const joinRoom = (room_id: string) => {
+    socket.emit('join room', room_id);
+}
+
+export const leaveRoom = () => {
+    socket.emit('leave room');
+}
+
+export const listenMessages = (cb: any) => {
+    socket.on('new message', (id: string, msg: string) => {
+        return cb(id, msg);
+    })
+}
+
+export const sendMessage = (msg: string) => {
+    socket.emit('new message', msg);
+}
