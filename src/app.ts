@@ -6,6 +6,11 @@ const active_rooms = new Map()
 
 server.listen(80);
 
+// @ts-ignore
+app.get('/', (req, res) => {
+    res.send('GET request to the homepage');
+})
+
 const defaultNamespace = io.of('/');
 
 const register = (socket: any) => {
