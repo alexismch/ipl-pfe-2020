@@ -4,7 +4,7 @@ const io = require('socket.io')(server);
 
 const active_rooms = new Map()
 
-server.listen(4001);
+server.listen(80);
 
 const defaultNamespace = io.of('/');
 

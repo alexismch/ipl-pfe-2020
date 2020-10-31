@@ -10,10 +10,10 @@
     "baseUrl": "../src"
   },
   "include": [
-    "../src/**/*"
+    "src/**/*"
   ],
   "exclude": [
-    "../src/types/*.ts",
+    "src/types/*.ts",
     "node_modules",
     ".vscode",
     ".idea",
