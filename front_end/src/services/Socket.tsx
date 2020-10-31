@@ -37,9 +37,17 @@ export const leaveRoom = () => {
 }
 
 export const listenMessages = (cb: any) => {
+    socket.on('room joined', (id: string) => {
+        cb('room joined', id);
+    });
+
     socket.on('new message', (id: string, msg: string) => {
-        return cb(id, msg);
-    })
+        return cb('new message', id, msg);
+    });
+
+    socket.on('room left', (id: string) => {
+        cb('room left', id);
+    });
 }
 
 export const sendMessage = (msg: string) => {

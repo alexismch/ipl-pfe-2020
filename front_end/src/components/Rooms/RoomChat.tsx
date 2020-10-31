@@ -2,12 +2,21 @@ import React, {useContext, useState} from "react"
 import {leaveRoom, sendMessage} from "services/Socket";
 import Context from "contexts/RoomsContext";
 
-export const newMessageHandler = (id: string, msg: string) => {
+export const newMessageHandler = (type: string, id: string, msg: string = '') => {
     const d = document.createElement("div");
-    const s = document.createElement("strong");
-    s.append(id);
-    d.append(s);
-    d.append(" : ");
+    switch (type) {
+        case 'room left':
+            msg = id + ' left the room';
+            break;
+        case 'room joined':
+            msg = id + ' joined the room';
+            break;
+        case 'new message':
+            const s = document.createElement("strong");
+            s.append(id);
+            d.append(s);
+            d.append(" : ");
+    }
     d.append(msg);
     // @ts-ignore
     document.getElementById('chatBox').append(d)
