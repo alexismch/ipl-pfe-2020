@@ -4,7 +4,7 @@ const io = require('socket.io')(server);
 
 const active_rooms = new Map()
 
-server.listen(80);
+server.listen(443);
 
 // @ts-ignore
 app.get('/', (req, res) => {
