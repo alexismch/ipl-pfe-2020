@@ -1,10 +1,10 @@
-//const app = require('express')();
-//const server = require('http').Server(app);
-const io = require('socket.io')(4001)//(server);
+const app = require('express')();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 const active_rooms = new Map()
 
-//server.listen(4001);
+server.listen(4001);
 
 const defaultNamespace = io.of('/');
 
