@@ -22,9 +22,9 @@
     "npm": "6.x"
   },
   "scripts": {
-    "dev": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
+    "start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "build": "tsc",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix front_end && npm run build --prefix front_end",
-    "start": "node dist/js/app.js"
+    "web": "node dist/js/app.js"
   }
 }
