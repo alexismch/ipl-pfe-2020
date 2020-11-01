@@ -18,13 +18,12 @@ export const newMessageHandler = (type: string, id: string, msg: string = '') =>
             d.append(" : ");
     }
     d.append(msg);
-    // @ts-ignore
-    document.getElementById('chatBox').append(d)
+    const elt = document.getElementById('chatBox');
+    if (elt) elt.append(d)
 }
 
 const RoomChat = () => {
-    // @ts-ignore
-    const {setCurrentRoom} = useContext(Context)
+    const {setCurrentRoom} = useContext<any>(Context)
 
     const [newMessage, setNewMessage] = useState("");
 
@@ -57,5 +56,4 @@ const RoomChat = () => {
     )
 }
 
-// @ts-ignore
 export default RoomChat

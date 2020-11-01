@@ -1,13 +1,14 @@
+import {Request, Response} from "express";
+
 const app = require('express')();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const active_rooms = new Map()
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 80);
 
-// @ts-ignore
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.send('GET request to the homepage');
 })
 

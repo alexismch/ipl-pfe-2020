@@ -3,11 +3,9 @@ import Context from "contexts/RoomsContext";
 import {joinRoom} from "services/Socket";
 
 const Rooms = () => {
-    // @ts-ignore
-    const {rooms, setCurrentRoom} = useContext(Context)
+    const {rooms, setCurrentRoom} = useContext<any>(Context)
 
     const clickHandler = (e: { currentTarget: { value: string; }; }) => {
-        // @ts-ignore
         const room_id = e.currentTarget.value;
         joinRoom(room_id);
         setCurrentRoom(room_id);

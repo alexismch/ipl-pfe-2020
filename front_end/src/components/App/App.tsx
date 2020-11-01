@@ -1,24 +1,28 @@
-import React, {useContext, useEffect} from "react"
+import React, {useContext, useEffect, useRef} from "react"
 import {disconnectSocket, initSocket, listenMessages, listenRooms} from "services/Socket";
 import Context from "contexts/RoomsContext";
 import IdleRooms from "components/Rooms/IdleRooms";
 import RoomChat, {newMessageHandler} from "components/Rooms/RoomChat";
 
 const App = () => {
-    // @ts-ignore
-    const {currentRoom, setAllRooms, addRoom} = useContext(Context)
+    const {currentRoom, setAllRooms, addRoom} = useContext<any>(Context)
 
-    addRoom.bind(this)
+    const refSetAllRooms = useRef(setAllRooms);
+    const refaddRoom = useRef(addRoom);
+    useEffect(() => {
+        refSetAllRooms.current = setAllRooms;
+        refaddRoom.current = addRoom;
+    });
 
     useEffect(() => {
-        initSocket(setAllRooms)
-        listenRooms(addRoom)
+        initSocket(refSetAllRooms.current)
+        listenRooms(refaddRoom.current)
         listenMessages(newMessageHandler)
 
         return () => {
             disconnectSocket();
         }
-    }, [])// eslint-disable-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div>
