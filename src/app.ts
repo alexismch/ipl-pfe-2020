@@ -7,7 +7,7 @@ const active_rooms = new Map()
 
 server.listen(process.env.PORT || 80);
 
-app.use(express.static('public'))
+app.use(express.static('front_end/build'))
 
 const defaultNamespace = io.of('/');
 

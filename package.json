@@ -21,7 +21,8 @@
   "scripts": {
     "dev": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "build": "tsc",
-    "start": "cd front_end && npm install && npm run build && cd .. && npm run build && node dist/js/app.js"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+    "start": "pm run build && node dist/js/app.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.8",
