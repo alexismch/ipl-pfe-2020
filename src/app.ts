@@ -1,6 +1,5 @@
-import {Request, Response} from "express";
-
-const app = require('express')();
+const express = require('express')
+const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
@@ -8,9 +7,7 @@ const active_rooms = new Map()
 
 server.listen(process.env.PORT || 80);
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('GET request to the homepage');
-})
+app.use(express.static('public'))
 
 const defaultNamespace = io.of('/');
 

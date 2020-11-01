@@ -1,31 +1,31 @@
 import React, {useContext, useState} from "react"
-import {leaveRoom, sendMessage} from "services/Socket";
+import {leaveRoom, listenMessages, off, sendMessage} from "services/Socket";
 import Context from "contexts/RoomsContext";
-
-export const newMessageHandler = (type: string, id: string, msg: string = '') => {
-    const d = document.createElement("div");
-    switch (type) {
-        case 'room left':
-            msg = id + ' left the room';
-            break;
-        case 'room joined':
-            msg = id + ' joined the room';
-            break;
-        case 'new message':
-            const s = document.createElement("strong");
-            s.append(id);
-            d.append(s);
-            d.append(" : ");
-    }
-    d.append(msg);
-    const elt = document.getElementById('chatBox');
-    if (elt) elt.append(d)
-}
 
 const RoomChat = () => {
     const {setCurrentRoom} = useContext<any>(Context)
 
     const [newMessage, setNewMessage] = useState("");
+
+    const newMessageHandler = (type: string, id: string, msg: string = '') => {
+        const d = document.createElement("div");
+        switch (type) {
+            case 'room left':
+                msg = id + ' left the room';
+                break;
+            case 'room joined':
+                msg = id + ' joined the room';
+                break;
+            case 'new message':
+                const s = document.createElement("strong");
+                s.append(id);
+                d.append(s);
+                d.append(" : ");
+        }
+        d.append(msg);
+        const elt = document.getElementById('chatBox');
+        if (elt) elt.append(d)
+    }
 
     const submitHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -38,9 +38,14 @@ const RoomChat = () => {
     }
 
     const clickHandler = () => {
-        setCurrentRoom("")
+        setCurrentRoom("");
+        off('new message');
         leaveRoom();
     }
+
+    useState(() => {
+       listenMessages(newMessageHandler);
+    });
 
     return (
         <div>

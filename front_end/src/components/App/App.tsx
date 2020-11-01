@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useRef} from "react"
-import {disconnectSocket, initSocket, listenMessages, listenRooms} from "services/Socket";
+import {disconnectSocket, initSocket, listenRooms} from "services/Socket";
 import Context from "contexts/RoomsContext";
 import IdleRooms from "components/Rooms/IdleRooms";
-import RoomChat, {newMessageHandler} from "components/Rooms/RoomChat";
+import RoomChat from "components/Rooms/RoomChat";
 
 const App = () => {
     const {currentRoom, setAllRooms, addRoom} = useContext<any>(Context)
@@ -17,7 +17,6 @@ const App = () => {
     useEffect(() => {
         initSocket(refSetAllRooms.current)
         listenRooms(refaddRoom.current)
-        listenMessages(newMessageHandler)
 
         return () => {
             disconnectSocket();

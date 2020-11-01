@@ -18,8 +18,9 @@
     "node": "12.x"
   },
   "scripts": {
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "build": "tsc",
-    "start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\""
+    "start": "cd front_end && npm run build && cd .. && npm run build && node dist/js/app.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.8",

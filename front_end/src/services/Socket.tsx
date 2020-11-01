@@ -13,6 +13,10 @@ export const initSocket = (cb: any) => {
     socket.on('disconnect', () => console.log("disconnected"))
 }
 
+export const off = (trigger: string) => {
+    socket.off(trigger);
+}
+
 export const addRoom = (room_id: string) => {
     if (room_id !== "")
         return socket.emit('add room', room_id);
