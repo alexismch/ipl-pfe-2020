@@ -1,11 +1,11 @@
 import socketIOClient from 'socket.io-client';
 
 const production  = 'https://ipl-pfe-2020-dev.herokuapp.com/';
-const development = 'http://127.0.0.1';
+const development = 'http://127.0.0.1/';
 let socket: SocketIOClient.Socket;
 
 export const initSocket = (cb: any) => {
-    socket = socketIOClient(process.env.NODE_ENV ? production : development);
+    socket = socketIOClient(process.env.NODE_ENV === 'production' ? production : development);
 
     socket.on('active rooms', (rooms: any) => {
         cb(rooms)
