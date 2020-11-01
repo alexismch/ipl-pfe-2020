@@ -55,6 +55,12 @@ export const listenMessages = (cb: any) => {
     });
 }
 
+export const unsubscribeMessages = () => {
+    off('room joined');
+    off('new message');
+    off('room left');
+}
+
 export const sendMessage = (msg: string) => {
     socket.emit('new message', msg);
 }

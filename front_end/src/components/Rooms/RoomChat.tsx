@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react"
-import {leaveRoom, listenMessages, off, sendMessage} from "services/Socket";
+import {leaveRoom, listenMessages, unsubscribeMessages, sendMessage} from "services/Socket";
 import Context from "contexts/RoomsContext";
 
 const RoomChat = () => {
@@ -39,7 +39,7 @@ const RoomChat = () => {
 
     const clickHandler = () => {
         setCurrentRoom("");
-        off('new message');
+        unsubscribeMessages();
         leaveRoom();
     }
 
