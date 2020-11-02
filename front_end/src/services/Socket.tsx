@@ -4,6 +4,7 @@ const development = 'http://127.0.0.1/';
 let socket: SocketIOClient.Socket;
 
 export const initSocket = (cb: any) => {
+    console.log(process.env.ENDPOINT);
     socket = socketIOClient(
         process.env.ENDPOINT || development,
         {
