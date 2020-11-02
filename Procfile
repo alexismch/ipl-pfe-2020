@@ -1,1 +1,1 @@
-web: npm run build:front && npm run web
+web: npm run web

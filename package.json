@@ -25,6 +25,6 @@
     "start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "build": "tsc",
     "build:front": "NPM_CONFIG_PRODUCTION=false npm install --prefix front_end && npm run build --prefix front_end",
-    "web": "node dist/js/app.js"
+    "web": "npm run build:front && node dist/js/app.js"
   }
 }
