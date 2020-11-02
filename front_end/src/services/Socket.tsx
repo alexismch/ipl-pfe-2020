@@ -5,7 +5,7 @@ let socket: SocketIOClient.Socket;
 
 export const initSocket = (cb: any) => {
     socket = socketIOClient(
-        process.env.ENDPOINT ? process.env.ENDPOINT : development,
+        process.env.ENDPOINT || development,
         {
             transports: ['websocket']
         }
