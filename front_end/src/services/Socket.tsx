@@ -4,9 +4,9 @@ const development = 'http://127.0.0.1/';
 let socket: SocketIOClient.Socket;
 
 export const initSocket = (cb: any) => {
-    console.log(process.env.ENDPOINT);
+    console.log(process.env);
     socket = socketIOClient(
-        process.env.ENDPOINT || development,
+        process.env.REACT_APP_ENDPOINT || development,
         {
             transports: ['websocket']
         }
