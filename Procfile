@@ -1,2 +1,2 @@
-release: npm run prebuild && npm run build:front
-web: npm run build:back && npm run web
+release: echo "ok"
+web: npm run web

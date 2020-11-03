@@ -23,6 +23,7 @@
   },
   "scripts": {
     "start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
+    "build": "npm run prebuild && npm run build:front && npm run build:back",
     "prebuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix front_end",
     "build:front": "npm run build --prefix front_end",
     "build:back": "tsc",
