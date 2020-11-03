@@ -12,7 +12,7 @@ variables:
   azureSubscription: 'f4d917d3-2f67-4fb5-98b6-26281d95e4f8'
   
   # Web app name
-  webAppName: 'ipl-pfe-2020'
+  webAppName: 'IPL_PFE_2020'
   
   # Environment name
   environmentName: 'dev'
