@@ -1,2 +1,2 @@
-release: npm run build:front && npm run build:back
-web: npm run web
+release: npm run build:front
+web: npm run build:back && npm run web
