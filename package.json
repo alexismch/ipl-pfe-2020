@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix front_end",
+    "prebuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix front_end",
     "build:front": "npm run build --prefix front_end",
     "build:back": "tsc",
     "web": "node dist/js/app.js"
