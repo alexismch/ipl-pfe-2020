@@ -1,7 +1,7 @@
 {
   "env": {
-    "MONGO_USER": "ipl_pfe_2020",
-    "MONGO_PASSWORD": "zSddcEfClgpofax8",
-    "MONGO_DB": "ipl-pfe-2020"
+    "MONGO_USER": "",
+    "MONGO_PASSWORD": "",
+    "MONGO_DB": "i"
   }
 }

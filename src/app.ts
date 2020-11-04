@@ -5,7 +5,7 @@ const io = require('socket.io')(server);
 
 const active_rooms = new Map()
 
-console.log(process.env);
+//console.log(process.env);
 
 server.listen(process.env.PORT || 80);
 
