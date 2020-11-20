@@ -25,7 +25,7 @@
     "all": "concurrently \"npm start\" \"npm start --prefix front_end\"",
     "start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "build": "npm run prebuild && npm run build:front && npm run build:back",
-    "prebuild": "npm install --prefix front_end",
+    "prebuild": "NPM_CONFIG_PRODUCTION=true npm install --prefix front_end",
     "build:front": "npm run build --prefix front_end",
     "build:back": "tsc",
     "web": "node dist/js/app.js"
