@@ -3,15 +3,13 @@
   "version": "0.0.1",
   "description": "Projet de Fin d'Études 2020 du Groupe 1 à l'Institut Paul Lambin",
   "dependencies": {
+    "@types/express": "^4.17.8",
+    "@types/node": "^14.14.6",
     "concurrently": "^5.3.0",
-    "cors": "^2.8.5",
     "express": "^4.17.1",
     "nodemon": "^2.0.6",
     "socket.io": "^2.3.0",
-    "typescript": "^4.0.5",
-    "@types/cors": "^2.8.8",
-    "@types/express": "^4.17.8",
-    "@types/node": "^14.14.6"
+    "typescript": "^4.0.5"
   },
   "main": "index.js",
   "repository": "https://github.com/alexismch/IPL_PFE_2020.git",
@@ -25,7 +23,7 @@
     "all": "concurrently \"npm start\" \"npm start --prefix front_end\"",
     "start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "build": "npm run prebuild && npm run build:front && npm run build:back",
-    "prebuild": "NPM_CONFIG_PRODUCTION=true npm install --prefix front_end",
+    "prebuild": "npm install --prefix front_end",
     "build:front": "npm run build --prefix front_end",
     "build:back": "tsc",
     "web": "node dist/js/app.js"
