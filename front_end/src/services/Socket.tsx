@@ -2,15 +2,8 @@ import socketIOClient from 'socket.io-client';
 
 let socket: SocketIOClient.Socket;
 
-const dev = "http://127.0.0.1";
-
 export const initSocket = (cb: any) => {
-    socket = socketIOClient(
-        process.env.REACT_APP_PROD ? window.location.origin : dev,
-        {
-            transports: ['websocket']
-        }
-    );
+    socket = socketIOClient("/");
 
     socket.on('active rooms', (rooms: any) => {
         cb(rooms)

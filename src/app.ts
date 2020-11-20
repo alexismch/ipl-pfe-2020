@@ -7,7 +7,7 @@ const active_rooms = new Map()
 
 //console.log(process.env);
 
-server.listen(process.env.PORT || 80);
+server.listen(process.env.PORT || 4000);
 
 app.use(express.static('front_end/build'))
 
