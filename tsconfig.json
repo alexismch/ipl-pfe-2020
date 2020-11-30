@@ -6,10 +6,10 @@
     "sourceMap": true,
     "target": "es6",
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@routes/*": ["routes/*"],
-      "@models/*": ["models/*"]
+      "@routes/*": ["src/routes/*"],
+      "@models/*": ["src/models/*"]
     }
   },
   "include": [
