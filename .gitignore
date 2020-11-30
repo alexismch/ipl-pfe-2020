@@ -119,8 +119,9 @@ dist
 .tern-port
 
 # Editors cache directory
-.vs/
-.idea/
+vs/
+idea/
+vscode/
 
 
 /public/
