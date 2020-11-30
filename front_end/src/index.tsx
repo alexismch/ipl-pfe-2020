@@ -1,4 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+//Fundamentals
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from 'components/App';
 
-ReactDOM.render(<div/>, document.getElementById('root'))
+//Visuals
+import './index.css';
+
+ReactDOM.render(<App/>, document.getElementById('root'));
