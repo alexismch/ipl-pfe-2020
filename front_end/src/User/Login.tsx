@@ -1,29 +1,24 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Grid, Container, Paper } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import { authorize } from "../../js/actions/auth";
 import { useTheme } from "@material-ui/core/styles";
 import { Redirect } from "react-router-dom";
-import { useReduxPrefsState } from "../../js/actions/prefs";
-import background from "../../img/banner.jpg"
 
 export default function Login() {
-  const [email, setEmail] = useReduxPrefsState("email","");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
   const theme = useTheme();
 
-  const dispatch = useDispatch();
-  const error = useSelector(state => state.auth.errorMessage);
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const error = "error";
+  const isAuthenticated = "false";
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(authorize(email,password));
+    // dispatch(authorize(email,password));
     setShowError(true);
   };
 
-  return (<div style={{ backgroundImage : `url(${background})`, backgroundAttachment: "fixed"}}>
+  return (<div>
       {isAuthenticated && <Redirect
               to={{
                 pathname: "/"
@@ -34,11 +29,6 @@ export default function Login() {
         <Paper elevation={10} >
           <form onSubmit={handleSubmit}>
           <Grid container >
-            <Grid item container xs={12} justify='center' >
-              <Grid item >      
-                <a href="https://www.syty.io/" ><img src="/sytyio.png" alt="syty.io" height={theme.spacing(7)} /></a>
-              </Grid>
-            </Grid>
             <Grid item container xs={12} >    
             <Typography variant='subtitle1' >Please sign-in</Typography>
             </Grid>
