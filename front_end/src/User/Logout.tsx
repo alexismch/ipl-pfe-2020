@@ -1,15 +1,15 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 
+function logout(){
+  return null;
+}
+
 const Logout = () => {
   const isAuthenticated = false;
 
-  // if(isAuthenticated){
-  //   logout();
-  // };
-
   return (
-    (isAuthenticated ? null : <Redirect to={"/"} />)
+    (isAuthenticated ? logout() : <Redirect to={"/"} />)
   );
 };
 
