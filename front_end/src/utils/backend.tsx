@@ -59,7 +59,7 @@ export function SignIn(token : string, email : string, password : string, isDoct
 
   if(isDoctor){
     return new Promise((resolve, reject) => {
-      Axios.post(`/api/doctors/login`, data, config)
+      Axios.post(`/api/doctors/session`, data, config)
         .then(response => {
           resolve(response.data.token);
         })
@@ -69,7 +69,7 @@ export function SignIn(token : string, email : string, password : string, isDoct
     })
   } else {
     return new Promise((resolve, reject) => {
-      Axios.post(`/api/institutions/login`, data, config)
+      Axios.post(`/api/institutions/session`, data, config)
         .then(response => {
           resolve(response.data.token);
         })
@@ -78,4 +78,9 @@ export function SignIn(token : string, email : string, password : string, isDoct
         })
     })
   }
+}
+
+export function SignOut(token : string){
+  //todo setToken to null in localstorage
+  return null;
 }
