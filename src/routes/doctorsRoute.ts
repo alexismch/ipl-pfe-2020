@@ -7,10 +7,18 @@ import * as EmailValidator from 'email-validator';
 const express = require('express');
 const router = express.Router();
 
+/**
+ * Handle request to login
+ * Delegated to ConnectableUtility connect method
+ * @return response with the doctor that asked to connect, or with an error
+ */
 router.post('/login', (req: Request, res: Response) => {
     return ConnectableUtility.connect(req, res, Doctor);
 });
 
+/**
+ * Handle request to create a doctor
+ */
 router.post('/', (req: Request, res: Response) => {
     const body = req.body;
     if (!body || !body.firstname || !body.lastname || !body.email || !body.passwd || !EmailValidator.validate(body.email))

@@ -36,6 +36,7 @@ app.use("/api/establishments", establishmentsRoute);
 app.use("/api/locations", locationsRoute);
 app.use("/api/qrCodes", qrCodesRoute);
 
+// Handle if no route found
 app.use((req: Request, res: Response) => {
     res.status(404).json({error: 'unknown request'})
 });

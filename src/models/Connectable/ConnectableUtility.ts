@@ -5,6 +5,7 @@ import {Request, Response} from "express";
 const bcrypt = require('bcrypt');
 
 export default class ConnectableUtility {
+    // format that removes passwd to connectable toJson method
     public static jsonFormat = {
         transform: (document, returnedObject) => {
             returnedObject.id = returnedObject._id.toString()
@@ -15,6 +16,10 @@ export default class ConnectableUtility {
     };
     public static saltRounds = 10;
 
+    /**
+     * set properties to a Connectable Schema
+     * @param schema to whom to set properties
+     */
     public static setProperties(schema: Schema): void {
         schema.method('verifyPasswd', function (passwd: string): boolean {
             return bcrypt.compareSync(passwd, this.passwd);
@@ -31,11 +36,18 @@ export default class ConnectableUtility {
             if (!this.isModified('passwd'))
                 return next();
 
-            doctor.passwd = bcrypt.hashSync(doctor.passwd, ConnectableUtility.saltRounds);
+            doctor.hashPasswd();
             next();
         });
     }
 
+    /**
+     * verify the authorisation to connect
+     * @param req the request
+     * @param res the response
+     * @param model the model of mongoose data
+     * @return response with user's data if connection allowed, error if not
+     */
     public static connect(req: Request, res: Response, model: Model<IConnectableDoc>): any {
         const body = req.body;
         if (!body || !body.email || !body.passwd)

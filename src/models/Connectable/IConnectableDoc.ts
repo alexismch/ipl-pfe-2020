@@ -2,7 +2,14 @@ import {Document} from "mongoose";
 import {IConnectable} from "@models/Connectable/IConnectable";
 
 export interface IConnectableDoc extends Document, IConnectable {
-    verifyPasswd?(passwd: string): boolean;
+    /**
+     * verify is passwd matches with hashed passwd
+     * @param passwd the passwd to verify
+     */
+    verifyPasswd(passwd: string): boolean;
 
-    hashPasswd?(): void;
+    /**
+     * hash the current passwd
+     */
+    hashPasswd(): void;
 }
