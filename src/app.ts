@@ -1,7 +1,7 @@
 import 'module-alias/register';
 
 require('dotenv').config();
-require('@models/db');
+require('@models/dbInit');
 
 /**
  * Web server
@@ -10,35 +10,29 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const morgan = require('morgan');
+server.listen(process.env.PORT || 4000);
 
 /**
  * Routes imports
  */
-const doctor = require('@routes/doctor');
-const qrcode = require('@routes/qrcode');
+const doctorRoute = require('@routes/doctorRoute');
+const establishmentRoute = require('@routes/establishmentRoute');
+const qrcodeRoute = require('@routes/qrcodeRoute');
 
 /**
  * Middlewares
  */
-morgan.token('body', (req) => {
-    return JSON.stringify(req.body);
-});
+app.use(express.json());
 
-server.listen(process.env.PORT || 4000);
-
-app.use(
-    express.json()
-);
-
-app.use(
-    morgan(':method :url :status :res[content-length] - :response-time ms :body')
-);
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 app.use(express.static('front_end/build'));
 
 /**
  * Routes definition
  */
-app.use("/api/doctor", doctor);
+app.use("/api/doctor", doctorRoute);
 
-app.use("/api/qrcode", qrcode);
+app.use("/api/establishment", establishmentRoute);
+
+app.use("/api/qrcode", qrcodeRoute);
