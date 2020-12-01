@@ -3,8 +3,11 @@ import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import {Request, Response} from "express";
 
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 export default class ConnectableUtility {
+    private static secret = "IPL_PFE_2020";
+
     // Format that removes password to connectable toJson method
     public static jsonFormat = {
         transform: (document, returnedObject) => {
@@ -53,13 +56,18 @@ export default class ConnectableUtility {
         if (!body || !body.email || !body.password)
             return res.status(422).json({error: 'content missing'});
 
+        console.log(model.collection.collectionName);
+
         model
             .findOne({email: body.email})
             .then((connectable: IConnectableDoc) => {
                 if (!connectable || !connectable.verifyPassword(body.password))
-                    res.status(401).json({error: 'please verify content'});
-                else
-                    res.json(connectable);
+                    return res.status(401).json({error: 'please verify content'});
+                const token = jwt.sign({
+                    type: model.collection.collectionName,
+                    id: connectable.id
+                }, this.secret, {expiresIn: '24h'});
+                res.json({token});
             })
             .catch(() => res.status(500).json({error: 'a server error occurred'}));
     }

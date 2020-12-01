@@ -11,6 +11,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const morgan = require('morgan');
+const cors = require('cors')
 server.listen(process.env.PORT || 4000);
 
 /**
@@ -24,6 +25,7 @@ const qrCodesRoute = require('@routes/qrCodesRoute');
 /**
  * Middlewares
  */
+app.use(cors());
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(express.static('front_end/build'));
