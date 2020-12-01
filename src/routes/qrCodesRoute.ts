@@ -3,6 +3,9 @@ import {Request, Response} from "express";
 const express = require('express');
 const router = express.Router();
 
+/**
+ *
+ */
 router.post('/', (req: Request, res: Response) => {
     //TODO
     const body = req.body;
@@ -13,6 +16,7 @@ router.post('/', (req: Request, res: Response) => {
         case "location":
             break;
         case "infection":
+
             break;
         default:
             return res.status(422).json({error: 'wrong QR code type'});

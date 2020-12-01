@@ -5,7 +5,6 @@ import ConnectableUtility from "@models/Connectable/ConnectableUtility";
 
 const establishmentSchemaFields: Record<keyof IEstablishment, any> = {
     name: {type: String, required: true, unique: true},
-    description: {type: String, required: true},
     email: {type: String, required: true, unique: true},
     passwd: {type: String, required: true}
 };

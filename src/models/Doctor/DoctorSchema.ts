@@ -7,6 +7,7 @@ const doctorSchemaFields: Record<keyof IDoctor, any> = {
     firstname: {type: String, required: true},
     lastname: {type: String, required: true},
     email: {type: String, required: true, unique: true},
+    inami: {type: String, required: true, unique: true},
     passwd: {type: String, required: true}
 };
 

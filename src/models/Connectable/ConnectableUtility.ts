@@ -5,7 +5,7 @@ import {Request, Response} from "express";
 const bcrypt = require('bcrypt');
 
 export default class ConnectableUtility {
-    // format that removes passwd to connectable toJson method
+    // Format that removes passwd to connectable toJson method
     public static jsonFormat = {
         transform: (document, returnedObject) => {
             returnedObject.id = returnedObject._id.toString()
@@ -17,7 +17,7 @@ export default class ConnectableUtility {
     public static saltRounds = 10;
 
     /**
-     * set properties to a Connectable Schema
+     * Set properties to a Connectable Schema
      * @param schema to whom to set properties
      */
     public static setProperties(schema: Schema): void {
@@ -42,7 +42,7 @@ export default class ConnectableUtility {
     }
 
     /**
-     * verify the authorisation to connect
+     * Verify the authorisation to connect
      * @param req the request
      * @param res the response
      * @param model the model of mongoose data
