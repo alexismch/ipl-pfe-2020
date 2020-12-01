@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import Citizen from "@models/Citizen/CitizenSchema";
 import ICitizenDoc from "@models/Citizen/ICitizenDoc";
+import ErrorUtils from "@utils/ErrorUtils";
 
 const express = require('express');
 const router = express.Router();
@@ -12,7 +13,7 @@ const router = express.Router();
 router.post('/', (req: Request, res: Response) => {
     const body = req.body;
     if (!body || !body.device)
-        return res.status(422).json({error: 'content missing'});
+        return ErrorUtils.sendError(res, 422, 'content missing or incorrect');
 
     const citizen: ICitizenDoc = new Citizen({
         device: body.device
@@ -26,9 +27,9 @@ router.post('/', (req: Request, res: Response) => {
             citizen
                 .save()
                 .then(cit => res.json(cit))
-                .catch(() => res.status(500).json({error: 'a server error occurred'}))
+                .catch(() => ErrorUtils.sendError(res));
         })
-        .catch(() => res.status(500).json({error: 'a server error occurred'}));
+        .catch(() => ErrorUtils.sendError(res));
 });
 
 module.exports = router;

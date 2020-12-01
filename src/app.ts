@@ -1,5 +1,6 @@
 import 'module-alias/register';
 import {Request, Response} from "express";
+import ErrorUtils from "@utils/ErrorUtils";
 
 require('dotenv').config();
 require('@models/dbInit');
@@ -40,5 +41,5 @@ app.use("/api/qrCodes", qrCodesRoute);
 
 // Handle if no route found
 app.use((req: Request, res: Response) => {
-    res.status(404).json({error: 'unknown request'})
+    ErrorUtils.sendError(res, 404, 'unsupported request');
 });

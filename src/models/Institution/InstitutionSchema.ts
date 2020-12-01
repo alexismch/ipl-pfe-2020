@@ -1,7 +1,7 @@
 import {model, Schema} from 'mongoose';
 import IInstitution from "@models/Institution/IInstitution";
 import IInstitutionDoc from "@models/Institution/IInstitutionDoc";
-import ConnectableUtility from "@models/Connectable/ConnectableUtility";
+import ConnectableUtils from "@models/Connectable/ConnectableUtils";
 
 const institutionSchemaFields: Record<keyof IInstitution, any> = {
     name: {type: String, required: true, unique: true},
@@ -11,6 +11,6 @@ const institutionSchemaFields: Record<keyof IInstitution, any> = {
 
 const institutionSchema: Schema = new Schema(institutionSchemaFields);
 
-ConnectableUtility.setProperties(institutionSchema);
+ConnectableUtils.setProperties(institutionSchema);
 
 export default model<IInstitutionDoc>('Institution', institutionSchema);

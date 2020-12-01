@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
-import QRCode from "@models/QRCode/QRCode";
+import JWTUtils from "@utils/JWTUtils";
+import ErrorUtils from "@utils/ErrorUtils";
 
 const express = require('express');
 const router = express.Router();
@@ -8,31 +9,36 @@ const router = express.Router();
  *
  */
 router.post('/', (req: Request, res: Response) => {
+    //TODO
     const body = req.body;
     const type = body.type;
     if (!body || !type)
-        return res.status(422).json({error: 'content missing'});
+        return ErrorUtils.sendError(res, 422, 'content missing or incorrect');
+
     let token;
     switch (type) {
         case "location":
             break;
         case "doctor":
             if (!body.inami)
-                return res.status(422).json({error: 'inami missing'});
-            token = QRCode.sign({inami: body.inami});
+                return ErrorUtils.sendError(res, 422, 'inami missing or incorrect');
+            token = JWTUtils.sign({inami: body.inami});
             break;
         default:
-            return res.status(422).json({error: 'wrong QR code type'});
+            return ErrorUtils.sendError(res, 422, 'wrong QR code type');
     }
     res.json({token});
 });
 
+/**
+ *
+ */
 router.post('/scan', (req: Request, res: Response) => {
     //TODO
     const body = req.body;
     const token = body.token;
     if (!body || !token)
-        return res.status(422).json({error: 'content missing'});
+        return ErrorUtils.sendError(res, 422, 'content missing or incorrect');
     res.json({token: body.token});
 });
 
