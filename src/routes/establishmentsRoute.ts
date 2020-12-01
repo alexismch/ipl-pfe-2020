@@ -2,15 +2,23 @@ import {Request, Response} from "express";
 import Establishment from "@models/Establishment/EstablishmentSchema";
 import ConnectableUtility from "@models/Connectable/ConnectableUtility";
 import * as EmailValidator from "email-validator";
-import {IEstablishmentDoc} from "@models/Establishment/IEstablishmentDoc";
+import IEstablishmentDoc from "@models/Establishment/IEstablishmentDoc";
 
 const express = require('express');
 const router = express.Router();
 
+/**
+ * Handle request to login
+ * Delegated to ConnectableUtility connect method
+ * @return response with the establishment that asked to connect, or with an error
+ */
 router.post('/login', (req: Request, res: Response) => {
     return ConnectableUtility.connect(req, res, Establishment);
 });
 
+/**
+ * Handle request to create an establishment
+ */
 router.post('/', (req: Request, res: Response) => {
     const body = req.body;
     if (!body || !body.name || !body.description || !body.email || !body.passwd || !EmailValidator.validate(body.email))

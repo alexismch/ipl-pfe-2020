@@ -1,28 +1,30 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Grid, Container, Paper } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
+import { Registration } from "utils/backend";
+import { Redirect } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [inami, setInami] = useState("");
+  const [error, setError] = useState("");
+  const [token, setToken] = useState("");
   const [showError, setShowError] = useState(false);
-  const theme = useTheme();
-
-  const error = "error";
+  const isAuthenticated = false;
 
   const handleSubmit = (e : any) => {
     e.preventDefault();
-    // dispatch(authorize(email,password));
-    setShowError(true);
+    Registration(token, name, email, password, inami)
+      .then(response => setToken(String(response)))
+      .catch(error => {
+        setError(error);
+        setShowError(true);
+    });
   };
 
   return (<div>
-      {/* {isAuthenticated && <Redirect
-              to={{
-                pathname: "/"
-              }}
-            /> } */}
+      {isAuthenticated ? <Redirect to="/" /> :
       <Container maxWidth="xs" disableGutters >
         <Grid container justify='space-around' alignItems='center' direction='column' style={{minHeight:"100vh"}} >
         <Paper elevation={10} >
@@ -38,6 +40,14 @@ export default function Register() {
               </Grid>
               : null
             }
+            <Grid item xs={12} >
+              <TextField
+                value={name}
+                fullWidth
+                placeholder="Full name or institution name"
+                onChange={event => setName(event.target.value)}
+              />
+            </Grid>
             <Grid item xs={12} >
               <TextField
                 value={email}
@@ -71,6 +81,7 @@ export default function Register() {
         </Paper>
         </Grid>
       </Container>
+      }
       </div>
   );
 }

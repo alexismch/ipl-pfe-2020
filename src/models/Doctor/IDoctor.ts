@@ -1,6 +1,7 @@
-import {IConnectable} from "@models/Connectable/IConnectable";
+import IConnectable from "@models/Connectable/IConnectable";
 
-export interface IDoctor extends IConnectable {
+export default interface IDoctor extends IConnectable {
     firstname: string;
     lastname: string;
+    inami: string;
 }

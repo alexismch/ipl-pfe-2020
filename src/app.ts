@@ -18,7 +18,7 @@ server.listen(process.env.PORT || 4000);
  */
 const doctorsRoute = require('@routes/doctorsRoute');
 const establishmentsRoute = require('@routes/establishmentsRoute');
-const locationsRoute = require('@routes/locationsRoute');
+const citizensRoute = require('@routes/citizensRoute');
 const qrCodesRoute = require('@routes/qrCodesRoute');
 
 /**
@@ -33,9 +33,10 @@ app.use(express.static('front_end/build'));
  */
 app.use("/api/doctors", doctorsRoute);
 app.use("/api/establishments", establishmentsRoute);
-app.use("/api/locations", locationsRoute);
+app.use("/api/citizens", citizensRoute);
 app.use("/api/qrCodes", qrCodesRoute);
 
+// Handle if no route found
 app.use((req: Request, res: Response) => {
     res.status(404).json({error: 'unknown request'})
 });
