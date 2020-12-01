@@ -7,11 +7,11 @@ import {IEstablishmentDoc} from "@models/Establishment/IEstablishmentDoc";
 const express = require('express');
 const router = express.Router();
 
-router.post('/login', (req: Request, res: Response) => {
+router.post('/session', (req: Request, res: Response) => {
     return ConnectableUtility.connect(req, res, Establishment);
 });
 
-router.post('/register', (req: Request, res: Response) => {
+router.post('/', (req: Request, res: Response) => {
     const body = req.body;
     if (!body || !body.name || !body.description || !body.email || !body.passwd || !EmailValidator.validate(body.email))
         return res.status(422).json({error: 'content missing'});
