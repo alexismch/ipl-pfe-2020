@@ -1,4 +1,5 @@
 import 'module-alias/register';
+import {Request, Response} from "express";
 
 require('dotenv').config();
 require('@models/dbInit');
@@ -32,3 +33,7 @@ app.use(express.static('front_end/build'));
 app.use("/api/doctors", doctorsRoute);
 app.use("/api/establishments", establishmentsRoute);
 app.use("/api/qrCodes", qrCodesRoute);
+
+app.use((req: Request, res: Response) => {
+    res.status(404).json({error: 'unknown request'})
+});
