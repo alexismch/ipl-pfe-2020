@@ -15,7 +15,10 @@ export default function Login() {
   const handleSubmit = (e : any) => {
     e.preventDefault();
     SignIn(token, email, password, isDoctor)
-      .then(response => setToken(String(response)))
+      .then(response => {
+        setToken(String(response));
+        console.log(response);
+      })
       .catch(error => {
         setError(error);
         setShowError(true);        
