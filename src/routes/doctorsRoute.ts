@@ -22,14 +22,14 @@ router.post('/login', (req: Request, res: Response) => {
 router.post('/', (req: Request, res: Response) => {
     const body = req.body;
     const [firstname, lastname] = body.fullname.split(' ');
-    if (!body || !firstname || !lastname || !body.email || !body.passwd || !body.inami || !EmailValidator.validate(body.email))
+    if (!body || !firstname || !lastname || !body.email || !body.password || !body.inami || !EmailValidator.validate(body.email))
         return res.status(422).json({error: 'content missing'});
 
     const doctor: IDoctorDoc = new Doctor({
         firstname: firstname,
         lastname: lastname,
         email: body.email,
-        passwd: body.passwd,
+        password: body.password,
         inami: body.inami
     });
 

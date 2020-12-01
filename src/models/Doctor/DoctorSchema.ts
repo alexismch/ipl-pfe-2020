@@ -8,7 +8,7 @@ const doctorSchemaFields: Record<keyof IDoctor, any> = {
     lastname: {type: String, required: true},
     email: {type: String, required: true, unique: true},
     inami: {type: String, required: true, unique: true},
-    passwd: {type: String, required: true}
+    password: {type: String, required: true}
 };
 
 const doctorSchema: Schema = new Schema(doctorSchemaFields);

@@ -3,13 +3,13 @@ import IConnectable from "@models/Connectable/IConnectable";
 
 export default interface IConnectableDoc extends Document, IConnectable {
     /**
-     * Verify if passwd matches with hashed passwd
-     * @param passwd the passwd to verify
+     * Verify if password matches with hashed password
+     * @param password the password to verify
      */
-    verifyPasswd(passwd: string): boolean;
+    verifyPassword(password: string): boolean;
 
     /**
-     * Hash the current passwd
+     * Hash the current password
      */
-    hashPasswd(): void;
+    hashPassword(): void;
 }

@@ -17,7 +17,7 @@ server.listen(process.env.PORT || 4000);
  * Routes imports
  */
 const doctorsRoute = require('@routes/doctorsRoute');
-const establishmentsRoute = require('@routes/establishmentsRoute');
+const institutionsRoute = require('@routes/institutionsRoute');
 const citizensRoute = require('@routes/citizensRoute');
 const qrCodesRoute = require('@routes/qrCodesRoute');
 
@@ -32,7 +32,7 @@ app.use(express.static('front_end/build'));
  * Routes definition
  */
 app.use("/api/doctors", doctorsRoute);
-app.use("/api/establishments", establishmentsRoute);
+app.use("/api/institutions", institutionsRoute);
 app.use("/api/citizens", citizensRoute);
 app.use("/api/qrCodes", qrCodesRoute);
 

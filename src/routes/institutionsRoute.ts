@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
-import Establishment from "@models/Establishment/EstablishmentSchema";
+import Institution from "@models/Institution/InstitutionSchema";
 import ConnectableUtility from "@models/Connectable/ConnectableUtility";
 import * as EmailValidator from "email-validator";
-import IEstablishmentDoc from "@models/Establishment/IEstablishmentDoc";
+import IInstitutionDoc from "@models/Institution/IInstitutionDoc";
 
 const express = require('express');
 const router = express.Router();
@@ -10,30 +10,30 @@ const router = express.Router();
 /**
  * Handle request to login
  * Delegated to ConnectableUtility connect method
- * @return response with the establishment that asked to connect, or with an error
+ * @return response with the institution that asked to connect, or with an error
  */
 router.post('/login', (req: Request, res: Response) => {
-    return ConnectableUtility.connect(req, res, Establishment);
+    return ConnectableUtility.connect(req, res, Institution);
 });
 
 /**
- * Handle request to create an establishment
+ * Handle request to create an institution
  */
 router.post('/', (req: Request, res: Response) => {
     const body = req.body;
-    if (!body || !body.name || !body.description || !body.email || !body.passwd || !EmailValidator.validate(body.email))
+    if (!body || !body.name || !body.description || !body.email || !body.password || !EmailValidator.validate(body.email))
         return res.status(422).json({error: 'content missing'});
 
-    const establishment: IEstablishmentDoc = new Establishment({
+    const institution: IInstitutionDoc = new Institution({
         name: body.name,
         description: body.description,
         email: body.email,
-        passwd: body.passwd
+        password: body.password
     });
 
-    establishment
+    institution
         .save()
-        .then(est => res.json(est))
+        .then(inst => res.json(inst))
         .catch((e) => {
             if (e.code === 11000)
                 return res.status(409).json({error: 'email or name already used'});
