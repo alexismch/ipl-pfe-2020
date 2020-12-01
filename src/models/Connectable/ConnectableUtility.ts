@@ -39,15 +39,16 @@ export default class ConnectableUtility {
     public static connect(req: Request, res: Response, model: Model<IConnectableDoc>): any {
         const body = req.body;
         if (!body || !body.email || !body.passwd)
-            return res.status(422).json({error: 'content missing'})
+            return res.status(422).json({error: 'content missing'});
 
         model
             .findOne({email: body.email})
             .then((connectable: IConnectableDoc) => {
                 if (!connectable || !connectable.verifyPasswd(body.passwd))
-                    res.status(401).json({error: 'please verify informations'});
+                    res.status(401).json({error: 'please verify content'});
                 else
                     res.json(connectable);
-            });
+            })
+            .catch(() => res.status(500).json({error: 'a server error occurred'}));
     }
 }

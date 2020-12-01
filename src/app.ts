@@ -23,16 +23,12 @@ const qrcodeRoute = require('@routes/qrcodeRoute');
  * Middlewares
  */
 app.use(express.json());
-
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
-
 app.use(express.static('front_end/build'));
 
 /**
  * Routes definition
  */
 app.use("/api/doctor", doctorRoute);
-
 app.use("/api/establishment", establishmentRoute);
-
 app.use("/api/qrcode", qrcodeRoute);
