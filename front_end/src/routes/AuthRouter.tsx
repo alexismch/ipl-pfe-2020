@@ -2,7 +2,8 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Login from "User/Login";
 import Logout from "User/Logout";
 import Register from "User/Register";
-import Home from "components/Home";
+import HomeDoctor from "components/HomeDoctor";
+import HomeInstitution from "components/HomeInstitution";
 
 const AuthRouter = () => {
 //TODO JWT TOKEN
@@ -14,7 +15,8 @@ const AuthRouter = () => {
         {auth ? 
         <Switch>
           <Route exact path="/home">
-            <Home />
+            <HomeDoctor/>
+            {/* <HomeInstitution/> */}
           </Route>
           <Route exact path="/logout">
             <Logout />
