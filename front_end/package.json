@@ -12,6 +12,7 @@
     "@types/node": "^12.19.7",
     "@types/react": "^16.14.2",
     "@types/react-dom": "^16.9.10",
+    "@types/react-router-dom": "^5.1.6",
     "axios": "^0.21.0",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
@@ -45,8 +46,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4000",
-  "devDependencies": {
-    "@types/react-router-dom": "^5.1.6"
-  }
+  "proxy": "http://localhost:4000"
 }
