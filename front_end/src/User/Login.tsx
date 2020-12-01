@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { TextField, Button, Typography, Grid, Container, Paper, FormControlLabel, Checkbox } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { SignIn } from "utils/backend";
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -59,9 +57,8 @@ export default function Login() {
             </Grid>
             <Grid item xs={12}>
             <FormControlLabel
-              control={<Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} name="isDoctor" />}
+              control={<Checkbox name="isDoctor" onChange={e => setIsDoctor(!isDoctor)} />}
               label="I am a doctor"
-              onChange={e => setIsDoctor(!isDoctor)}
             />
             </Grid>
             <Grid item xs={12}>

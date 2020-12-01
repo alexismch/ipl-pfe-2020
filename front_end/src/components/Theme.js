@@ -55,19 +55,6 @@ export const theme = createMuiTheme({
                                 borderWidth: "1px"
                         }
                 },
-                MuiIconButton: {
-                        root: {
-                                color: "#000",
-                                border: "1px solid",
-                                backgroundColor: "#00ff9d",
-                                borderColor: "#000",
-                                width: 38,
-                                height: 38,
-                                '&:hover': {
-                                        borderColor: "#FFF",
-                                }, 
-                        },
-                },
                 MuiTypography: {
                         subtitle1: {
                                 fontWeight: "bold",
