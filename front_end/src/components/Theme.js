@@ -9,7 +9,7 @@ export const theme = createMuiTheme({
                         main: "#BBB",
                 }, 
                 background:{
-                        default: "#00ff9d",
+                        default: "#4DDB63",
                         paper : "#FFF",
                 },
         },
@@ -22,13 +22,13 @@ export const theme = createMuiTheme({
         overrides: {
                 MuiInput: {
                         underline: {
-                                color: "black",
+                                color: "#000",
                                 margin: "0"
                         }
                 },
                 MuiInputBase: {
                         root: {
-                                backgroundColor : "#00ff9d",
+                                backgroundColor : "#4DDB63",
                         }
                 },
                 MuiButton: {
@@ -38,7 +38,7 @@ export const theme = createMuiTheme({
                                 fontFamily: "Open Sans",
                                 float: "right",
                                 textTransform: "none",
-                                backgroundColor: "#00ff9d",
+                                backgroundColor: "#4DDB63",
                                 color: "#000",
                                 '&:hover': {
                                         borderColor: "#FFF",
@@ -65,7 +65,7 @@ export const theme = createMuiTheme({
                 },
                 MuiAlert: {
                         root: {
-                                backgroundColor: "#00ff9d",  
+                                backgroundColor: "#4DDB63",  
                                 color: "#000",
                                 padding: 0,
                                 paddingLeft: 8,
@@ -89,7 +89,7 @@ export const theme = createMuiTheme({
                 },
                 MuiPopover: { 
                         paper: {
-                                backgroundColor: "#00ff9d",
+                                backgroundColor: "#4DDB63",
                                 borderRadius: 4,
                                 paddingTop: 16
                         },
