@@ -56,7 +56,6 @@ export function SignIn(token : string, email : string, password : string, isDoct
     email,
     password
   }
-
   if(isDoctor){
     return new Promise((resolve, reject) => {
       Axios.post(`/api/doctors/session`, data, config)
