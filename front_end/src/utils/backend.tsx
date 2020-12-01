@@ -15,7 +15,7 @@ export function Registration(token : string, name : string, email : string, pass
       inami
     }
     return new Promise((resolve, reject) => {
-      Axios.post(`/`, data, config)
+      Axios.post(`/api/doctors/`, data, config)
         .then(response => {
           resolve(response.data.token);
         })
@@ -30,7 +30,40 @@ export function Registration(token : string, name : string, email : string, pass
       password
     }
     return new Promise((resolve, reject) => {
-      Axios.post(`/`, data, config)
+      Axios.post(`/api/institutions/`, data, config)
+        .then(response => {
+          resolve(response.data.token);
+        })
+        .catch(error => {
+          reject(error);
+        })
+    })
+  }
+}
+
+export function SignIn(token : string, email : string, password : string, isDoctor : boolean){
+  const config = {
+    headers: { Authorization: "Bearer " + token }
+  };
+
+  const data = {
+    email,
+    password
+  }
+
+  if(isDoctor){
+    return new Promise((resolve, reject) => {
+      Axios.post(`/api/doctors/login`, data, config)
+        .then(response => {
+          resolve(response.data.token);
+        })
+        .catch(error => {
+          reject(error);
+        })
+    })
+  } else {
+    return new Promise((resolve, reject) => {
+      Axios.post(`/api/institutions/login`, data, config)
         .then(response => {
           resolve(response.data.token);
         })
