@@ -10,9 +10,9 @@ const router = express.Router();
 /**
  * Handle request to login
  * Delegated to ConnectableUtility connect method
- * @return response with the institution that asked to connect, or with an error
+ * @return response with a session token that expires in 24h, or with an error
  */
-router.post('/login', (req: Request, res: Response) => {
+router.post('/session', (req: Request, res: Response) => {
     return ConnectableUtility.connect(req, res, Institution);
 });
 
@@ -22,7 +22,7 @@ router.post('/login', (req: Request, res: Response) => {
 router.post('/', (req: Request, res: Response) => {
     const body = req.body;
     if (!body || !body.fullName || !body.email || !body.password || !EmailValidator.validate(body.email))
-        return res.status(422).json({error: 'content missing'});
+        return res.status(422).json({error: 'content missing or incorrect'});
 
     const institution: IInstitutionDoc = new Institution({
         name: body.fullName,

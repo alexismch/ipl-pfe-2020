@@ -12,7 +12,7 @@ const router = express.Router();
  * Delegated to ConnectableUtility connect method
  * @return response with the doctor that asked to connect, or with an error
  */
-router.post('/login', (req: Request, res: Response) => {
+router.post('/session', (req: Request, res: Response) => {
     return ConnectableUtility.connect(req, res, Doctor);
 });
 
