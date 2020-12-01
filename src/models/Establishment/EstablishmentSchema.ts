@@ -14,4 +14,4 @@ const establishmentSchema: Schema = new Schema(establishmentSchemaFields);
 
 ConnectableUtility.setProperties(establishmentSchema);
 
-export default model<IEstablishmentDoc>('Doctor', establishmentSchema);
+export default model<IEstablishmentDoc>('Establishment', establishmentSchema);

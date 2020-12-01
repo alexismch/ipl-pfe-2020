@@ -1,5 +1,6 @@
-import {Schema} from "mongoose";
+import {Model, Schema} from "mongoose";
 import {IConnectableDoc} from "@models/Connectable/IConnectableDoc";
+import {Request, Response} from "express";
 
 const bcrypt = require('bcrypt');
 
@@ -26,12 +27,27 @@ export default class ConnectableUtility {
         schema.set('toJSON', ConnectableUtility.jsonFormat);
 
         schema.pre('save', function (next) {
-            const doctor: IConnectableDoc = <IConnectableDoc> this;
+            const doctor: IConnectableDoc = <IConnectableDoc>this;
             if (!this.isModified('passwd'))
                 return next();
 
             doctor.passwd = bcrypt.hashSync(doctor.passwd, ConnectableUtility.saltRounds);
             next();
         });
+    }
+
+    public static connect(req: Request, res: Response, model: Model<IConnectableDoc>): any {
+        const body = req.body;
+        if (!body || !body.email || !body.passwd)
+            return res.status(422).json({error: 'content missing'})
+
+        model
+            .findOne({email: body.email})
+            .then((connectable: IConnectableDoc) => {
+                if (!connectable || !connectable.verifyPasswd(body.passwd))
+                    res.status(401).json({error: 'please verify informations'});
+                else
+                    res.json(connectable);
+            });
     }
 }
