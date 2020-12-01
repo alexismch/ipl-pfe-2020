@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import Establishment from "@models/Establishment/EstablishmentSchema";
 import ConnectableUtility from "@models/Connectable/ConnectableUtility";
 import * as EmailValidator from "email-validator";
-import {IEstablishmentDoc} from "@models/Establishment/IEstablishmentDoc";
+import IEstablishmentDoc from "@models/Establishment/IEstablishmentDoc";
 
 const express = require('express');
 const router = express.Router();

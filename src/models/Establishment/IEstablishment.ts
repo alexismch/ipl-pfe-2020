@@ -1,5 +1,5 @@
-import {IConnectable} from "@models/Connectable/IConnectable";
+import IConnectable from "@models/Connectable/IConnectable";
 
-export interface IEstablishment extends IConnectable {
+export default interface IEstablishment extends IConnectable {
     name: string;
 }

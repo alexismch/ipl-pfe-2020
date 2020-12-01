@@ -1,5 +1,5 @@
 import {Model, Schema} from "mongoose";
-import {IConnectableDoc} from "@models/Connectable/IConnectableDoc";
+import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import {Request, Response} from "express";
 
 const bcrypt = require('bcrypt');

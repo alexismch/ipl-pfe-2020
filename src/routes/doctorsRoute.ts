@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import Doctor from "@models/Doctor/DoctorSchema";
-import {IDoctorDoc} from "@models/Doctor/IDoctorDoc";
+import IDoctorDoc from "@models/Doctor/IDoctorDoc";
 import ConnectableUtility from "@models/Connectable/ConnectableUtility";
 import * as EmailValidator from 'email-validator';
 

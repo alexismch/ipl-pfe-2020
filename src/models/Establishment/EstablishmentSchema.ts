@@ -1,6 +1,6 @@
 import {model, Schema} from 'mongoose';
-import {IEstablishment} from "@models/Establishment/IEstablishment";
-import {IEstablishmentDoc} from "@models/Establishment/IEstablishmentDoc";
+import IEstablishment from "@models/Establishment/IEstablishment";
+import IEstablishmentDoc from "@models/Establishment/IEstablishmentDoc";
 import ConnectableUtility from "@models/Connectable/ConnectableUtility";
 
 const establishmentSchemaFields: Record<keyof IEstablishment, any> = {
