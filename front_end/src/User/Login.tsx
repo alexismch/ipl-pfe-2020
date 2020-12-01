@@ -3,7 +3,7 @@ import { TextField, Button, Typography, Grid, Container, Paper, FormControlLabel
 import { Redirect } from "react-router-dom";
 import { SignIn } from "utils/backend";
 
-export default function Login() {
+export default function Login({setAuth} : any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
@@ -17,7 +17,8 @@ export default function Login() {
     SignIn(token, email, password, isDoctor)
       .then(response => {
         setToken(String(response));
-        console.log(response);
+        localStorage.setItem("Token", String(response));
+        setAuth(true);
       })
       .catch(error => {
         setError(error);

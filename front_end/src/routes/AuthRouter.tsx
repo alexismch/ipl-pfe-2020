@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Login from "User/Login";
 import Logout from "User/Logout";
@@ -8,7 +9,13 @@ import HomeInstitution from "components/HomeInstitution";
 const AuthRouter = () => {
 //TODO JWT TOKEN
 
-  const auth = false;
+  const [auth, setAuth] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("Token")){
+      //If valid token... To be continued.
+      setAuth(true);
+    }
+  }, [])
 
   return (
     <BrowserRouter>
@@ -26,7 +33,7 @@ const AuthRouter = () => {
         : 
         <Switch>
           <Route exact path="/login">
-            <Login />
+            <Login setAuth={setAuth}/>
           </Route>
           <Route exact path="/register">
             <Register />
