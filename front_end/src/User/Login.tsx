@@ -1,29 +1,31 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Grid, Container, Paper } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
+import { TextField, Button, Typography, Grid, Container, Paper, FormControlLabel, Checkbox } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
+import { SignIn } from "utils/backend";
+import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  const [error, setError] = useState("");
+  const [isDoctor, setIsDoctor] = useState(false);
   const [showError, setShowError] = useState(false);
-  const theme = useTheme();
-
-  const error = "error";
   const isAuthenticated = false;
 
   const handleSubmit = (e : any) => {
     e.preventDefault();
-    // dispatch(authorize(email,password));
-    setShowError(true);
+    SignIn(token, email, password, isDoctor)
+      .then(response => setToken(String(response)))
+      .catch(error => {
+        setError(error);
+        setShowError(true);        
+      })
   };
 
   return (<div>
-      {isAuthenticated && <Redirect
-              to={{
-                pathname: "/"
-              }}
-            /> }
+      {isAuthenticated && <Redirect to="/" /> }
       <Container maxWidth="xs" disableGutters >
         <Grid container justify='space-around' alignItems='center' direction='column' style={{minHeight:"100vh"}} >
         <Paper elevation={10} >
@@ -54,6 +56,13 @@ export default function Login() {
                 placeholder="Password"
                 onChange={event => setPassword(event.target.value)}
               />
+            </Grid>
+            <Grid item xs={12}>
+            <FormControlLabel
+              control={<Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} name="isDoctor" />}
+              label="I am a doctor"
+              onChange={e => setIsDoctor(!isDoctor)}
+            />
             </Grid>
             <Grid item xs={12}>
                 <Button type="submit" variant="contained" >Sign in</Button>
