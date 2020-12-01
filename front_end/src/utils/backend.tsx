@@ -15,11 +15,14 @@ export function Registration(token : string, name : string, email : string, pass
       inami
     }
     return new Promise((resolve, reject) => {
+      console.log(data)
       Axios.post(`/api/doctors/`, data, config)
         .then(response => {
+          console.log(response);
           resolve(response.data.token);
         })
         .catch(error => {
+          console.log(error)
           reject(error);
         })
     })
@@ -30,11 +33,14 @@ export function Registration(token : string, name : string, email : string, pass
       password
     }
     return new Promise((resolve, reject) => {
+      console.log(data)
       Axios.post(`/api/institutions/`, data, config)
         .then(response => {
+          console.log(response);
           resolve(response.data.token);
         })
         .catch(error => {
+          console.group(error)
           reject(error);
         })
     })
