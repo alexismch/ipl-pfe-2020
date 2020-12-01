@@ -19,6 +19,7 @@ const AuthRouter = () => {
           <Route exact path="/logout">
             <Logout />
           </Route>
+          <Redirect to="/home" />
         </Switch>
         : 
         <Switch>
