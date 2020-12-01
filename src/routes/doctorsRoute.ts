@@ -21,7 +21,7 @@ router.post('/login', (req: Request, res: Response) => {
  */
 router.post('/', (req: Request, res: Response) => {
     const body = req.body;
-    const [firstname, lastname] = body.fullname.split(' ');
+    const [firstname, lastname] = body.fullName.split(' ');
     if (!body || !firstname || !lastname || !body.email || !body.password || !body.inami || !EmailValidator.validate(body.email))
         return res.status(422).json({error: 'content missing'});
 

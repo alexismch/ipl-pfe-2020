@@ -21,11 +21,11 @@ router.post('/login', (req: Request, res: Response) => {
  */
 router.post('/', (req: Request, res: Response) => {
     const body = req.body;
-    if (!body || !body.name || !body.description || !body.email || !body.password || !EmailValidator.validate(body.email))
+    if (!body || !body.fullName || !body.email || !body.password || !EmailValidator.validate(body.email))
         return res.status(422).json({error: 'content missing'});
 
     const institution: IInstitutionDoc = new Institution({
-        name: body.name,
+        name: body.fullName,
         description: body.description,
         email: body.email,
         password: body.password
@@ -37,6 +37,7 @@ router.post('/', (req: Request, res: Response) => {
         .catch((e) => {
             if (e.code === 11000)
                 return res.status(409).json({error: 'email or name already used'});
+            console.log(e);
             res.status(500).json({error: 'a server error occurred'});
         });
 });
