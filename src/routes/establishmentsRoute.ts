@@ -7,7 +7,7 @@ import {IEstablishmentDoc} from "@models/Establishment/IEstablishmentDoc";
 const express = require('express');
 const router = express.Router();
 
-router.post('/session', (req: Request, res: Response) => {
+router.post('/login', (req: Request, res: Response) => {
     return ConnectableUtility.connect(req, res, Establishment);
 });
 
