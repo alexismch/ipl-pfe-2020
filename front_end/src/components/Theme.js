@@ -14,58 +14,33 @@ export const theme = createMuiTheme({
                 },
         },
         typography: {
-                fontFamily:{
-                        fontFamily: "Open Sans",
-                },                
+                fontFamily: "Open Sans",               
         },  
         shape: {
                 borderRadius: 4,
         },
-        zIndex: 10,
         overrides: {
                 MuiInput: {
                         underline: {
-                                color: "white",
-                                margin: "0",
-                                '&:before': {
-                                        content:""
-                                },
-                                '&:after': {
-                                        content:""
-                                }
+                                color: "black",
+                                margin: "0"
                         }
                 },
                 MuiInputBase: {
                         root: {
-                                padding:"5px 10px",
-                        }
-                },
-                MuiAutocomplete: {
-                        endAdornment: {
-                                paddingRight: "10px"
-                        },
-                        inputRoot: {
-                                paddingRight:"40px !important",
-                                paddingBottom:"7px !important"
-                        },
-                        clearIndicator: {
-                                marginRight:"2px"
-                        },
-                        noOptions: {
-                                color: "white"
+                                backgroundColor : "#00ff9d",
                         }
                 },
                 MuiButton: {
                         contained: {
                                 border: "1px solid",
-                                borderColor: "#BBB",
+                                borderColor: "#000",
                                 fontFamily: "Open Sans",
                                 float: "right",
                                 textTransform: "none",
-                                backgroundColor: "#3d4a57",
-                                color: "#FFF",
+                                backgroundColor: "#00ff9d",
+                                color: "#000",
                                 '&:hover': {
-                                        backgroundColor: "#5d6a77",
                                         borderColor: "#FFF",
                                 },  
                         },
@@ -75,8 +50,6 @@ export const theme = createMuiTheme({
                 },
                 MuiTextField: {
                         root: {
-                                backgroundColor: "#222930",
-                                borderColor: "hsl(0,0%,80%)",
                                 borderRadius: "4px",
                                 borderStyle: "solid",
                                 borderWidth: "1px"
@@ -84,22 +57,18 @@ export const theme = createMuiTheme({
                 },
                 MuiIconButton: {
                         root: {
-                                color: "#FFF",
+                                color: "#000",
                                 border: "1px solid",
-                                backgroundColor: "#3d4a57",
-                                borderColor: "#BBB",
+                                backgroundColor: "#00ff9d",
+                                borderColor: "#000",
                                 width: 38,
                                 height: 38,
                                 '&:hover': {
-                                        backgroundColor: "#5d6a77",
                                         borderColor: "#FFF",
                                 }, 
                         },
                 },
                 MuiTypography: {
-                        root: {
-                                color: "#FFF",
-                        },
                         subtitle1: {
                                 fontWeight: "bold",
                         },
@@ -109,27 +78,23 @@ export const theme = createMuiTheme({
                 },
                 MuiAlert: {
                         root: {
-                                backgroundColor: "#222930",  
-                                color: "#FFF",
+                                backgroundColor: "#00ff9d",  
+                                color: "#000",
                                 padding: 0,
                                 paddingLeft: 8,
                                 paddingRight: 8,
                         },
-                        standardInfo: {
-                                backgroundColor: "#222930",  
-                                color: "#FFF",
-                        },
                 },
                 MuiDialog: {
                         paper:{
-                                color: "#FFF",
-                                backgroundColor: "#222930",
+                                color: "#000",
+                                backgroundColor: "#FFF",
                         },
                 },
                 MuiPaper: {
                         root: {
-                                color: "#FFF",
-                                backgroundColor: "#3d4a57",
+                                color: "#000",
+                                backgroundColor: "#FFF",
                                 borderRadius: 4,
                                 padding : 8,
                                 elevation : 8,
@@ -137,7 +102,7 @@ export const theme = createMuiTheme({
                 },
                 MuiPopover: { 
                         paper: {
-                                backgroundColor: "#3d4a57",
+                                backgroundColor: "#00ff9d",
                                 borderRadius: 4,
                                 paddingTop: 16
                         },
@@ -150,7 +115,7 @@ export const theme = createMuiTheme({
                 },
                 MuiGrid: {
                         root: {
-                                color: "#FFF",
+                                color: "#000",
                                 padding: 8,
                                 borderRadius: 4,
                         },
