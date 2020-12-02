@@ -48,10 +48,7 @@ export function Registration(token : string, name : string, email : string, pass
   }
 }
 
-export function SignIn(token : string, email : string, password : string, isDoctor : boolean){
-  const config = {
-    headers: { Authorization: "Bearer " + token }
-  };
+export function SignIn(email : string, password : string, isDoctor : boolean){
 
   const data = {
     email,
@@ -60,7 +57,7 @@ export function SignIn(token : string, email : string, password : string, isDoct
 
   if(isDoctor){
     return new Promise((resolve, reject) => {
-      Axios.post(`/api/doctors/session`, data, config)
+      Axios.post(`/api/doctors/session`, data)
         .then(response => {
           resolve(response);
         })
@@ -70,7 +67,7 @@ export function SignIn(token : string, email : string, password : string, isDoct
     })
   } else {
     return new Promise((resolve, reject) => {
-      Axios.post(`/api/institutions/session`, data, config)
+      Axios.post(`/api/institutions/session`, data)
         .then(response => {
           resolve(response);
         })

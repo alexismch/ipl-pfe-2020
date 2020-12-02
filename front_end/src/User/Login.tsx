@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Grid, Container, Paper, FormControlLabel, Checkbox } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Typography,
+  Grid,
+  Container,
+  Paper,
+  FormControlLabel,
+  Checkbox,
+  FormControl, FormLabel, RadioGroup, Radio
+} from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { SignIn } from "utils/backend";
 
 export default function Login({setAuth} : any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
   const [error, setError] = useState("");
   const [isDoctor, setIsDoctor] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -14,9 +23,8 @@ export default function Login({setAuth} : any) {
 
   const handleSubmit = (e : any) => {
     e.preventDefault();
-    SignIn(token, email, password, isDoctor)
+    SignIn(email, password, isDoctor)
       .then((response : any) => {
-        console.log(response.data.session);
         localStorage.setItem("Token", String(response.data.session));
         setAuth(true);
       })
@@ -25,6 +33,10 @@ export default function Login({setAuth} : any) {
         setShowError(true);        
       })
   };
+
+  const handleChange = (e : any) => {
+    console.log("Changed!");
+  }
 
   return (<div>
       {isAuthenticated && <Redirect to="/" /> }
@@ -60,10 +72,23 @@ export default function Login({setAuth} : any) {
               />
             </Grid>
             <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox name="isDoctor" onChange={e => setIsDoctor(!isDoctor)} />}
-              label="I am a doctor"
-            />
+
+
+
+
+
+            <FormControl component="fieldset">
+              <FormLabel component="legend">I am : </FormLabel>
+              <RadioGroup aria-label="I am" name="isDoctor" onChange={handleChange}>
+                <FormControlLabel value="Doctor" control={<Radio />} label="A Doctor" />
+                <FormControlLabel value="Establishment" control={<Radio />} label="An Establishment" />
+              </RadioGroup>
+            </FormControl>
+
+
+
+
+
             </Grid>
             <Grid item xs={12}>
                 <Button type="submit" variant="contained" >Sign in</Button>
@@ -75,4 +100,12 @@ export default function Login({setAuth} : any) {
       </Container>
       </div>
   );
+  /*
+
+  <FormControlLabel
+    control={<Checkbox name="isDoctor" onChange={e => setIsDoctor(!isDoctor)} />}
+    label="I am a doctor"
+  />
+
+   */
 }

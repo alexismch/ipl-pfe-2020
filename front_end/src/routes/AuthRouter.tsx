@@ -12,7 +12,9 @@ const AuthRouter = () => {
   const [auth, setAuth] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("Token")){
+
       //If valid token... To be continued.
+
       setAuth(true);
     }
   }, [])
