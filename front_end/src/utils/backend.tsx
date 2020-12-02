@@ -1,4 +1,5 @@
 import Axios from "axios";
+import {receiveMessageOnPort} from "worker_threads";
 
 export function Registration(token : string, name : string, email : string, password : string, inami : string){
   const config = {
@@ -19,7 +20,7 @@ export function Registration(token : string, name : string, email : string, pass
       Axios.post(`/api/doctors/`, data, config)
         .then(response => {
           console.log(response);
-          resolve(response.data.token);
+          resolve(response);
         })
         .catch(error => {
           console.log(error)
@@ -37,7 +38,7 @@ export function Registration(token : string, name : string, email : string, pass
       Axios.post(`/api/institutions/`, data, config)
         .then(response => {
           console.log(response);
-          resolve(response.data.token);
+          resolve(response);
         })
         .catch(error => {
           console.group(error)
@@ -56,11 +57,12 @@ export function SignIn(token : string, email : string, password : string, isDoct
     email,
     password
   }
+
   if(isDoctor){
     return new Promise((resolve, reject) => {
       Axios.post(`/api/doctors/session`, data, config)
         .then(response => {
-          resolve(response.data.token);
+          resolve(response);
         })
         .catch(error => {
           reject(error);
@@ -70,7 +72,7 @@ export function SignIn(token : string, email : string, password : string, isDoct
     return new Promise((resolve, reject) => {
       Axios.post(`/api/institutions/session`, data, config)
         .then(response => {
-          resolve(response.data.token);
+          resolve(response);
         })
         .catch(error => {
           reject(error);

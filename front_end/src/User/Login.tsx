@@ -15,9 +15,9 @@ export default function Login({setAuth} : any) {
   const handleSubmit = (e : any) => {
     e.preventDefault();
     SignIn(token, email, password, isDoctor)
-      .then(response => {
-        setToken(String(response));
-        localStorage.setItem("Token", String(response));
+      .then((response : any) => {
+        console.log(response.data.session);
+        localStorage.setItem("Token", String(response.data.session));
         setAuth(true);
       })
       .catch(error => {
