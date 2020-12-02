@@ -8,8 +8,9 @@ import {
   Paper,
   FormControlLabel,
   Checkbox,
-  FormControl, FormLabel, RadioGroup, Radio
+  FormControl, FormLabel, RadioGroup, Radio, withStyles
 } from "@material-ui/core";
+import { green } from '@material-ui/core/colors';
 import { Redirect } from "react-router-dom";
 import { SignIn } from "utils/backend";
 
@@ -17,8 +18,9 @@ export default function Login({setAuth} : any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isDoctor, setIsDoctor] = useState(false);
+  const [isDoctor, setIsDoctor] = useState(true);
   const [showError, setShowError] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("Doctor");
   const isAuthenticated = false;
 
   const handleSubmit = (e : any) => {
@@ -34,11 +36,35 @@ export default function Login({setAuth} : any) {
       })
   };
 
+  //Green color for radio buttons.
+  // explanation found here : https://material-ui.com/components/radio-buttons/
+  const GreenRadio = withStyles({
+    root: {
+      //Green is a dictionary containing an int as key and an hexadecimal color as value.
+      //Just put 6000 instead of 400 for mor information (it will throw an error.)
+      color: green[400],
+      '&$checked': {
+        color: green[700],
+      },
+    },
+    checked: {},
+  })((props) => <Radio color="default" {...props} />);
+
+  //Changes de value of IsDoctor according to the radio button selected
+  // in the login form.
   const handleChange = (e : any) => {
-    console.log("Changed!");
+    if (e.target.value === "Doctor"){
+      setIsDoctor(true);
+      setSelectedValue("Doctor");
+    } else if (e.target.value === "Establishment"){
+      setIsDoctor(false);
+      setSelectedValue("Establishment");
+    } else {
+      throw new Error("Wrong radio selected.");
+    }
   }
 
-  return (<div>
+  return (<div >
       {isAuthenticated && <Redirect to="/" /> }
       <Container maxWidth="xs" disableGutters >
         <Grid container justify='space-around' alignItems='center' direction='column' style={{minHeight:"100vh"}} >
@@ -55,12 +81,22 @@ export default function Login({setAuth} : any) {
               </Grid>
               : null
             }
+
+            {/*
+                Start Modification done by bruno.
+                old code at the end of this page.
+              */}
             <Grid item xs={12} >
               <TextField
-                value={email}
-                fullWidth
+                id="E-mail"
+                label="Enter your E-mail"
                 placeholder="E-mail"
+                multiline
+                variant="outlined"
+                value={email}
                 onChange={event => setEmail(event.target.value)}
+                fullWidth
+                required
               />
             </Grid>
             <Grid item xs={12} >
@@ -68,25 +104,21 @@ export default function Login({setAuth} : any) {
                 type="password"
                 fullWidth
                 placeholder="Password"
+                label="Enter your password"
                 onChange={event => setPassword(event.target.value)}
+                variant="outlined"
+                required
               />
             </Grid>
             <Grid item xs={12}>
-
-
-
-
-
-            <FormControl component="fieldset">
+            <FormControl component="fieldset" >
               <FormLabel component="legend">I am : </FormLabel>
               <RadioGroup aria-label="I am" name="isDoctor" onChange={handleChange}>
-                <FormControlLabel value="Doctor" control={<Radio />} label="A Doctor" />
-                <FormControlLabel value="Establishment" control={<Radio />} label="An Establishment" />
+                <FormControlLabel value="Doctor" checked={selectedValue === "Doctor"} control={<GreenRadio />} label="A Doctor" />
+                <FormControlLabel value="Establishment" checked={selectedValue === "Establishment"} control={<GreenRadio />} label="An Establishment" />
               </RadioGroup>
             </FormControl>
-
-
-
+            {/*End Moddification effectuée par bruno.*/}
 
 
             </Grid>
@@ -100,11 +132,12 @@ export default function Login({setAuth} : any) {
       </Container>
       </div>
   );
-  /*
 
+  /*
+   Old checkbox for the doctor boolean.
   <FormControlLabel
-    control={<Checkbox name="isDoctor" onChange={e => setIsDoctor(!isDoctor)} />}
-    label="I am a doctor"
+      control={<Checkbox name="isDoctor" onChange={e => setIsDoctor(!isDoctor)} />}
+      label="I am a doctor"
   />
 
    */
