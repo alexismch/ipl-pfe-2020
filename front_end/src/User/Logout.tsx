@@ -1,8 +1,9 @@
 import { Redirect } from "react-router";
+import logout from "utils/backend";
 
 export default function Logout(){
 
-  localStorage.removeItem("Token");
+  logout();
   
   return (
     <Redirect to="/login" />

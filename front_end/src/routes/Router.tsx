@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import Login from "User/Login";
-import Logout from "User/Logout";
-import Register from "User/Register";
-import Acount from "User/Acount";
+import Login from "user/Login";
+import Logout from "user/Logout";
+import Register from "user/Register";
+import Acount from "user/Acount";
 import HomeDoctor from "components/HomeDoctor";
 import HomeInstitution from "components/HomeInstitution";
 

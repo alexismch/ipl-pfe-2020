@@ -79,6 +79,5 @@ export function SignIn(email : string, password : string, isDoctor : boolean){
 }
 
 export function SignOut(token : string){
-  //todo setToken to null in localstorage
-  return null;
+  return localStorage.removeItem("Token");
 }
