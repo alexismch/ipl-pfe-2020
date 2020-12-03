@@ -1,3 +1,5 @@
+import ISession from "@models/Connectable/ISession";
+
 export default class JWTUtils {
     private static readonly secret = "IPL_PFE_2020";
     private static readonly jwt = require('jsonwebtoken');
@@ -11,7 +13,7 @@ export default class JWTUtils {
         return this.jwt.sign(payload, this.secret, options);
     }
 
-    public static getSessionConnectableId(sessionToken: string): object {
+    public static getSessionConnectableId(sessionToken: string): ISession {
         return this.jwt.verify(sessionToken, this.secret);
     }
 }

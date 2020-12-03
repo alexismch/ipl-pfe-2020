@@ -9,16 +9,17 @@ import Location from "@models/Location/LocationSchema";
 import ILocationDoc from "@models/Location/ILocationDoc";
 import ISession from "@models/Connectable/ISession";
 
+const createError = require('http-errors');
 const express = require('express');
 const router = express.Router();
 
 /**
  * Handle request to create an institution
  */
-router.post('/', (req: Request, res: Response) => {
+router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;
     if (!body || !body.fullName || !body.email || !body.password || !EmailValidator.validate(body.email))
-        return ErrorUtils.sendError(res, 422, 'content missing or incorrect');
+        return next(createError(422, 'content missing or incorrect'));
 
     const institution: IInstitutionDoc = new Institution({
         name: body.fullName,
@@ -27,48 +28,44 @@ router.post('/', (req: Request, res: Response) => {
         password: body.password
     });
 
-    ConnectableUtils.register(req, res, institution, Institution, 'email or name already used')
+    ConnectableUtils.register(req, res, next, institution, Institution, 'email or name already used')
 });
 
 /**
  * Handle request to login
  * Delegated to ConnectableUtility connect method
- * @return response with a session token that expires in 24h, or with an error
+ * @return response with a session token, or with an error
  */
-router.post('/session', (req: Request, res: Response) => {
-    return ConnectableUtils.connect(req, res, Institution);
+router.post('/session', (req: Request, res: Response, next: NextFunction) => {
+    return ConnectableUtils.connect(req, res, next, Institution);
 });
 
 /**
  * Middleware to check if a session has been sent
+ * Delegated to ConnectableUtility verifySession method
  * @return response delegated to the next endpoint, or with an error
  */
-router.use((req: Request, res: Response, next: NextFunction) => {
-    if (!req.headers.session)
-        return ErrorUtils.sendError(res, 403, 'no session provided');
-    next();
-});
+router.use(ConnectableUtils.verifySession);
 
 /**
  * Handle request to create a location
  * @return response with the new location, or with an error
  */
-router.post('/locations', (req: Request, res: Response) => {
+router.post('/locations', (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;
-    const session: string = <string>req.headers.session;
-    const decodedSession: ISession = <ISession>JWTUtils.getSessionConnectableId(session);
-    if (decodedSession.type !== Institution.collection.collectionName)
-        return ErrorUtils.sendError(res, 401, 'wrong user type');
-    const id = decodedSession.id;
+    const session = <ISession><unknown>req.headers.session;
+    if (session.type !== Institution.collection.collectionName)
+        return next(createError(401, 'wrong user type'));
+    const id = session.id;
 
     Institution
         .findById(id)
         .then(inst => {
             if (!inst)
-                return ErrorUtils.sendError(res, 422, 'incorrect institution id');
+                return next(createError(422, 'incorrect institution id'));
 
             if (!body || !body.name || !body.description)
-                return ErrorUtils.sendError(res, 422, 'content missing or incorrect');
+                return next(createError(422, 'content missing or incorrect'));
 
             let qrCodeToken = "";
             const location: ILocationDoc = new Location({
@@ -89,13 +86,26 @@ router.post('/locations', (req: Request, res: Response) => {
                 .then(loc => res.status(201).send(loc))
                 .catch(e => {
                     if (e.code === 11000)
-                        return ErrorUtils.sendError(res, 409, 'location\'s name already used for this institution');
-                    ErrorUtils.sendError(res);
+                        return next(createError(409, 'location\'s name already used for this institution'));
+                    ErrorUtils.sendError(next);
                 });
         })
-        .catch(() => ErrorUtils.sendError(res));
+        .catch(() => ErrorUtils.sendError(next));
 });
 
-//TODO: GET locations
+router.get('/locations', (req: Request, res: Response, next: NextFunction) => {
+    const session = <ISession><unknown>req.headers.session;
+    if (session.type !== Institution.collection.collectionName)
+        return next(createError(401, 'wrong user type'));
+    const id = session.id;
+
+    Location
+        .find({institution: id})
+        .then(locs => {
+            if (!locs || locs.length === 0)
+                return res.status(204).send();
+            res.json(locs);
+        });
+});
 
 module.exports = router;

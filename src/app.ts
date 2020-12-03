@@ -1,6 +1,5 @@
 import 'module-alias/register';
-import {Request, Response} from "express";
-import ErrorUtils from "@utils/ErrorUtils";
+import {NextFunction, Request, Response} from "express";
 
 require('dotenv').config();
 require('@models/dbInit');
@@ -8,6 +7,7 @@ require('@models/dbInit');
 /**
  * Web server
  */
+const createError = require('http-errors');
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
@@ -42,6 +42,11 @@ app.use("/api/locations", locationsRoute);
 app.use("/api/qrCodes", qrCodesRoute);
 
 // Handle if no route found
-app.use((req: Request, res: Response) => {
-    ErrorUtils.sendError(res, 404, 'unsupported request');
+app.use((req: Request, res: Response, next: NextFunction) => {
+    next(createError(404, 'ok'));
+});
+
+app.use((error, req: Request, res: Response, next: NextFunction) => {
+    res.status(error.status).json({error: error.message});
+    next();
 });
