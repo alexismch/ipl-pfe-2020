@@ -15,7 +15,7 @@ import {
   useTheme
 } from "@material-ui/core";
 import { green } from '@material-ui/core/colors';
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { SignIn } from "utils/backend";
 
 export default function Login({setAuth} : any) {
@@ -27,6 +27,7 @@ export default function Login({setAuth} : any) {
   const [selectedValue, setSelectedValue] = useState("Doctor");
   const isAuthenticated = false;
   const theme = useTheme();
+  const history = useHistory();
 
   const handleSubmit = (e : any) => {
     e.preventDefault();
@@ -130,8 +131,13 @@ export default function Login({setAuth} : any) {
 
 
             </Grid>
-            <Grid item xs={12}>
-                <Button type="submit" variant="contained" >Sign in</Button>
+            <Grid container direction="row" justify="space-between">
+              <Grid item>
+                  <Button onClick={() => history.push("/register")} variant="contained" >Register</Button>
+              </Grid>
+              <Grid item>
+                  <Button type="submit" variant="contained" >Sign in</Button>
+              </Grid>
             </Grid>
           </Grid>
           </form>

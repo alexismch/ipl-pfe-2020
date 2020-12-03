@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, List, ListItem, Popover, Box, Grid, useTheme, Paper } from "@material-ui/core";
-import Logout from "User/Logout";
-import Acount from "User/Acount";
+import { useHistory } from "react-router";
 
 export default function Overlay(){
     const user = "Name to retrieve";
@@ -9,6 +8,7 @@ export default function Overlay(){
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;
     const theme = useTheme();
+    const history = useHistory();
 
     const handleOpen = (e : any) =>  {
         setAnchorEl(e.currentTarget);
@@ -41,12 +41,12 @@ export default function Overlay(){
                 >
                     <List disablePadding>
                         <ListItem disableGutters>
-                            <Button onClick={Acount} variant="contained">
+                            <Button onClick={() => history.push("/acount")} variant="contained">
                                 Acount
                             </Button>
                         </ListItem>
                         <ListItem disableGutters>
-                            <Button onClick={Logout} variant="contained">
+                            <Button onClick={() => history.push("/logout")} variant="contained">
                                 Logout
                             </Button>
                         </ListItem>
