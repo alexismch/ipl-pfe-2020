@@ -105,7 +105,6 @@ export default function Login({setAuth} : any) {
                 value={email}
                 onChange={event => setEmail(event.target.value)}
                 fullWidth
-                required
               />
             </Grid>
             <Grid item xs={12} >
@@ -116,7 +115,6 @@ export default function Login({setAuth} : any) {
                 label="Enter your password"
                 onChange={event => setPassword(event.target.value)}
                 variant="outlined"
-                required
               />
             </Grid>
             <Grid item xs={12}>
