@@ -20,6 +20,7 @@ export const theme = createMuiTheme({
                 borderRadius: 4,
         },
         overrides: {
+
                 MuiInput: {
                         underline: {
                                 color: "#000",
@@ -28,8 +29,13 @@ export const theme = createMuiTheme({
                 },
                 MuiInputBase: {
                         root: {
-                                backgroundColor : "#4DDB63",
-                        }
+                                letterSpacing: "2px",
+                                fontSize: "1.8em",
+                                backgroundColor : "#c5ebd5",
+                                '&:hover':{
+                                        border: "0px",
+                                },
+                        },
                 },
                 MuiButton: {
                         contained: {
@@ -39,9 +45,10 @@ export const theme = createMuiTheme({
                                 float: "right",
                                 textTransform: "none",
                                 backgroundColor: "#4DDB63",
-                                color: "#000",
+                                color: "#595c5a",
                                 '&:hover': {
-                                        borderColor: "#FFF",
+                                        borderColor: "#c5ebd5",
+                                        backgroundColor:"#9ef7c4"
                                 },  
                         },
                         label: {
@@ -50,9 +57,9 @@ export const theme = createMuiTheme({
                 },
                 MuiTextField: {
                         root: {
+                                color: "#595c5a",
                                 borderRadius: "4px",
-                                borderStyle: "solid",
-                                borderWidth: "1px"
+                                borderStyle: "solid"
                         }
                 },
                 MuiTypography: {
@@ -65,8 +72,8 @@ export const theme = createMuiTheme({
                 },
                 MuiAlert: {
                         root: {
-                                backgroundColor: "#4DDB63",  
-                                color: "#000",
+                                backgroundColor: "#4DDB63",
+                                color: "#595c5a",
                                 padding: 0,
                                 paddingLeft: 8,
                                 paddingRight: 8,
@@ -106,6 +113,13 @@ export const theme = createMuiTheme({
                                 padding: 8,
                                 borderRadius: 4,
                         },
+                },
+                MuiInputLabel: {
+                        root: {
+                                color: "#595c5a",
+                                letterSpacing: "4px",
+                                fontSize: "1.2em",
+                        }
                 },
         },
 });
