@@ -1,9 +1,9 @@
 import { Redirect } from "react-router";
-import logout from "utils/backend";
+import { SignOut } from "utils/backend";
 
 export default function Logout(){
 
-  logout();
+  SignOut();
   
   return (
     <Redirect to="/login" />
