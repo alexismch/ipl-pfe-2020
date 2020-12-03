@@ -39,9 +39,10 @@ app.use("/api/citizens", citizensRoute);
 
 // Handle if no route found
 app.use((req: Request, res: Response, next: NextFunction) => {
-    next(createError(404, 'ok'));
+    next(createError(404, 'unsupported request'));
 });
 
+// Handle if error
 app.use((error, req: Request, res: Response, next: NextFunction) => {
     res.status(error.status).json({error: error.message});
     next();

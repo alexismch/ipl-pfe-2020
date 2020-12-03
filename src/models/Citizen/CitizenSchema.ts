@@ -3,7 +3,7 @@ import ICitizen from "@models/Citizen/ICitizen";
 import ICitizenDoc from "@models/Citizen/ICitizenDoc";
 
 const citizenSchemaFields: Record<keyof ICitizen, any> = {
-    device: {type: String, required: true, unique: true}
+    device: {type: String}
 };
 
 const citizenSchema: Schema = new Schema(citizenSchemaFields);
