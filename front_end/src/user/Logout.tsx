@@ -1,7 +1,11 @@
+import {useEffect} from "react";
+
 export default function Logout({setAuth}:any){
 
   localStorage.removeItem("Token");
-  setAuth(false);
+  useEffect(() => {
+    setAuth(false);
+  })
 
   return null;
   

@@ -50,6 +50,7 @@ export default function Register() {
                 value={name}
                 fullWidth
                 placeholder="Full name or institution name"
+                label="Full name or institution name"
                 onChange={event => setName(event.target.value)}
                 variant="outlined"
               />

@@ -1,5 +1,5 @@
 import Axios from "axios";
-import {receiveMessageOnPort} from "worker_threads";
+//import {receiveMessageOnPort} from "worker_threads";
 
 export function Registration(token : string, name : string, email : string, password : string, inami : string){
   const config = {
