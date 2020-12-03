@@ -9,7 +9,7 @@ export const theme = createMuiTheme({
                         main: "#BBB",
                 }, 
                 background:{
-                        default: "#4DDB63",
+                        default: "#6ccf7b",
                         paper : "#FFF",
                 },
         },
@@ -44,7 +44,7 @@ export const theme = createMuiTheme({
                                 fontFamily: "Open Sans",
                                 float: "right",
                                 textTransform: "none",
-                                backgroundColor: "#4DDB63",
+                                backgroundColor: "#6ccf7b",
                                 color: "#595c5a",
                                 '&:hover': {
                                         borderColor: "#c5ebd5",
@@ -57,7 +57,7 @@ export const theme = createMuiTheme({
                 },
                 MuiTextField: {
                         root: {
-                                color: "#595c5a",
+                                color: "#7ace86",
                                 borderRadius: "4px",
                                 borderStyle: "solid"
                         }
@@ -68,15 +68,6 @@ export const theme = createMuiTheme({
                         },
                         h5: {
                                 fontWeight: "bold",
-                        },
-                },
-                MuiAlert: {
-                        root: {
-                                backgroundColor: "#4DDB63",
-                                color: "#595c5a",
-                                padding: 0,
-                                paddingLeft: 8,
-                                paddingRight: 8,
                         },
                 },
                 MuiDialog: {
@@ -90,20 +81,17 @@ export const theme = createMuiTheme({
                                 color: "#000",
                                 backgroundColor: "#FFF",
                                 borderRadius: 4,
-                                padding : 8,
                                 elevation : 8,
                         },
                 },
                 MuiPopover: { 
                         paper: {
-                                backgroundColor: "#4DDB63",
-                                borderRadius: 4,
-                                paddingTop: 16
+                                backgroundColor : "#FFF",
                         },
                 },
                 MuiListItem: {
                         root:{
-                                padding: 0,
+                                padding: 8,
                                 margin: 0,
                         },
                 },
@@ -116,7 +104,7 @@ export const theme = createMuiTheme({
                 },
                 MuiInputLabel: {
                         root: {
-                                color: "#595c5a",
+                                color: "#6ccf7b",
                                 letterSpacing: "4px",
                                 fontSize: "1.2em",
                         }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Grid, Container, Paper } from "@material-ui/core";
+import { TextField, Button, Typography, Grid, Container, Paper, useTheme } from "@material-ui/core";
 import { Registration } from "utils/backend";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -12,6 +12,8 @@ export default function Register() {
   const [token, setToken] = useState("");
   const [showError, setShowError] = useState(false);
   const isAuthenticated = false;
+  const theme = useTheme();
+  const history = useHistory();
 
   const handleSubmit = (e : any) => {
     e.preventDefault();
@@ -26,8 +28,11 @@ export default function Register() {
   return (<div>
       {isAuthenticated ? <Redirect to="/" /> :
       <Container maxWidth="xs" disableGutters >
-        <Grid container justify='space-around' alignItems='center' direction='column' style={{minHeight:"100vh"}} >
+        <Grid container justify='space-around' alignItems='center' direction='column' style={{minHeight:"100vh"}}>
         <Paper elevation={10} >
+          <Grid item container xs={12} justify="space-around"> 
+              <img src="Logo.png" alt="BlockCovid" height={theme.spacing(10)} />
+          </Grid>
           <form onSubmit={handleSubmit}>
           <Grid container >
             <Grid item container xs={12} >    
@@ -73,8 +78,13 @@ export default function Register() {
                     onChange={event => setInami(event.target.value)}
                 />
             </Grid>
-            <Grid item xs={12}>
-                <Button type="submit" variant="contained" >Register</Button>
+            <Grid container direction="row" justify="space-between">
+              <Grid item>
+                  <Button onClick={() => history.push("/login")} variant="contained" >to login</Button>
+              </Grid>
+              <Grid item>
+                  <Button type="submit" variant="contained" >Register</Button>
+              </Grid>
             </Grid>
           </Grid>
           </form>

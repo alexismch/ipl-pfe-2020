@@ -7,11 +7,15 @@ import {
   Container,
   Paper,
   FormControlLabel,
-  Checkbox,
-  FormControl, FormLabel, RadioGroup, Radio, withStyles
+  FormControl, 
+  FormLabel, 
+  RadioGroup, 
+  Radio, 
+  withStyles,
+  useTheme
 } from "@material-ui/core";
 import { green } from '@material-ui/core/colors';
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { SignIn } from "utils/backend";
 
 export default function Login({setAuth} : any) {
@@ -22,6 +26,8 @@ export default function Login({setAuth} : any) {
   const [showError, setShowError] = useState(false);
   const [selectedValue, setSelectedValue] = useState("Doctor");
   const isAuthenticated = false;
+  const theme = useTheme();
+  const history = useHistory();
 
   const handleSubmit = (e : any) => {
     e.preventDefault();
@@ -68,11 +74,14 @@ export default function Login({setAuth} : any) {
       {isAuthenticated && <Redirect to="/" /> }
       <Container maxWidth="xs" disableGutters >
         <Grid container justify='space-around' alignItems='center' direction='column' style={{minHeight:"100vh"}} >
-        <Paper elevation={10} >
+        <Paper elevation={15} >
           <form onSubmit={handleSubmit}>
           <Grid container >
-            <Grid item container xs={12} >    
-            <Typography variant='subtitle1' >Please sign-in</Typography>
+            <Grid item container xs={12} style={{padding : "0px"}} justify="space-around"> 
+                <img src="Logo.png" alt="BlockCovid" height={theme.spacing(10)} />
+            </Grid>
+            <Grid item xs={12} >    
+              <Typography variant='subtitle1' >Please sign-in</Typography>
             </Grid>
             {
               showError && error ? 
@@ -122,8 +131,13 @@ export default function Login({setAuth} : any) {
 
 
             </Grid>
-            <Grid item xs={12}>
-                <Button type="submit" variant="contained" >Sign in</Button>
+            <Grid container direction="row" justify="space-between">
+              <Grid item>
+                  <Button onClick={() => history.push("/register")} variant="contained" >Register</Button>
+              </Grid>
+              <Grid item>
+                  <Button type="submit" variant="contained" >Sign in</Button>
+              </Grid>
             </Grid>
           </Grid>
           </form>

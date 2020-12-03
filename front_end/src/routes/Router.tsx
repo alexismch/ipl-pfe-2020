@@ -3,10 +3,11 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Login from "User/Login";
 import Logout from "User/Logout";
 import Register from "User/Register";
+import Acount from "User/Acount";
 import HomeDoctor from "components/HomeDoctor";
 import HomeInstitution from "components/HomeInstitution";
 
-const AuthRouter = () => {
+export default function Router(){
 //TODO JWT TOKEN
 
   const [auth, setAuth] = useState(false);
@@ -30,6 +31,9 @@ const AuthRouter = () => {
           <Route exact path="/logout">
             <Logout />
           </Route>
+          <Route exact path="/acount">
+            <Acount />
+          </Route>
           <Redirect to="/home" />
         </Switch>
         : 
@@ -46,5 +50,3 @@ const AuthRouter = () => {
     </BrowserRouter>
   );
 };
-
-export default AuthRouter;
