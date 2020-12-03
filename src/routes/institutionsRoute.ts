@@ -53,7 +53,7 @@ router.use((req: Request, res: Response, next: NextFunction) => {
  * Handle request to create a location
  * @return response with the new location, or with an error
  */
-router.post('/location', (req: Request, res: Response) => {
+router.post('/locations', (req: Request, res: Response) => {
     const body = req.body;
     const session: string = <string>req.headers.session;
     const decodedSession: ISession = <ISession>JWTUtils.getSessionConnectableId(session);
@@ -95,5 +95,7 @@ router.post('/location', (req: Request, res: Response) => {
         })
         .catch(() => ErrorUtils.sendError(res));
 });
+
+//TODO: GET locations
 
 module.exports = router;
