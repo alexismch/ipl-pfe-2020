@@ -5,7 +5,7 @@ import Logout from "user/Logout";
 import Register from "user/Register";
 import Acount from "user/Acount";
 import HomeDoctor from "components/HomeDoctor";
-import HomeInstitution from "components/HomeInstitution";
+//import HomeInstitution from "components/HomeInstitution";
 
 export default function Router(){
 //TODO JWT TOKEN
