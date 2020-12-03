@@ -80,7 +80,7 @@ export default function Register() {
             </Grid>
             <Grid container direction="row" justify="space-between">
               <Grid item>
-                  <Button onClick={() => history.push("/register")} variant="contained" >to login</Button>
+                  <Button onClick={() => history.push("/login")} variant="contained" >to login</Button>
               </Grid>
               <Grid item>
                   <Button type="submit" variant="contained" >Register</Button>
