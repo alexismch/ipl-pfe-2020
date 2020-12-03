@@ -90,7 +90,6 @@ export const theme = createMuiTheme({
                                 color: "#000",
                                 backgroundColor: "#FFF",
                                 borderRadius: 4,
-                                padding : 8,
                                 elevation : 8,
                         },
                 },

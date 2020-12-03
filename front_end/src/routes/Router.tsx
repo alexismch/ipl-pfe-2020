@@ -6,7 +6,7 @@ import Register from "User/Register";
 import HomeDoctor from "components/HomeDoctor";
 import HomeInstitution from "components/HomeInstitution";
 
-const AuthRouter = () => {
+export default function Router(){
 //TODO JWT TOKEN
 
   const [auth, setAuth] = useState(false);
@@ -46,5 +46,3 @@ const AuthRouter = () => {
     </BrowserRouter>
   );
 };
-
-export default AuthRouter;
