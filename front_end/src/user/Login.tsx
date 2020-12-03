@@ -34,6 +34,7 @@ export default function Login({setAuth} : any) {
     SignIn(email, password, isDoctor)
       .then((response : any) => {
         localStorage.setItem("Token", String(response.data.session));
+        setAuth(true);
       })
       .catch(error => {
         setError(error);

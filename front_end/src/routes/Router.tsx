@@ -29,7 +29,7 @@ export default function Router(){
             {/* <HomeInstitution/> */}
           </Route>
           <Route exact path="/logout">
-            <Logout />
+            <Logout setAuth={setAuth}/>
           </Route>
           <Route exact path="/acount">
             <Acount />
