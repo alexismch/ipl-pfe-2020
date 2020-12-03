@@ -126,5 +126,4 @@ vscode/
 
 /public/
 /front_end/build/
-package-lock.json
 /front_end/src/react-app-env.d.ts
