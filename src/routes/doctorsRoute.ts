@@ -36,7 +36,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     });
     doctor.qrCodeToken = qrCodeToken;
 
-    ConnectableUtils.register(req, res, next, doctor, Doctor, 'email or inami already used')
+    ConnectableUtils.register(req, res, next, doctor, Doctor, 'email or inami already used');
 });
 
 /**

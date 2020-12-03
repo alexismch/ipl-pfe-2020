@@ -28,7 +28,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         password: body.password
     });
 
-    ConnectableUtils.register(req, res, next, institution, Institution, 'email or name already used')
+    ConnectableUtils.register(req, res, next, institution, Institution, 'email or name already used');
 });
 
 /**

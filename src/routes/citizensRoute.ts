@@ -12,31 +12,29 @@ const router = express.Router();
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const device = req.body?.device;
-    const body = device ? {device} : {}
+    const body = device ? {device} : {};
     const citizen: ICitizenDoc = new Citizen(body);
 
-    const save = (citizen) => {
+    const save = (citizen) =>
         citizen
             .save()
             .then(cit => res.status(201).json(cit))
             .catch((e) => {
                 console.log(e);
-                ErrorUtils.sendError(next)
+                ErrorUtils.sendError(next);
             });
-    }
 
-    if (device) {
+    if (device)
         Citizen
             .findOne({device: device})
             .then(cit => {
                 if (cit)
                     return res.json(cit);
-                save(citizen)
+                save(citizen);
             })
             .catch(() => ErrorUtils.sendError(next));
-    } else {
-        save(citizen)
-    }
+    else
+        save(citizen);
 });
 
 module.exports = router;
