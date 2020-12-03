@@ -77,7 +77,3 @@ export function SignIn(email : string, password : string, isDoctor : boolean){
     })
   }
 }
-
-export function SignOut(){
-  return localStorage.removeItem("Token");
-}

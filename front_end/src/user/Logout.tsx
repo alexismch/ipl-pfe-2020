@@ -1,11 +1,9 @@
-import { Redirect } from "react-router";
-import { SignOut } from "utils/backend";
+import { Redirect } from "react-router-dom";
 
 export default function Logout(){
 
-  SignOut();
+  localStorage.removeItem("Token");
+
+  return <Redirect to ="/login" />;
   
-  return (
-    <Redirect to="/login" />
-  );
 };
