@@ -45,7 +45,7 @@ router.post('/session', (req: Request, res: Response) => {
  */
 router.use((req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.session)
-        return res.status(403).json({error: 'no session sent'});
+        return ErrorUtils.sendError(res, 403, 'no session provided');
     next();
 });
 
@@ -58,7 +58,7 @@ router.post('/location', (req: Request, res: Response) => {
     const session: string = <string>req.headers.session;
     const decodedSession: ISession = <ISession>JWTUtils.getSessionConnectableId(session);
     if (decodedSession.type !== Institution.collection.collectionName)
-        return res.status(401).json({error: 'wrong user type'});
+        return ErrorUtils.sendError(res, 401, 'wrong user type');
     const id = decodedSession.id;
 
     Institution
@@ -86,7 +86,7 @@ router.post('/location', (req: Request, res: Response) => {
 
             location
                 .save()
-                .then(loc => res.send(loc))
+                .then(loc => res.status(201).send(loc))
                 .catch(e => {
                     if (e.code === 11000)
                         return ErrorUtils.sendError(res, 409, 'location\'s name already used for this institution');

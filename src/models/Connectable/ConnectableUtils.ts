@@ -77,7 +77,7 @@ export default class ConnectableUtils {
         connectable
             .save()
             .then(connectable => {
-                res.json({
+                res.status(201).json({
                     session: this.generateSessionToken(connectable, model),
                     //connectable
                 });

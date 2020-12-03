@@ -26,7 +26,7 @@ router.post('/', (req: Request, res: Response) => {
                 return res.json(cit);
             citizen
                 .save()
-                .then(cit => res.json(cit))
+                .then(cit => res.status(201).json(cit))
                 .catch(() => ErrorUtils.sendError(res));
         })
         .catch(() => ErrorUtils.sendError(res));
