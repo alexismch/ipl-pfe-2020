@@ -86,14 +86,12 @@ export const theme = createMuiTheme({
                 },
                 MuiPopover: { 
                         paper: {
-                                backgroundColor: "#6ccf7b",
-                                borderRadius: 4,
-                                paddingTop: 16
+                                backgroundColor : "#FFF",
                         },
                 },
                 MuiListItem: {
                         root:{
-                                padding: 0,
+                                padding: 8,
                                 margin: 0,
                         },
                 },

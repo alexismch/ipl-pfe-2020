@@ -17,8 +17,8 @@ export default function Overlay(){
         setAnchorEl(null);
     };
 
-    return (<Paper elevation={15} style={{padding: 0}}>
-        <Grid container  direction="row" alignItems="center" justify="space-between">
+    return (<Paper elevation={15}>
+        <Grid container direction="row" alignItems="center" justify="space-between">
             <Box >
                 <img src="Logo.png" alt="BlockCovid" height={theme.spacing(10)} />
             </Box>
@@ -38,7 +38,7 @@ export default function Overlay(){
                         horizontal: "center",
                     }}
                 >
-                    <List disablePadding >
+                    <List disablePadding>
                         <ListItem disableGutters>
                             <Button onClick={() => <Redirect to="/acount" />} variant="contained">
                                 Acount
