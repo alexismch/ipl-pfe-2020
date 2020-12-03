@@ -1,12 +1,12 @@
 import React from 'react';
-import AuthRouter from 'routes/AuthRouter';
+import Router from 'routes/Router';
 import {ThemeProvider} from '@material-ui/core/styles';
 import {theme} from './Theme'
 
 const App = () => {
         return (
                 <ThemeProvider theme={theme}>        
-                        <AuthRouter/>
+                        <Router/>
                 </ThemeProvider>
         )       
 };
