@@ -27,18 +27,22 @@ router.post('/', (req: Request, res: Response) => {
     if (!body || !firstname || !lastname || !body.email || !body.password || !body.inami || !EmailValidator.validate(body.email))
         return ErrorUtils.sendError(res, 422, 'content missing or incorrect');
 
-    const qrCodeToken = JWTUtils.sign({
-        type: Doctor.collection.collectionName,
-        inami: body.inami
-    });
+    let qrCodeToken = "";
     const doctor: IDoctorDoc = new Doctor({
         firstname: firstname,
         lastname: lastname,
         email: body.email,
         password: body.password,
         inami: body.inami,
-        qrCodeToken: qrCodeToken
+        qrCodeToken
     });
+
+    qrCodeToken = JWTUtils.sign({
+        type: Doctor.collection.collectionName,
+        doctor: doctor._id
+    });
+    doctor.qrCodeToken = qrCodeToken;
+
     ConnectableUtils.register(req, res, doctor, Doctor, 'email or inami already used')
 });
 

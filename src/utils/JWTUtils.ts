@@ -10,4 +10,8 @@ export default class JWTUtils {
     public static sign(payload: object, options: object = {}): string {
         return this.jwt.sign(payload, this.secret, options);
     }
+
+    public static getSessionConnectableId(sessionToken: string): object {
+        return this.jwt.verify(sessionToken, this.secret);
+    }
 }
