@@ -1,9 +1,8 @@
-import { Redirect } from "react-router-dom";
-
-export default function Logout(){
+export default function Logout({setAuth}:any){
 
   localStorage.removeItem("Token");
+  setAuth(false);
 
-  return <Redirect to ="/login" />;
+  return null;
   
 };
