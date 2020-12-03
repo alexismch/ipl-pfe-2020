@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, List, ListItem, Popover, Box, Grid, useTheme, Paper } from "@material-ui/core";
-import { Redirect } from "react-router-dom";
+import Logout from "User/Logout";
+import Acount from "User/Acount";
 
 export default function Overlay(){
     const user = "Name to retrieve";
@@ -40,12 +41,12 @@ export default function Overlay(){
                 >
                     <List disablePadding>
                         <ListItem disableGutters>
-                            <Button onClick={() => <Redirect to="/acount" />} variant="contained">
+                            <Button onClick={Acount} variant="contained">
                                 Acount
                             </Button>
                         </ListItem>
                         <ListItem disableGutters>
-                            <Button onClick={() => <Redirect to="/logout" />} variant="contained">
+                            <Button onClick={Logout} variant="contained">
                                 Logout
                             </Button>
                         </ListItem>

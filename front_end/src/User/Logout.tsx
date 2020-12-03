@@ -1,16 +1,7 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
-
-function logout(){
-  return null;
-}
-
-const Logout = () => {
-  const isAuthenticated = false;
-
+export default function Logout(){
+  localStorage.removeItem("Token");
+  
   return (
-    (isAuthenticated ? logout() : <Redirect to={"/"} />)
+    null
   );
 };
-
-export default Logout;
