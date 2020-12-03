@@ -41,7 +41,7 @@ export default function Overlay(){
                 >
                     <List disablePadding>
                         <ListItem disableGutters>
-                            <Button onClick={() => history.push("/login")} variant="contained">
+                            <Button onClick={() => history.push("/acount")} variant="contained">
                                 Acount
                             </Button>
                         </ListItem>
