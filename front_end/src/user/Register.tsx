@@ -51,6 +51,7 @@ export default function Register() {
                 fullWidth
                 placeholder="Full name or institution name"
                 onChange={event => setName(event.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} >
@@ -58,7 +59,9 @@ export default function Register() {
                 value={email}
                 fullWidth
                 placeholder="E-mail"
+                label="E-mail"
                 onChange={event => setEmail(event.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} >
@@ -66,7 +69,9 @@ export default function Register() {
                 type="password"
                 fullWidth
                 placeholder="Password"
+                label="password"
                 onChange={event => setPassword(event.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} >
@@ -75,7 +80,9 @@ export default function Register() {
                     value={inami}
                     fullWidth
                     placeholder="inami"
+                    label="inami"
                     onChange={event => setInami(event.target.value)}
+                    variant="outlined"
                 />
             </Grid>
             <Grid container direction="row" justify="space-between">
