@@ -22,7 +22,6 @@ const doctorsRoute = require('@routes/doctorsRoute');
 const institutionsRoute = require('@routes/institutionsRoute');
 const citizensRoute = require('@routes/citizensRoute');
 const locationsRoute = require('@routes/locationsRoute');
-const qrCodesRoute = require('@routes/qrCodesRoute');
 
 /**
  * Middlewares
@@ -39,7 +38,6 @@ app.use("/api/doctors", doctorsRoute);
 app.use("/api/institutions", institutionsRoute);
 app.use("/api/citizens", citizensRoute);
 app.use("/api/locations", locationsRoute);
-app.use("/api/qrCodes", qrCodesRoute);
 
 // Handle if no route found
 app.use((req: Request, res: Response, next: NextFunction) => {
