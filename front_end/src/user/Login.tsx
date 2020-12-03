@@ -17,6 +17,7 @@ import {
 import { green } from '@material-ui/core/colors';
 import { Redirect, useHistory } from "react-router-dom";
 import { SignIn } from "utils/backend";
+import RouterLink from "routes/RouterLink";
 
 export default function Login({setAuth} : any) {
   const [email, setEmail] = useState("");
@@ -34,7 +35,6 @@ export default function Login({setAuth} : any) {
     SignIn(email, password, isDoctor)
       .then((response : any) => {
         localStorage.setItem("Token", String(response.data.session));
-        setAuth(true);
       })
       .catch(error => {
         setError(error);
@@ -105,7 +105,6 @@ export default function Login({setAuth} : any) {
                 value={email}
                 onChange={event => setEmail(event.target.value)}
                 fullWidth
-                required
               />
             </Grid>
             <Grid item xs={12} >
@@ -116,7 +115,6 @@ export default function Login({setAuth} : any) {
                 label="Enter your password"
                 onChange={event => setPassword(event.target.value)}
                 variant="outlined"
-                required
               />
             </Grid>
             <Grid item xs={12}>
@@ -133,7 +131,7 @@ export default function Login({setAuth} : any) {
             </Grid>
             <Grid container direction="row" justify="space-between">
               <Grid item>
-                  <Button onClick={() => history.push("/register")} variant="contained" >Register</Button>
+                  <Button component={RouterLink} to="/logout" variant="contained" >Register</Button>
               </Grid>
               <Grid item>
                   <Button type="submit" variant="contained" >Sign in</Button>

@@ -9,7 +9,7 @@ export const theme = createMuiTheme({
                         main: "#BBB",
                 }, 
                 background:{
-                        default: "#6ccf7b",
+                        default: "#4DDB63",
                         paper : "#FFF",
                 },
         },
@@ -29,9 +29,10 @@ export const theme = createMuiTheme({
                 },
                 MuiInputBase: {
                         root: {
+                                height: "40px",
                                 letterSpacing: "2px",
-                                fontSize: "1.8em",
-                                backgroundColor : "#c5ebd5",
+                                fontSize: "1em",
+                                backgroundColor : "#e6e6e6",
                                 '&:hover':{
                                         border: "0px",
                                 },
@@ -104,9 +105,9 @@ export const theme = createMuiTheme({
                 },
                 MuiInputLabel: {
                         root: {
-                                color: "#6ccf7b",
-                                letterSpacing: "4px",
-                                fontSize: "1.2em",
+                                color: "#424242",
+                                letterSpacing: "2px",
+                                fontSize: "1em",
                         }
                 },
         },
