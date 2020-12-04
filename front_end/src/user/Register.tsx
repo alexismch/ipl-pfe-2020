@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {Grid, Container, Paper, Button, Typography, TextField} from "@material-ui/core";
 import { Redirect, useHistory } from "react-router-dom";
-import {doctorRegistration} from "../utils/backend";
+import {doctorRegistration, institutionRegistration} from "../utils/backend";
+//import {response} from "express";
 
 export default function Register() {
   const isAuthenticated = false;
@@ -19,6 +20,10 @@ export default function Register() {
   const [instEmail, setInstEmail] = useState("");
   const [instPwd, setInstPwd] = useState("");
   const [instRepeatPwd, setInstRepeatPwd] = useState("");
+  const [instNoTVA, setInstNoTVA] = useState("");
+  //Errors
+  const [pwdNoMatchError, setPwdNoMatchError] = useState(false);
+  const [emailAlreadyExistsError, setEmailAlreadyExistsError] = useState(false);
 
   const handleSubmit = (e:any) =>{
     console.log("Registered");
@@ -32,21 +37,49 @@ export default function Register() {
     setRegistrationAs("institution");
   }
 
+  //PROBLEME DONT IL FAUT PARLER A OLIVIER!!
+
+  /*
+
+  Scénario à suivre pour le problème:
+  1) entrer des données pour le docteur.
+  2) dans les données, l'adresse mail doit etre ok@ok.ok (déjà utilisée) et exécuter avec le reste des données OK.
+  3) mot de passe ne doivent plus correspondre
+  4) exécuter la requète à nouveau
+  5) corriger le mot de passe (ils correspoent maintenant)
+  6) exécuter
+  7) le message "mot de passe ne correspondent pas" toujours présent
+
+   */
   const handleRegisterClick = (e : any) => {
     if (registrationAs === "doctor"){
-
-      console.log(docFirstname + " " + docName + " " + docEmail + " " + docPassword + " " + inami)
-
-      doctorRegistration(docFirstname, docName, docEmail, docPassword, inami)
-        .then(response => {
-          console.log(response);
-        }).catch(error => {
-          console.log("Error OK");
-          console.log(error);
-      })
+      if (docPassword === docRepeatPwd){
+        doctorRegistration(docFirstname, docName, docEmail, docPassword, inami)
+          .then(response => {
+            history.push("/login");
+            console.log(response);
+          }).catch(error => {
+            if (error.response.status === 409){
+              setEmailAlreadyExistsError(true);
+            }
+        })
+      } else {
+        setPwdNoMatchError(true);
+      }
     } else if (registrationAs === "institution"){
-      console.log("register as institution");
-      console.log("name = " + instName + " mail = " + instEmail);
+      if (instPwd === instRepeatPwd){
+        institutionRegistration(instName, instEmail, instPwd, instNoTVA)
+            .then(response => {
+              history.push("/login");
+              console.log(response);
+            }).catch(error => {
+          if (error.response.status === 409){
+            setEmailAlreadyExistsError(true);
+          }
+        })
+      } else {
+        setPwdNoMatchError(true);
+      }
     } else {
       console.error("ERROR!");
     }
@@ -89,6 +122,7 @@ export default function Register() {
 
         <form onSubmit={handleSubmit}>
           {
+            //DOCTOR FORM!!
             (registrationAs === "doctor")?
               <Grid container direction={"column"}>
                 <Grid item xs={12} >
@@ -112,6 +146,11 @@ export default function Register() {
                   </Grid>
                 </Grid>
 
+                {
+                  emailAlreadyExistsError?
+                    <p style={{color:"#FF0000", paddingLeft:"5%"}}>Email déjà utilisé.</p>
+                    : null
+                }
                 <Grid item xs >
                   <TextField value={docEmail}
                              fullWidth
@@ -121,7 +160,11 @@ export default function Register() {
                              onChange={event => setDocEmail(event.target.value)}
                              variant="outlined"/>
                 </Grid>
-
+                {
+                  pwdNoMatchError?
+                      <p style={{color:"#FF0000", paddingLeft:"5%"}}>Les mots de passe ne correspondent pas.</p>
+                      : null
+                }
                 <Grid item xs={12} >
                   <Grid container direction={"row"} spacing={1}>
                     <Grid item xs>
@@ -155,47 +198,71 @@ export default function Register() {
 
 
               </Grid>
-
+                //----------------
+                //INSTITUTION FORM
+                //----------------
                 : (registrationAs === "institution")?
               <Grid container direction={"column"}>
-                <Grid item xs={12} >
+                <Grid item xs={12} style={{paddingTop:"3.8%", paddingBottom:"3.8%"}}>
                   <TextField value={instName}
                              fullWidth
                              placeholder="Nom"
                              label="Nom"
                              onChange={event => setInstName(event.target.value)}
                              variant="outlined"
-                             style={{paddingTop:"2%", paddingBottom:"2%", width: "96%", paddingLeft:"2%"}}/>
+                             style={{/*paddingTop:"2%", paddingBottom:"6%",*/ width: "96%", paddingLeft:"2%"}}/>
                 </Grid>
-                <Grid item xs={12} >
+
+                {
+                  emailAlreadyExistsError?
+                      <p style={{color:"#FF0000", paddingLeft:"5%"}}>Email déjà utilisé.</p>
+                      : null
+                }
+                <Grid item xs >
                   <TextField value={instEmail}
                              fullWidth
+                             style={{width: "96%", paddingLeft:"2%"}}
                              placeholder="E-mail"
                              label="E-mail"
                              onChange={event => setInstEmail(event.target.value)}
-                             variant="outlined"
-                             style={{paddingTop:"2%", paddingBottom:"2%", width: "96%", paddingLeft:"2%"}}/>
+                             variant="outlined"/>
                 </Grid>
-                <Grid item xs={12} >
-                  <TextField value={instPwd}
-                             fullWidth
-                             placeholder="Mot de passe"
-                             label="Mot de passe"
-                             onChange={event => setInstPwd(event.target.value)}
-                             variant="outlined"
-                             style={{paddingTop:"2%", paddingBottom:"2%", width: "96%", paddingLeft:"2%"}}/>
-                </Grid>
-                <Grid item xs={12} >
-                  <TextField value={instRepeatPwd}
-                             fullWidth
-                             placeholder="Répéter le mot de passe"
-                             label="Répéter le mot de passe"
-                             onChange={event => setInstRepeatPwd(event.target.value)}
-                             variant="outlined"
-                             style={{paddingTop:"2%", paddingBottom:"2%", width: "96%", paddingLeft:"2%"}}/>
 
-
+                {
+                  pwdNoMatchError?
+                      <p style={{color:"#FF0000", paddingLeft:"5%"}}>Les mots de passe ne correspondent pas.</p>
+                      : null
+                }
+                <Grid item xs={12} >
+                  <Grid container direction={"row"} spacing={1}>
+                    <Grid item xs>
+                      <TextField value={instPwd}
+                                 fullWidth
+                                 placeholder="Mot de passe"
+                                 label="MDP"
+                                 onChange={event => setInstPwd(event.target.value)}
+                                 variant="outlined"/>
+                    </Grid>
+                    <Grid item xs >
+                      <TextField value={instRepeatPwd}
+                                 fullWidth
+                                 placeholder="Répéter mot de passe"
+                                 label="Répéter MDP"
+                                 onChange={event => setInstRepeatPwd(event.target.value)}
+                                 variant="outlined"/>
+                    </Grid>
+                  </Grid>
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField value={instNoTVA}
+                             fullWidth
+                             style={{width: "96%", paddingLeft:"2%"}}
+                             placeholder="Numéro inami"
+                             label="Numéro inami"
+                             onChange={event => setInstNoTVA(event.target.value)}
+                             variant="outlined"/>
+                </Grid>
+
               </Grid> : null
           }
 

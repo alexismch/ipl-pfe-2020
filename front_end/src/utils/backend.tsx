@@ -3,13 +3,11 @@ import Axios from "axios";
 
 export function doctorRegistration(firstName : string, lastName : string, email : string, password : string, inami : string){
   const data = {
-    body : {
       "firstName": firstName,
       "lastName": lastName,
       "email": email,
       "password": password,
       "inami": inami
-    }
   }
 
   return new Promise((resolve, reject) => {
