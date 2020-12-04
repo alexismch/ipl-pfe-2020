@@ -31,7 +31,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 
     qrCodeToken = JWTUtils.sign({
         type: Doctor.collection.collectionName,
-        doctor: doctor._id
+        id: doctor._id
     });
     doctor.qrCodeToken = qrCodeToken;
 

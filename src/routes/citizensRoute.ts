@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import Citizen from "@models/Citizen/CitizenSchema";
 import ICitizenDoc from "@models/Citizen/ICitizenDoc";
 import ErrorUtils from "@utils/ErrorUtils";
+import * as mongoose from "mongoose";
 
 const express = require('express');
 const router = express.Router();
@@ -35,6 +36,12 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
             .catch(() => ErrorUtils.sendError(next));
     else
         save(citizen);
+});
+
+router.post('/history', (req: Request, res: Response, next: NextFunction) => {
+    console.log(Citizen.collection.collectionName);
+    mongoose.connection.collection('doctors')
+    next();
 });
 
 module.exports = router;

@@ -77,7 +77,7 @@ router.post('/locations', (req: Request, res: Response, next: NextFunction) => {
 
             qrCodeToken = JWTUtils.sign({
                 type: Location.collection.collectionName,
-                location: location._id
+                id: location._id
             });
             location.qrCodeToken = qrCodeToken;
 
