@@ -1,16 +1,16 @@
 import {NextFunction, Request, Response} from "express";
 import * as EmailValidator from 'email-validator';
-import JWTUtils from "@utils/JWTUtils";
-import ErrorUtils from "@utils/ErrorUtils";
+import {sendError} from "@utils/ErrorUtils";
 import ISession from "@models/Connectable/ISession";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import IDoctorDoc from "@models/Doctor/IDoctorDoc";
+import {connect, register, verifySession} from "@models/Connectable/ConnectableUtils";
+import {sign} from "@utils/JWTUtils";
 
 const createError = require('http-errors');
 const express = require('express');
 const router = express.Router();
-const connectableUtils = require('@models/Connectable/ConnectableUtils');
 
 /**
  * Handle request to create a doctor
@@ -38,12 +38,12 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         doctor_qrCodeToken
     });
 
-    doctor_qrCodeToken = JWTUtils.sign({
+    doctor_qrCodeToken = sign({
         doctor: connectable._id
     });
     connectable.doctor_qrCodeToken = doctor_qrCodeToken;
 
-    connectableUtils.register(req, res, next, connectable, 'field \'email\' or \'inami\' already used');
+    register(req, res, next, connectable, 'field \'email\' or \'inami\' already used');
 });
 
 /**
@@ -52,14 +52,14 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * @return response with the doctor that asked to connect, or with an error
  */
 router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return connectableUtils.connect(req, res, next);
+    return connect(req, res, next);
 });
 
 /**
  * Middleware to check if a session has been sent
  * @return response delegated to the next endpoint, or with an error
  */
-router.use(router.use(connectableUtils.verifySession));
+router.use(router.use(verifySession));
 
 /**
  * Handle request to get the QR Code Token of the doctor
@@ -77,7 +77,7 @@ router.get('/qrCodeToken', (req: Request, res: Response, next: NextFunction) => 
                 return res.json({qrCodeToken: d.doctor_qrCodeToken});
             return next(createError(404, 'doctor not found'));
         })
-        .catch(() => ErrorUtils.sendError(next));
+        .catch(() => sendError(next));
 });
 
 module.exports = router;

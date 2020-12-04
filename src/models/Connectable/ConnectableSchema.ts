@@ -1,8 +1,8 @@
 import {model, Schema} from 'mongoose';
 import IConnectable from "@models/Connectable/IConnectable";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
+import {setProperties} from "@models/Connectable/ConnectableUtils";
 
-const connectableUtils = require('@models/Connectable/ConnectableUtils');
 
 // @ts-ignore
 const requiredDoctorFields = () => !this.institution_name && this.doctor_inami;
@@ -23,6 +23,6 @@ const connectableSchemaFields: Record<keyof IConnectable, any> = {
 
 const connectableSchema: Schema = new Schema(connectableSchemaFields);
 
-connectableUtils.setProperties(connectableSchema);
+setProperties(connectableSchema);
 
 export default model<IConnectableDoc>('connectable', connectableSchema);

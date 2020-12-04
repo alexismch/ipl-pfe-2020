@@ -1,17 +1,17 @@
 import {NextFunction, Request, Response} from "express";
 import * as EmailValidator from "email-validator";
-import ErrorUtils from "@utils/ErrorUtils";
-import JWTUtils from "@utils/JWTUtils";
+import {sendError} from "@utils/ErrorUtils";
 import Location from "@models/Location/LocationSchema";
 import ILocationDoc from "@models/Location/ILocationDoc";
 import ISession from "@models/Connectable/ISession";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
+import {connect, register, verifySession} from "@models/Connectable/ConnectableUtils";
+import {sign} from "@utils/JWTUtils";
 
 const createError = require('http-errors');
 const express = require('express');
 const router = express.Router();
-const connectableUtils = require('@models/Connectable/ConnectableUtils');
 
 /**
  * Handle request to create an institution
@@ -36,7 +36,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         password: body.password
     });
 
-    connectableUtils.register(req, res, next, institution, 'field \'email\' or \'name\' already used');
+    register(req, res, next, institution, 'field \'email\' or \'name\' already used');
 });
 
 /**
@@ -45,7 +45,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * @return response with a session token, or with an error
  */
 router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return connectableUtils.connect(req, res, next);
+    return connect(req, res, next);
 });
 
 /**
@@ -53,7 +53,7 @@ router.post('/session', (req: Request, res: Response, next: NextFunction) => {
  * Delegated to ConnectableUtility verifySession method
  * @return response delegated to the next endpoint, or with an error
  */
-router.use(connectableUtils.verifySession);
+router.use(verifySession);
 
 /**
  * Handle request to create a location
@@ -84,7 +84,7 @@ router.post('/locations', (req: Request, res: Response, next: NextFunction) => {
                 qrCodeToken
             });
 
-            qrCodeToken = JWTUtils.sign({
+            qrCodeToken = sign({
                 location: location._id
             });
             location.qrCodeToken = qrCodeToken;
@@ -95,10 +95,10 @@ router.post('/locations', (req: Request, res: Response, next: NextFunction) => {
                 .catch(e => {
                     if (e.code === 11000)
                         return next(createError(409, 'location\'s name already used for this institution'));
-                    ErrorUtils.sendError(next);
+                    sendError(next);
                 });
         })
-        .catch(() => ErrorUtils.sendError(next));
+        .catch(() => sendError(next));
 });
 
 router.get('/locations', (req: Request, res: Response, next: NextFunction) => {

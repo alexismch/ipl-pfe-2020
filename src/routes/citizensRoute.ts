@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import Citizen from "@models/Citizen/CitizenSchema";
 import ICitizenDoc from "@models/Citizen/ICitizenDoc";
-import ErrorUtils from "@utils/ErrorUtils";
+import {sendError} from "@utils/ErrorUtils";
 import * as mongoose from "mongoose";
 
 const express = require('express');
@@ -20,7 +20,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         citizen
             .save()
             .then(cit => res.status(201).json(cit))
-            .catch(() => ErrorUtils.sendError(next));
+            .catch(() => sendError(next));
 
     if (device)
         Citizen
@@ -30,7 +30,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
                     return res.json(cit);
                 save(citizen);
             })
-            .catch(() => ErrorUtils.sendError(next));
+            .catch(() => sendError(next));
     else
         save(citizen);
 });

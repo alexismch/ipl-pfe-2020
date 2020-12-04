@@ -1,10 +1,10 @@
 import {Schema} from "mongoose";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import {NextFunction, Request, Response} from "express";
-import JWTUtils from "@utils/JWTUtils";
-import ErrorUtils from "@utils/ErrorUtils";
+import {sendError} from "@utils/ErrorUtils";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import * as EmailValidator from "email-validator";
+import {getSessionConnectableId, sign} from "@utils/JWTUtils";
 
 const createError = require('http-errors');
 const bcrypt = require('bcrypt');
@@ -25,7 +25,7 @@ const expIn = '24h';
  * Set properties to a Connectable Schema
  * @param schema to whom to set properties
  */
-function setProperties(schema: Schema): void {
+export function setProperties(schema: Schema): void {
     schema.method('verifyPassword', function (password: string): boolean {
         return bcrypt.compareSync(password, this.password);
     });
@@ -53,7 +53,7 @@ function setProperties(schema: Schema): void {
  * @param next the next middleware
  * @return response with user's data if connection allowed, error if not
  */
-function connect(req: Request, res: Response, next: NextFunction): any {
+export function connect(req: Request, res: Response, next: NextFunction): any {
     const body = req.body;
     if (!body)
         return next(createError(422, 'body missing'));
@@ -69,7 +69,7 @@ function connect(req: Request, res: Response, next: NextFunction): any {
                 return next(createError(401, 'field \'email\' or \'password\' incorrect'));
             res.json({session: generateSessionToken(connectable)});
         })
-        .catch(() => ErrorUtils.sendError(next));
+        .catch(() => sendError(next));
 }
 
 /**
@@ -80,7 +80,7 @@ function connect(req: Request, res: Response, next: NextFunction): any {
  * @param connectable the connectable that asked to connect
  * @param paramsErrorMsg the error message to send if error is due to the params
  */
-function register(req: Request, res: Response, next: NextFunction, connectable: IConnectableDoc, paramsErrorMsg: string): any {
+export function register(req: Request, res: Response, next: NextFunction, connectable: IConnectableDoc, paramsErrorMsg: string): any {
     connectable
         .save()
         .then(connectable => {
@@ -91,7 +91,7 @@ function register(req: Request, res: Response, next: NextFunction, connectable: 
         .catch((e) => {
             if (e.code === 11000)
                 return next(createError(409, paramsErrorMsg));
-            ErrorUtils.sendError(next);
+            sendError(next);
         });
 }
 
@@ -102,13 +102,13 @@ function register(req: Request, res: Response, next: NextFunction, connectable: 
  * @param next the next middleware
  * @return response delegated to the next middleware, or with an error
  */
-function verifySession(req: Request, res: Response, next: NextFunction): void {
+export function verifySession(req: Request, res: Response, next: NextFunction): void {
     if (!req.headers.session)
         return next(createError(403, 'no header \'session\' provided'));
 
     const session: string = <string>req.headers.session;
     try {
-        req.headers.session = <string[]><unknown>JWTUtils.getSessionConnectableId(session);
+        req.headers.session = <string[]><unknown>getSessionConnectableId(session);
         next();
     } catch (e) {
         return next(createError(498, 'session invalid or expired'));
@@ -121,14 +121,7 @@ function verifySession(req: Request, res: Response, next: NextFunction): void {
  * @private
  */
 function generateSessionToken(connectable: IConnectableDoc): string {
-    return JWTUtils.sign({
+    return sign({
         id: connectable.id
     }, {expiresIn: expIn});
-}
-
-module.exports = {
-    setProperties,
-    connect,
-    register,
-    verifySession
 }

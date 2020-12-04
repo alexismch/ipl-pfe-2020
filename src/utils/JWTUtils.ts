@@ -1,19 +1,17 @@
 import ISession from "@models/Connectable/ISession";
 
-export default class JWTUtils {
-    private static readonly secret = "IPL_PFE_2020";
-    private static readonly jwt = require('jsonwebtoken');
+const secret = "IPL_PFE_2020";
+const jwt = require('jsonwebtoken');
 
-    /**
-     * Create a JWT Token
-     * @param payload payload to add to the token
-     * @param options token options
-     */
-    public static sign(payload: object, options: object = {}): string {
-        return this.jwt.sign(payload, this.secret, options);
-    }
+/**
+ * Create a JWT Token
+ * @param payload payload to add to the token
+ * @param options token options
+ */
+export function sign(payload: object, options: object = {}): string {
+    return jwt.sign(payload, secret, options);
+}
 
-    public static getSessionConnectableId(sessionToken: string): ISession {
-        return this.jwt.verify(sessionToken, this.secret);
-    }
+export function getSessionConnectableId(sessionToken: string): ISession {
+    return jwt.verify(sessionToken, secret);
 }
