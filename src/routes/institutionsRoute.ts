@@ -1,13 +1,13 @@
 import {NextFunction, Request, Response} from "express";
-import Institution from "@models/Institution/InstitutionSchema";
 import ConnectableUtils from "@models/Connectable/ConnectableUtils";
 import * as EmailValidator from "email-validator";
-import IInstitutionDoc from "@models/Institution/IInstitutionDoc";
 import ErrorUtils from "@utils/ErrorUtils";
 import JWTUtils from "@utils/JWTUtils";
 import Location from "@models/Location/LocationSchema";
 import ILocationDoc from "@models/Location/ILocationDoc";
 import ISession from "@models/Connectable/ISession";
+import Connectable from "@models/Connectable/ConnectableSchema";
+import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -18,17 +18,17 @@ const router = express.Router();
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;
-    if (!body || !body.fullName || !body.email || !body.password || !EmailValidator.validate(body.email))
+    if (!body || !body.name || !body.no || !body.email || !body.password || !EmailValidator.validate(body.email))
         return next(createError(422, 'content missing or incorrect'));
 
-    const institution: IInstitutionDoc = new Institution({
-        name: body.fullName,
-        description: body.description,
+    const institution: IConnectableDoc = new Connectable({
+        institution_name: body.name,
+        institution_no: body.no,
         email: body.email,
         password: body.password
     });
 
-    ConnectableUtils.register(req, res, next, institution, Institution, 'email or name already used');
+    ConnectableUtils.register(req, res, next, institution, 'email or name already used');
 });
 
 /**
@@ -37,7 +37,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * @return response with a session token, or with an error
  */
 router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return ConnectableUtils.connect(req, res, next, Institution);
+    return ConnectableUtils.connect(req, res, next);
 });
 
 /**
@@ -54,11 +54,11 @@ router.use(ConnectableUtils.verifySession);
 router.post('/locations', (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;
     const session = <ISession><unknown>req.headers.session;
-    if (session.type !== Institution.collection.collectionName)
+    if (session.type !== Connectable.collection.collectionName)
         return next(createError(401, 'wrong user type'));
     const id = session.id;
 
-    Institution
+    Connectable
         .findById(id)
         .then(inst => {
             if (!inst)
@@ -76,8 +76,7 @@ router.post('/locations', (req: Request, res: Response, next: NextFunction) => {
             });
 
             qrCodeToken = JWTUtils.sign({
-                type: Location.collection.collectionName,
-                id: location._id
+                location: location._id
             });
             location.qrCodeToken = qrCodeToken;
 
@@ -95,7 +94,7 @@ router.post('/locations', (req: Request, res: Response, next: NextFunction) => {
 
 router.get('/locations', (req: Request, res: Response, next: NextFunction) => {
     const session = <ISession><unknown>req.headers.session;
-    if (session.type !== Institution.collection.collectionName)
+    if (session.type !== Connectable.collection.collectionName)
         return next(createError(401, 'wrong user type'));
     const id = session.id;
 
