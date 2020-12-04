@@ -3,8 +3,8 @@ import ILocation from "@models/Location/ILocation";
 import ILocationDoc from "@models/Location/ILocationDoc";
 
 const locationSchemaFields: Record<keyof ILocation, any> = {
-    connectable_id: {type: Schema.Types.ObjectId, required: true},
-    connectable_name: {type: String, required: true},
+    owner_id: {type: Schema.Types.ObjectId, required: true},
+    owner_name: {type: String, required: true},
     name: {type: String, required: true},
     description: {type: String, required: true},
     qrCodeToken: {type: String, required: true, unique: true}

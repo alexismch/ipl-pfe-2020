@@ -28,6 +28,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
             .then(cit => {
                 if (cit)
                     return res.json(cit);
+                    // TODO: return session token
                 save(citizen);
             })
             .catch(() => sendError(next));

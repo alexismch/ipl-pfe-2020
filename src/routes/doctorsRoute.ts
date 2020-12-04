@@ -65,7 +65,7 @@ router.use(router.use(verifySession));
  * Handle request to get the QR Code Token of the doctor
  */
 router.get('/qrCodeToken', (req: Request, res: Response, next: NextFunction) => {
-    const session = <ISession><unknown>req.headers.session;
+    const session = <ISession><unknown>res.locals.session;
     if (session.type !== Connectable.collection.collectionName)
         return next(createError(401, 'user must be a doctor'));
     const id = session.id;

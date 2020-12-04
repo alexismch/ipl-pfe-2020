@@ -21,6 +21,7 @@ server.listen(process.env.PORT || 4000);
 const doctorsRoute = require('@routes/doctorsRoute');
 const institutionsRoute = require('@routes/institutionsRoute');
 const citizensRoute = require('@routes/citizensRoute');
+const locationsRoute = require('@routes/locationsRoute');
 
 /**
  * Middlewares
@@ -36,6 +37,7 @@ app.use(express.static('front_end/build'));
 app.use("/api/doctors", doctorsRoute);
 app.use("/api/institutions", institutionsRoute);
 app.use("/api/citizens", citizensRoute);
+app.use("/api/locations", locationsRoute);
 
 // Handle if no route found
 app.use((req: Request, res: Response, next: NextFunction) => {

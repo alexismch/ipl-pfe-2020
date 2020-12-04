@@ -103,15 +103,15 @@ export function register(req: Request, res: Response, next: NextFunction, connec
  * @return response delegated to the next middleware, or with an error
  */
 export function verifySession(req: Request, res: Response, next: NextFunction): void {
-    if (!req.headers.session)
-        return next(createError(403, 'no header \'session\' provided'));
+    if (!req.headers.authorization)
+        return next(createError(401, 'no header \'Authorization\' provided'));
 
-    const session: string = <string>req.headers.session;
+    const session: string = <string>req.headers.authorization;
     try {
-        req.headers.session = <string[]><unknown>getSessionConnectableId(session);
+        res.locals.session = <string[]><unknown>getSessionConnectableId(session);
         next();
     } catch (e) {
-        return next(createError(498, 'session invalid or expired'));
+        return next(createError(401, 'header \'Authorization\' invalid or expired'));
     }
 }
 
