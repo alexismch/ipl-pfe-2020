@@ -1,9 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import Citizen from "@models/Citizen/CitizenSchema";
 import ICitizenDoc from "@models/Citizen/ICitizenDoc";
-import {sendError} from "@utils/errorUtils";
+import {sendError} from "@modules/error";
 import * as mongoose from "mongoose";
-import {generateSessionToken} from "@utils/connectableUtils";
+import {generateSessionToken} from "@modules/connectable";
 
 const express = require('express');
 const router = express.Router();

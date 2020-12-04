@@ -32,7 +32,7 @@
   "_moduleAliases": {
     "@routes": "dist/routes",
     "@models": "dist/models",
-    "@utils": "dist/utils"
+    "@modules": "dist/modules"
   },
   "scripts": {
     "all": "concurrently \"npm start\" \"npm start --prefix front_end\"",

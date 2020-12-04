@@ -1,8 +1,10 @@
 import {model, Schema} from 'mongoose';
 import IConnectable from "@models/Connectable/IConnectable";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
-import {setProperties} from "@utils/connectableUtils";
+import * as connectable from "@modules/connectable";
+import {setProperties} from "@modules/connectable";
 
+console.log(connectable);
 
 function requiredDoctorFields(me = this): boolean {
     return (me.doctor_firstName || me.doctor_lastName || me.doctor_inami) && !me.institution_name && !me.institution_no;

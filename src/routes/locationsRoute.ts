@@ -3,8 +3,8 @@ import ISession from "@models/Connectable/ISession";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import ILocationDoc from "@models/Location/ILocationDoc";
 import Location from "@models/Location/LocationSchema";
-import {sendError} from "@utils/errorUtils";
-import {verifySession} from "@utils/connectableUtils";
+import {sendError} from "@modules/error";
+import {verifySession} from "@modules/connectable";
 
 const createError = require('http-errors');
 const express = require('express');

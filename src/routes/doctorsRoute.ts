@@ -2,8 +2,8 @@ import {NextFunction, Request, Response} from "express";
 import * as EmailValidator from 'email-validator';
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import Connectable from "@models/Connectable/ConnectableSchema";
-import {register, verifySession} from "@utils/connectableUtils";
-import {sendError} from "@utils/errorUtils";
+import {register, verifySession} from "@modules/connectable";
+import {sendError} from "@modules/error";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -41,8 +41,10 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 /**
  * Handle request to get public infos of a doctor
  */
-router.get('/:id/public', (req: Request, res: Response, next: NextFunction) => {
+router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
+    if (id === "me")
+        return next();
     if (id.length !== 24)
         next(createError(400, 'param \'id\' incorrect'));
 
@@ -70,15 +72,9 @@ router.use(verifySession);
 /**
  * Handle request to get infos of a doctor
  */
-router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    if (id.length !== 24)
-        return next(createError(400, 'param \'id\' incorrect'));
-    if (res.locals.session.id !== id)
-        return next(createError(401, 'unauthorized to get infos about another doctor'));
-
+router.get('/me', (req: Request, res: Response, next: NextFunction) => {
     Connectable
-        .findById(id)
+        .findById(res.locals.session.id)
         .then(doc => {
             if (!doc || !doc.doctor_inami)
                 return next(createError(404, 'unknown doctor'));
