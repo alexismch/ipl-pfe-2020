@@ -1,7 +1,7 @@
 import {model, Schema} from 'mongoose';
 import IConnectable from "@models/Connectable/IConnectable";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
-import {setProperties} from "@utils/ConnectableUtils";
+import {setProperties} from "@utils/connectableUtils";
 
 
 function requiredDoctorFields(me = this): boolean {
