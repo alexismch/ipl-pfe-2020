@@ -3,13 +3,32 @@ import ISession from "@models/Connectable/ISession";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import ILocationDoc from "@models/Location/ILocationDoc";
 import Location from "@models/Location/LocationSchema";
-import {sign} from "@utils/JWTUtils";
 import {sendError} from "@utils/ErrorUtils";
 import {verifySession} from "@utils/ConnectableUtils";
 
 const createError = require('http-errors');
 const express = require('express');
 const router = express.Router();
+
+router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (id.length !== 24)
+        next(createError(400, 'param \'id\' incorrect'));
+
+    Location
+        .findById(id)
+        .then(loc => {
+            if (!loc)
+                return next(createError(404, 'unknown location'));
+            res.json({
+                id: loc._id,
+                name: loc.name,
+                description: loc.description,
+                ownerName: loc.owner_name
+            });
+        })
+        .catch(() => sendError(next));
+});
 
 /**
  * Middleware to check if a session has been sent
@@ -40,19 +59,12 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
             if (!con)
                 return next(createError(401, 'unauthorized'));
 
-            let qrCodeToken = "";
             const location: ILocationDoc = new Location({
                 owner_id: id,
                 owner_name: con.institution_name || con.doctor_firstName + con.doctor_lastName,
                 name: body.name,
-                description: body.description,
-                qrCodeToken
+                description: body.description
             });
-
-            qrCodeToken = sign({
-                location: location._id
-            });
-            location.qrCodeToken = qrCodeToken;
 
             location
                 .save()
@@ -66,6 +78,10 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         .catch(() => sendError(next));
 });
 
+/**
+ * Handle request to get the connectable locations
+ * @return response with the list of locations, or a no content
+ */
 router.get('/', (req: Request, res: Response) => {
     const session = <ISession><unknown>res.locals.session;
     const id = session.id;

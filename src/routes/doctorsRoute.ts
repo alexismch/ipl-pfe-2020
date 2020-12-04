@@ -1,12 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import * as EmailValidator from 'email-validator';
-import {sendError} from "@utils/ErrorUtils";
-import ISession from "@models/Connectable/ISession";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import Connectable from "@models/Connectable/ConnectableSchema";
-import IDoctorDoc from "@models/Doctor/IDoctorDoc";
-import {connect, register, verifySession} from "@utils/ConnectableUtils";
-import {sign} from "@utils/JWTUtils";
+import {register, verifySession} from "@utils/ConnectableUtils";
+import {sendError} from "@utils/ErrorUtils";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -27,55 +24,65 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         return next(createError(422, 'field \'email\' missing or invalid'));
     if (!body.password)
         return next(createError(422, 'field \'password\' missing'));
+    if (!body.inami)
+        return next(createError(422, 'field \'inami\' missing'));
 
-    let doctor_qrCodeToken = "";
     const connectable: IConnectableDoc = new Connectable({
         email: body.email,
         password: body.password,
-        doctor_firstname: body.firstName,
-        doctor_lastname: body.lastName,
-        doctor_inami: body.inami,
-        doctor_qrCodeToken
+        doctor_firstName: body.firstName,
+        doctor_lastName: body.lastName,
+        doctor_inami: body.inami
     });
-
-    doctor_qrCodeToken = sign({
-        doctor: connectable._id
-    });
-    connectable.doctor_qrCodeToken = doctor_qrCodeToken;
 
     register(req, res, next, connectable, 'field \'email\' or \'inami\' already used');
 });
 
 /**
- * Handle request to login
- * Delegated to ConnectableUtility connect method
- * @return response with the doctor that asked to connect, or with an error
+ * Handle request to get public infos of a doctor
  */
-router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return connect(req, res, next);
+router.get('/:id/public', (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (id.length !== 24)
+        next(createError(400, 'param \'id\' incorrect'));
+
+    Connectable
+        .findById(id)
+        .then(doc => {
+            if (!doc || !doc.doctor_inami)
+                return next(createError(404, 'unknown doctor'));
+            res.json({
+                id: doc._id,
+                firstName: doc.doctor_firstName,
+                lastName: doc.doctor_lastName
+            });
+        })
+        .catch(() => sendError(next));
 });
 
 /**
  * Middleware to check if a session has been sent
+ * Delegated to ConnectableUtility verifySession method
  * @return response delegated to the next endpoint, or with an error
  */
-router.use(router.use(verifySession));
+router.use(verifySession);
 
 /**
- * Handle request to get the QR Code Token of the doctor
+ * Handle request to get infos of a doctor
  */
-router.get('/qrCodeToken', (req: Request, res: Response, next: NextFunction) => {
-    const session = <ISession><unknown>res.locals.session;
-    if (session.type !== Connectable.collection.collectionName)
-        return next(createError(401, 'user must be a doctor'));
-    const id = session.id;
+router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    if (id.length !== 24)
+        return next(createError(400, 'param \'id\' incorrect'));
+    if (res.locals.session.id !== id)
+        return next(createError(401, 'unauthorized to get infos about another doctor'));
 
     Connectable
         .findById(id)
-        .then((d: IDoctorDoc) => {
-            if (d)
-                return res.json({qrCodeToken: d.doctor_qrCodeToken});
-            return next(createError(404, 'doctor not found'));
+        .then(doc => {
+            if (!doc || !doc.doctor_inami)
+                return next(createError(404, 'unknown doctor'));
+            res.json(doc);
         })
         .catch(() => sendError(next));
 });

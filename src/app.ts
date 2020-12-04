@@ -18,6 +18,7 @@ server.listen(process.env.PORT || 4000);
 /**
  * Routes imports
  */
+const sessionRoute = require('@routes/sessionRoute');
 const doctorsRoute = require('@routes/doctorsRoute');
 const institutionsRoute = require('@routes/institutionsRoute');
 const citizensRoute = require('@routes/citizensRoute');
@@ -34,6 +35,7 @@ app.use(express.static('front_end/build'));
 /**
  * Routes definition
  */
+app.use("/api/session", sessionRoute);
 app.use("/api/doctors", doctorsRoute);
 app.use("/api/institutions", institutionsRoute);
 app.use("/api/citizens", citizensRoute);

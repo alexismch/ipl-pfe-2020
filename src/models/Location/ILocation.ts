@@ -3,5 +3,4 @@ export default interface ILocation {
     owner_name: string;
     name: string;
     description: string;
-    qrCodeToken: string
 }

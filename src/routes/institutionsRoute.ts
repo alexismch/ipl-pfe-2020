@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import * as EmailValidator from "email-validator";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
-import {connect, register} from "@utils/ConnectableUtils";
+import {register} from "@utils/ConnectableUtils";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -13,6 +13,7 @@ const router = express.Router();
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;
+    console.log(body);
     if (!body)
         return next(createError(422, 'body missing'));
     if (!body.name)
@@ -32,15 +33,6 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     });
 
     register(req, res, next, institution, 'field \'email\' or \'name\' already used');
-});
-
-/**
- * Handle request to login
- * Delegated to ConnectableUtility connect method
- * @return response with a session token, or with an error
- */
-router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return connect(req, res, next);
 });
 
 module.exports = router;

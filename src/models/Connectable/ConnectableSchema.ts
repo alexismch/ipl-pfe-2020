@@ -4,11 +4,13 @@ import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import {setProperties} from "@utils/ConnectableUtils";
 
 
-// @ts-ignore
-const requiredDoctorFields = () => !this.institution_name && this.doctor_inami;
+function requiredDoctorFields(me = this): boolean {
+  return (me.doctor_firstName || me.doctor_lastName || me.doctor_inami) && !me.institution_name && !me.institution_no;
+}
 
-// @ts-ignore
-const requiredInstitutionFields = () => this.institution_name && !this.doctor_inami;
+function requiredInstitutionFields(): boolean {
+    return !requiredDoctorFields(this);
+}
 
 const connectableSchemaFields: Record<keyof IConnectable, any> = {
     email: {type: String, required: true, unique: true},
@@ -17,8 +19,7 @@ const connectableSchemaFields: Record<keyof IConnectable, any> = {
     institution_no: {type: String, required: requiredInstitutionFields},
     doctor_firstName: {type: String, required: requiredDoctorFields},
     doctor_lastName: {type: String, required: requiredDoctorFields},
-    doctor_inami: {type: String, required: requiredDoctorFields},
-    doctor_qrCodeToken: {type: String, required: requiredDoctorFields},
+    doctor_inami: {type: String, required: requiredDoctorFields}
 };
 
 const connectableSchema: Schema = new Schema(connectableSchemaFields);
