@@ -1,8 +1,8 @@
 import {model, Schema} from 'mongoose';
 import IConnectable from "@models/Connectable/IConnectable";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
-import * as connectable from "@modules/Connectable";
-import {setProperties} from "@modules/Connectable";
+import * as connectable from "@modules/connectable";
+import {setProperties} from "@modules/connectable";
 
 console.log(connectable);
 
