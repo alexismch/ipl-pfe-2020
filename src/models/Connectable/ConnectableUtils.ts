@@ -4,6 +4,7 @@ import {NextFunction, Request, Response} from "express";
 import JWTUtils from "@utils/JWTUtils";
 import ErrorUtils from "@utils/ErrorUtils";
 import Connectable from "@models/Connectable/ConnectableSchema";
+import * as EmailValidator from "email-validator";
 
 const createError = require('http-errors');
 const bcrypt = require('bcrypt');
@@ -54,13 +55,18 @@ function setProperties(schema: Schema): void {
  */
 function connect(req: Request, res: Response, next: NextFunction): any {
     const body = req.body;
-    if (!body || !body.email || !body.password)
-        return next(createError(422, 'content missing or incorrect'));
+    if (!body)
+        return next(createError(422, 'body missing'));
+    if (!body.email || !EmailValidator.validate(body.email))
+        return next(createError(422, 'field \'email\' missing or invalid'));
+    if (!body.password)
+        return next(createError(422, 'field \'password\' missing'));
+
     Connectable
         .findOne({email: body.email})
         .then((connectable: IConnectableDoc) => {
             if (!connectable || !connectable.verifyPassword(body.password))
-                return next(createError(401, 'incorrect content'));
+                return next(createError(401, 'field \'email\' or \'password\' incorrect'));
             res.json({session: generateSessionToken(connectable)});
         })
         .catch(() => ErrorUtils.sendError(next));
@@ -80,7 +86,6 @@ function register(req: Request, res: Response, next: NextFunction, connectable: 
         .then(connectable => {
             res.status(201).json({
                 session: generateSessionToken(connectable),
-                //connectable
             });
         })
         .catch((e) => {
@@ -99,7 +104,7 @@ function register(req: Request, res: Response, next: NextFunction, connectable: 
  */
 function verifySession(req: Request, res: Response, next: NextFunction): void {
     if (!req.headers.session)
-        return next(createError(403, 'no session provided'));
+        return next(createError(403, 'no header \'session\' provided'));
 
     const session: string = <string>req.headers.session;
     try {

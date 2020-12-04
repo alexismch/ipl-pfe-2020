@@ -20,10 +20,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         citizen
             .save()
             .then(cit => res.status(201).json(cit))
-            .catch((e) => {
-                console.log(e);
-                ErrorUtils.sendError(next);
-            });
+            .catch(() => ErrorUtils.sendError(next));
 
     if (device)
         Citizen

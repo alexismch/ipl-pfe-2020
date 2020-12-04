@@ -18,8 +18,16 @@ const connectableUtils = require('@models/Connectable/ConnectableUtils');
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;
-    if (!body || !body.name || !body.no || !body.email || !body.password || !EmailValidator.validate(body.email))
-        return next(createError(422, 'content missing or incorrect'));
+    if (!body)
+        return next(createError(422, 'body missing'));
+    if (!body.name)
+        return next(createError(422, 'field \'name\' missing'));
+    if (!body.no || !/^(\s*?\.*?-*?)(\d\s*\.*-*){10}$/.test(body.no))
+        return next(createError(422, 'field \'no\' missing or invalid'));
+    if (!body.email || !EmailValidator.validate(body.email))
+        return next(createError(422, 'field \'email\' missing or invalid'));
+    if (!body.password)
+        return next(createError(422, 'field \'password\' missing'));
 
     const institution: IConnectableDoc = new Connectable({
         institution_name: body.name,
@@ -28,7 +36,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         password: body.password
     });
 
-    connectableUtils.register(req, res, next, institution, 'email or name already used');
+    connectableUtils.register(req, res, next, institution, 'field \'email\' or \'name\' already used');
 });
 
 /**
@@ -52,10 +60,11 @@ router.use(connectableUtils.verifySession);
  * @return response with the new location, or with an error
  */
 router.post('/locations', (req: Request, res: Response, next: NextFunction) => {
+    //TODO: move to global
     const body = req.body;
     const session = <ISession><unknown>req.headers.session;
     if (session.type !== Connectable.collection.collectionName)
-        return next(createError(401, 'wrong user type'));
+        return next(createError(401, 'user must be an institution'));
     const id = session.id;
 
     Connectable
