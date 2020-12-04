@@ -1,51 +1,43 @@
 import Axios from "axios";
 //import {receiveMessageOnPort} from "worker_threads";
 
-export function Registration(token : string, name : string, email : string, password : string, inami : string){
-  const config = {
-    headers: { Authorization: "Bearer " + token }
-  };
-
-  var data = {};
-
-  if(inami && inami !== ""){
-    data = {
-      fullName : name,
-      email,
-      password,
-      inami
-    }
-    return new Promise((resolve, reject) => {
-      console.log(data)
-      Axios.post(`/api/doctors/`, data, config)
-        .then(response => {
-          console.log(response);
-          resolve(response);
-        })
-        .catch(error => {
-          console.log(error)
-          reject(error);
-        })
-    })
-  } else {
-    data = {
-      fullName : name,
-      email,
-      password
-    }
-    return new Promise((resolve, reject) => {
-      console.log(data)
-      Axios.post(`/api/institutions/`, data, config)
-        .then(response => {
-          console.log(response);
-          resolve(response);
-        })
-        .catch(error => {
-          console.group(error)
-          reject(error);
-        })
-    })
+export function doctorRegistration(firstName : string, lastName : string, email : string, password : string, inami : string){
+  const data = {
+      "firstName": firstName,
+      "lastName": lastName,
+      "email": email,
+      "password": password,
+      "inami": inami
   }
+
+  return new Promise((resolve, reject) => {
+    Axios.post("/api/doctors", data)
+      .then(response => {
+        resolve(response);
+      })
+      .catch(error => {
+        reject(error);
+      })
+  })
+}
+
+export function institutionRegistration(name : string, email : string, password : string, no : string){
+  const data = {
+    "name": name,
+    "email": email,
+    "password": password,
+    "no": no
+  }
+
+  return new Promise((resolve, reject) => {
+    Axios.post("/api/institutions", data)
+      .then(response => {
+        resolve(response);
+      })
+      .catch(error => {
+        reject(error);
+      })
+  })
 }
 
 export function SignIn(email : string, password : string, isDoctor : boolean){
@@ -76,4 +68,22 @@ export function SignIn(email : string, password : string, isDoctor : boolean){
         })
     })
   }
+}
+
+export function getQRCodeToken(token:string){
+  const config = {
+    headers: { session: token }
+  };
+
+  //console.log(config.headers)
+  return new Promise((resolve, reject) => {
+
+    Axios.get(`/api/doctors/qrCodeToken`, config)
+      .then(response => {
+        resolve(response);
+      })
+      .catch(error => {
+        reject(error);
+      })
+  })
 }

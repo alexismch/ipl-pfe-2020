@@ -1,21 +1,54 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:100,300,500,700&display=swap');
 
 body {
-  background: linear-gradient(-45deg, #28df99, #99f3bd, #d2f6c5, #f6f7d4);
-  background-size: 400% 400%;
-  -webkit-animation: Gradient 2s ease infinite;
-  -moz-animation: Gradient 2s ease infinite;
-  animation: Gradient 15s ease infinite;
+  background-color: #F2F3F3
 }
 
-@keyframes Gradient {
-  0% {
-    background-position: 0% 50%
-  }
-  50% {
-    background-position: 100% 50%
-  }
-  100% {
-    background-position: 0% 50%
-  }
+.badge-promo {
+  position: relative;
+  overflow: hidden;
+  max-height: 70px;
+  width: 350px;
+  /*transform: translateX(-50px) translateY(-15px);*/
+  margin-bottom: 0px;
+  z-index: 1;
+  padding: 12px 20px 12px 20px;
+  border-radius: 2px 2px 0 0;
+  color: #fff;
+  text-align: left;
+}
+.badge-promo:before, .badge-promo:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.badge-promo:before {
+  background: #6ccf7b;
+  height: 100%;
+  width: 110%;
+  transform-origin: bottom right;
+  transform: rotate(1deg);
+}
+.badge-promo:after {
+  background: #02940c;
+  transform: rotate(-3deg);
+  transform-origin: bottom left;
+  height: 100%;
+  width: 110%;
+}
+
+.badge-promo-content {
+  position: relative;
+  z-index: 1;
+  font-family: sans-serif;
+  font-size: 18px;
+}
+
+.Register-as-button{
+  width: 180px;
+}
+
+.Register-button{
+  width: 180px;
 }
