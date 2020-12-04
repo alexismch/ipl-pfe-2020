@@ -67,7 +67,7 @@ export function connect(req: Request, res: Response, next: NextFunction): any {
         .then((connectable: IConnectableDoc) => {
             if (!connectable || !connectable.verifyPassword(body.password))
                 return next(createError(401, 'field \'email\' or \'password\' incorrect'));
-            res.json({session: generateSessionToken(connectable)});
+            res.json({session: generateSessionToken(connectable._id)});
         })
         .catch(() => sendError(next));
 }
@@ -85,7 +85,7 @@ export function register(req: Request, res: Response, next: NextFunction, connec
         .save()
         .then(connectable => {
             res.status(201).json({
-                session: generateSessionToken(connectable),
+                session: generateSessionToken(connectable._id),
             });
         })
         .catch((e) => {
@@ -117,11 +117,12 @@ export function verifySession(req: Request, res: Response, next: NextFunction): 
 
 /**
  * Generate a session token
- * @param connectable the connectable that asked to connect
+ * @param id the id
+ * @param exp the expiration time
  * @private
  */
-function generateSessionToken(connectable: IConnectableDoc): string {
+export function generateSessionToken(id: string, exp: string = expIn): string {
     return sign({
-        id: connectable.id
-    }, {expiresIn: expIn});
+        id
+    }, exp ? {expiresIn: exp} : {});
 }

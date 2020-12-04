@@ -38,7 +38,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         .findById(id)
         .then(con => {
             if (!con)
-                return next(createError(422, 'incorrect institution id'));
+                return next(createError(401, 'unauthorized'));
 
             let qrCodeToken = "";
             const location: ILocationDoc = new Location({
@@ -66,7 +66,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         .catch(() => sendError(next));
 });
 
-router.get('/', (req: Request, res: Response, next: NextFunction) => {
+router.get('/', (req: Request, res: Response) => {
     const session = <ISession><unknown>res.locals.session;
     const id = session.id;
 
@@ -77,7 +77,6 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
                 return res.status(204).send();
             res.json(locs);
         });
-    next();
 });
 
 module.exports = router;
