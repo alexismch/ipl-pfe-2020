@@ -16,14 +16,13 @@ const router = express.Router();
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;
-    const [firstname, lastname] = body.fullName ? body.fullName.split(' ') : [null, null];
-    if (!body || !firstname || !lastname || !body.email || !body.password || !body.inami || !EmailValidator.validate(body.email))
+    if (!body || !body.firstName || !body.lastName || !body.email || !body.password || !body.inami || !EmailValidator.validate(body.email))
         return next(createError(422, 'content missing or incorrect'));
 
     let qrCodeToken = "";
     const doctor: IDoctorDoc = new Doctor({
-        firstname: firstname,
-        lastname: lastname,
+        firstname: body.firstName,
+        lastname: body.lastName,
         email: body.email,
         password: body.password,
         inami: body.inami,
