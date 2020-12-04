@@ -6,7 +6,7 @@ import ILocationDoc from "@models/Location/ILocationDoc";
 import ISession from "@models/Connectable/ISession";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
-import {connect, register, verifySession} from "@models/Connectable/ConnectableUtils";
+import {connect, register, verifySession} from "@utils/ConnectableUtils";
 import {sign} from "@utils/JWTUtils";
 
 const createError = require('http-errors');

@@ -5,7 +5,7 @@ import ISession from "@models/Connectable/ISession";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import IDoctorDoc from "@models/Doctor/IDoctorDoc";
-import {connect, register, verifySession} from "@models/Connectable/ConnectableUtils";
+import {connect, register, verifySession} from "@utils/ConnectableUtils";
 import {sign} from "@utils/JWTUtils";
 
 const createError = require('http-errors');
