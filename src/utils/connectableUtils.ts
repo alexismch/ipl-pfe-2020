@@ -1,10 +1,10 @@
 import {Schema} from "mongoose";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import {NextFunction, Request, Response} from "express";
-import {sendError} from "@utils/ErrorUtils";
+import {sendError} from "@utils/errorUtils";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import * as EmailValidator from "email-validator";
-import {getSessionConnectableId, sign} from "@utils/JWTUtils";
+import {getSessionConnectableId, sign} from "@utils/jwtUtils";
 
 const createError = require('http-errors');
 const bcrypt = require('bcrypt');

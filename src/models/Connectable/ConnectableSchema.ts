@@ -5,7 +5,7 @@ import {setProperties} from "@utils/ConnectableUtils";
 
 
 function requiredDoctorFields(me = this): boolean {
-  return (me.doctor_firstName || me.doctor_lastName || me.doctor_inami) && !me.institution_name && !me.institution_no;
+    return (me.doctor_firstName || me.doctor_lastName || me.doctor_inami) && !me.institution_name && !me.institution_no;
 }
 
 function requiredInstitutionFields(): boolean {

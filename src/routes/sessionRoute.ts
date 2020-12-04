@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {connect} from "@utils/ConnectableUtils";
+import {connect} from "@utils/connectableUtils";
 
 const express = require('express');
 const router = express.Router();

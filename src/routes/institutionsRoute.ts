@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import * as EmailValidator from "email-validator";
 import Connectable from "@models/Connectable/ConnectableSchema";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
-import {register} from "@utils/ConnectableUtils";
+import {register} from "@utils/connectableUtils";
 
 const createError = require('http-errors');
 const express = require('express');
