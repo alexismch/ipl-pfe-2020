@@ -1,5 +1,4 @@
 import {NextFunction, Request, Response} from "express";
-import ConnectableUtils from "@models/Connectable/ConnectableUtils";
 import * as EmailValidator from "email-validator";
 import ErrorUtils from "@utils/ErrorUtils";
 import JWTUtils from "@utils/JWTUtils";
@@ -12,6 +11,7 @@ import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 const createError = require('http-errors');
 const express = require('express');
 const router = express.Router();
+const connectableUtils = require('@models/Connectable/ConnectableUtils');
 
 /**
  * Handle request to create an institution
@@ -28,7 +28,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
         password: body.password
     });
 
-    ConnectableUtils.register(req, res, next, institution, 'email or name already used');
+    connectableUtils.register(req, res, next, institution, 'email or name already used');
 });
 
 /**
@@ -37,7 +37,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * @return response with a session token, or with an error
  */
 router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return ConnectableUtils.connect(req, res, next);
+    return connectableUtils.connect(req, res, next);
 });
 
 /**
@@ -45,7 +45,7 @@ router.post('/session', (req: Request, res: Response, next: NextFunction) => {
  * Delegated to ConnectableUtility verifySession method
  * @return response delegated to the next endpoint, or with an error
  */
-router.use(ConnectableUtils.verifySession);
+router.use(connectableUtils.verifySession);
 
 /**
  * Handle request to create a location

@@ -1,5 +1,4 @@
 import {NextFunction, Request, Response} from "express";
-import ConnectableUtils from "@models/Connectable/ConnectableUtils";
 import * as EmailValidator from 'email-validator';
 import JWTUtils from "@utils/JWTUtils";
 import ErrorUtils from "@utils/ErrorUtils";
@@ -11,6 +10,7 @@ import IDoctorDoc from "@models/Doctor/IDoctorDoc";
 const createError = require('http-errors');
 const express = require('express');
 const router = express.Router();
+const connectableUtils = require('@models/Connectable/ConnectableUtils');
 
 /**
  * Handle request to create a doctor
@@ -35,7 +35,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     });
     connectable.doctor_qrCodeToken = doctor_qrCodeToken;
 
-    ConnectableUtils.register(req, res, next, connectable, 'email or inami already used');
+    connectableUtils.register(req, res, next, connectable, 'email or inami already used');
 });
 
 /**
@@ -44,14 +44,14 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * @return response with the doctor that asked to connect, or with an error
  */
 router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return ConnectableUtils.connect(req, res, next);
+    return connectableUtils.connect(req, res, next);
 });
 
 /**
  * Middleware to check if a session has been sent
  * @return response delegated to the next endpoint, or with an error
  */
-router.use(router.use(ConnectableUtils.verifySession));
+router.use(router.use(connectableUtils.verifySession));
 
 /**
  * Handle request to get the QR Code Token of the doctor
