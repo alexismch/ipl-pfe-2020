@@ -1,11 +1,12 @@
 import {NextFunction, Request, Response} from "express";
-import Doctor from "@models/Doctor/DoctorSchema";
-import IDoctorDoc from "@models/Doctor/IDoctorDoc";
 import ConnectableUtils from "@models/Connectable/ConnectableUtils";
 import * as EmailValidator from 'email-validator';
 import JWTUtils from "@utils/JWTUtils";
 import ErrorUtils from "@utils/ErrorUtils";
 import ISession from "@models/Connectable/ISession";
+import IConnectableDoc from "@models/Connectable/IConnectableDoc";
+import Connectable from "@models/Connectable/ConnectableSchema";
+import IDoctorDoc from "@models/Doctor/IDoctorDoc";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -19,23 +20,22 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     if (!body || !body.firstName || !body.lastName || !body.email || !body.password || !body.inami || !EmailValidator.validate(body.email))
         return next(createError(422, 'content missing or incorrect'));
 
-    let qrCodeToken = "";
-    const doctor: IDoctorDoc = new Doctor({
-        firstname: body.firstName,
-        lastname: body.lastName,
+    let doctor_qrCodeToken = "";
+    const connectable: IConnectableDoc = new Connectable({
         email: body.email,
         password: body.password,
-        inami: body.inami,
-        qrCodeToken
+        doctor_firstname: body.firstName,
+        doctor_lastname: body.lastName,
+        doctor_inami: body.inami,
+        doctor_qrCodeToken
     });
 
-    qrCodeToken = JWTUtils.sign({
-        type: Doctor.collection.collectionName,
-        id: doctor._id
+    doctor_qrCodeToken = JWTUtils.sign({
+        doctor: connectable._id
     });
-    doctor.qrCodeToken = qrCodeToken;
+    connectable.doctor_qrCodeToken = doctor_qrCodeToken;
 
-    ConnectableUtils.register(req, res, next, doctor, Doctor, 'email or inami already used');
+    ConnectableUtils.register(req, res, next, connectable, 'email or inami already used');
 });
 
 /**
@@ -44,7 +44,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * @return response with the doctor that asked to connect, or with an error
  */
 router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return ConnectableUtils.connect(req, res, next, Doctor);
+    return ConnectableUtils.connect(req, res, next);
 });
 
 /**
@@ -58,15 +58,15 @@ router.use(router.use(ConnectableUtils.verifySession));
  */
 router.get('/qrCodeToken', (req: Request, res: Response, next: NextFunction) => {
     const session = <ISession><unknown>req.headers.session;
-    if (session.type !== Doctor.collection.collectionName)
+    if (session.type !== Connectable.collection.collectionName)
         return next(createError(401, 'wrong user type'));
     const id = session.id;
 
-    Doctor
+    Connectable
         .findById(id)
         .then((d: IDoctorDoc) => {
             if (d)
-                return res.json({qrCodeToken: d.qrCodeToken});
+                return res.json({qrCodeToken: d.doctor_qrCodeToken});
             return next(createError(404, 'doctor not found'));
         })
         .catch(() => ErrorUtils.sendError(next));

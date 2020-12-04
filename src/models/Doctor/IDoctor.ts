@@ -1,8 +1,6 @@
-import IConnectable from "@models/Connectable/IConnectable";
-
-export default interface IDoctor extends IConnectable {
-    firstname: string;
-    lastname: string;
-    inami: string;
-    qrCodeToken: string;
+export default interface IDoctor {
+    doctor_firstName: string;
+    doctor_lastName: string;
+    doctor_inami: string;
+    doctor_qrCodeToken: string;
 }

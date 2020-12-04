@@ -1,5 +1,6 @@
 export default interface ILocation {
-    institution: string;
+    connectable_id: string;
+    connectable_name: string;
     name: string;
     description: string;
     qrCodeToken: string

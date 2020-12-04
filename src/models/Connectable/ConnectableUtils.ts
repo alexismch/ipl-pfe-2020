@@ -1,8 +1,9 @@
-import {Model, Schema} from "mongoose";
+import {Schema} from "mongoose";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import {NextFunction, Request, Response} from "express";
 import JWTUtils from "@utils/JWTUtils";
 import ErrorUtils from "@utils/ErrorUtils";
+import Connectable from "@models/Connectable/ConnectableSchema";
 
 const createError = require('http-errors');
 const bcrypt = require('bcrypt');
@@ -50,20 +51,18 @@ export default class ConnectableUtils {
      * @param req the request
      * @param res the response
      * @param next the next middleware
-     * @param model the model of mongoose data
      * @return response with user's data if connection allowed, error if not
      */
-    public static connect(req: Request, res: Response, next: NextFunction, model: Model<IConnectableDoc>): any {
+    public static connect(req: Request, res: Response, next: NextFunction): any {
         const body = req.body;
         if (!body || !body.email || !body.password)
             return next(createError(422, 'content missing or incorrect'));
-
-        model
+        Connectable
             .findOne({email: body.email})
             .then((connectable: IConnectableDoc) => {
                 if (!connectable || !connectable.verifyPassword(body.password))
                     return next(createError(401, 'incorrect content'));
-                res.json({session: this.generateSessionToken(connectable, model)});
+                res.json({session: this.generateSessionToken(connectable)});
             })
             .catch(() => ErrorUtils.sendError(next));
     }
@@ -74,15 +73,14 @@ export default class ConnectableUtils {
      * @param res the response
      * @param next the next middleware
      * @param connectable the connectable that asked to connect
-     * @param model the model of the connectable
      * @param paramsErrorMsg the error message to send if error is due to the params
      */
-    public static register(req: Request, res: Response, next: NextFunction, connectable: IConnectableDoc, model: Model<IConnectableDoc>, paramsErrorMsg: string): any {
+    public static register(req: Request, res: Response, next: NextFunction, connectable: IConnectableDoc, paramsErrorMsg: string): any {
         connectable
             .save()
             .then(connectable => {
                 res.status(201).json({
-                    session: this.generateSessionToken(connectable, model),
+                    session: this.generateSessionToken(connectable),
                     //connectable
                 });
             })
@@ -116,12 +114,10 @@ export default class ConnectableUtils {
     /**
      * Generate a session token
      * @param connectable the connectable that asked to connect
-     * @param model the model of the connectable
      * @private
      */
-    private static generateSessionToken(connectable: IConnectableDoc, model: Model<IConnectableDoc>): string {
+    private static generateSessionToken(connectable: IConnectableDoc): string {
         return JWTUtils.sign({
-            type: model.collection.collectionName,
             id: connectable.id
         }, {expiresIn: this.expIn});
     }
