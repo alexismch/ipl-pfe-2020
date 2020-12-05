@@ -1,5 +1,4 @@
 import Axios from "axios";
-import {promises} from "dns";
 //import {receiveMessageOnPort} from "worker_threads";
 
 export function doctorRegistration(firstName : string, lastName : string, email : string, password : string, inami : string){
@@ -49,7 +48,7 @@ export function SignIn(email : string, password : string){
   }
 
   return new Promise ((resolve, reject) => {
-    Axios.post("/api/doctors/session", data)
+    Axios.post("/api/authenticate", data)
       .then(response => {
         resolve(response);
       }).catch(error => {
