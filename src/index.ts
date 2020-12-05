@@ -2,4 +2,6 @@ import server from './app';
 
 require('dotenv').config();
 
-server.listen(process.env.PORT || 4000);
+const port = process.env.PORT || 4000;
+server.listen(port);
+console.error('Server listening on port ' + port);
