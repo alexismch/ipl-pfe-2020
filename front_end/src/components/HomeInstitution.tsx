@@ -41,7 +41,7 @@ export default function Home(){
             </Grid>
             <Grid container direction="row" justify="space-between">
               <Grid item>
-                  <Button onClick={() => history.push("/codesList")} variant="contained" >See my QR-Codes</Button>
+                  <Button onClick={() => history.push("/CodesList")} variant="contained" >See my QR-Codes</Button>
               </Grid>
               <Grid item>
                   <Button type="submit" variant="contained" >Submit</Button>
