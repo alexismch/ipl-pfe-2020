@@ -1,4 +1,3 @@
-import {Schema} from "mongoose";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
 import {NextFunction, Request, Response} from "express";
 import {sendError} from "@modules/error";
@@ -7,44 +6,8 @@ import * as EmailValidator from "email-validator";
 import {getSessionConnectableId, sign} from "@modules/jwt";
 
 const createError = require('http-errors');
-const bcrypt = require('bcrypt');
 
-// Format that removes password to connectable toJson method
-const jsonFormat = {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-        delete returnedObject.password
-    }
-};
-const saltRounds = 10;
 const expIn = '24h';
-
-/**
- * Set properties to a Connectable Schema
- * @param schema to whom to set properties
- */
-export function setProperties(schema: Schema): void {
-    schema.method('verifyPassword', function (password: string): boolean {
-        return bcrypt.compareSync(password, this.password);
-    });
-
-    schema.method('hashPassword', function (): void {
-        this.password = bcrypt.hashSync(this.password, saltRounds);
-    });
-
-    schema.set('toJSON', jsonFormat);
-
-    schema.pre('save', function (next) {
-        const doctor: IConnectableDoc = <IConnectableDoc>this;
-        if (!this.isModified('password'))
-            return next();
-
-        doctor.hashPassword();
-        next();
-    });
-}
 
 /**
  * Verify the authorisation to connect

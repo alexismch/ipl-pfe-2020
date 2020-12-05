@@ -1,10 +1,6 @@
 import {model, Schema} from 'mongoose';
 import IConnectable from "@models/Connectable/IConnectable";
 import IConnectableDoc from "@models/Connectable/IConnectableDoc";
-import * as connectable from "@modules/connectable";
-import {setProperties} from "@modules/connectable";
-
-console.log(connectable);
 
 function requiredDoctorFields(me = this): boolean {
     return (me.doctor_firstName || me.doctor_lastName || me.doctor_inami) && !me.institution_name && !me.institution_no;
@@ -26,6 +22,39 @@ const connectableSchemaFields: Record<keyof IConnectable, any> = {
 
 const connectableSchema: Schema = new Schema(connectableSchemaFields);
 
-setProperties(connectableSchema);
+/**
+ * Set properties to a Connectable Schema
+ */
+{
+    const bcrypt = require('bcrypt');
+    const jsonFormat = {
+        transform: (document, returnedObject) => {
+            returnedObject.id = returnedObject._id.toString()
+            delete returnedObject._id
+            delete returnedObject.__v
+            delete returnedObject.password
+        }
+    };
+    const saltRounds = 10;
+
+    connectableSchema.method('verifyPassword', function (password: string): boolean {
+        return bcrypt.compareSync(password, this.password);
+    });
+
+    connectableSchema.method('hashPassword', function (): void {
+        this.password = bcrypt.hashSync(this.password, saltRounds);
+    });
+
+    connectableSchema.set('toJSON', jsonFormat);
+
+    connectableSchema.pre('save', function (next) {
+        const doctor: IConnectableDoc = <IConnectableDoc>this;
+        if (!this.isModified('password'))
+            return next();
+
+        doctor.hashPassword();
+        next();
+    });
+}
 
 export default model<IConnectableDoc>('connectable', connectableSchema);
