@@ -1,4 +1,4 @@
-import {NextFunction} from "express";
+import {NextFunction} from 'express';
 
 const createError = require('http-errors');
 
@@ -9,5 +9,5 @@ const createError = require('http-errors');
  * @param msg the error message
  */
 export function sendError(next: NextFunction, code: number = 500, msg: string = 'a server error occurred'): void {
-    next(createError(code, msg));
+	next(createError(code, msg));
 }

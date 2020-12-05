@@ -10,7 +10,7 @@
     "paths": {
       "@routes/*": ["src/routes/*"],
       "@models/*": ["src/models/*"],
-      "@utils/*": ["src/utils/*"]
+      "@modules/*": ["src/modules/*"]
     }
   },
   "include": [

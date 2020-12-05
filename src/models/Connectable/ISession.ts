@@ -1,4 +1,4 @@
 export default interface ISession {
-    type: string;
-    id: string;
+	type: string;
+	id: string;
 }

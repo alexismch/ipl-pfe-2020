@@ -1,12 +1,9 @@
-import {NextFunction, Request, Response} from "express";
+import Connectable from '@models/Connectable/ConnectableSchema';
+import IConnectableDoc from '@models/Connectable/IConnectableDoc';
+import {register, verifySession} from '@modules/connectable';
+import {sendError} from '@modules/error';
 import * as EmailValidator from 'email-validator';
-import {sendError} from "@utils/ErrorUtils";
-import ISession from "@models/Connectable/ISession";
-import IConnectableDoc from "@models/Connectable/IConnectableDoc";
-import Connectable from "@models/Connectable/ConnectableSchema";
-import IDoctorDoc from "@models/Doctor/IDoctorDoc";
-import {connect, register, verifySession} from "@utils/ConnectableUtils";
-import {sign} from "@utils/JWTUtils";
+import {NextFunction, Request, Response} from 'express';
 
 const createError = require('http-errors');
 const express = require('express');
@@ -16,68 +13,74 @@ const router = express.Router();
  * Handle request to create a doctor
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
-    const body = req.body;
-    if (!body)
-        return next(createError(422, 'body missing'));
-    if (!body.firstName)
-        return next(createError(422, 'field \'firstName\' missing'));
-    if (!body.lastName)
-        return next(createError(422, 'field \'lastName\' missing'));
-    if (!body.email || !EmailValidator.validate(body.email))
-        return next(createError(422, 'field \'email\' missing or invalid'));
-    if (!body.password)
-        return next(createError(422, 'field \'password\' missing'));
+	const body = req.body;
+	if (!body)
+		return next(createError(422, 'body missing'));
+	if (!body.firstName)
+		return next(createError(422, 'field \'firstName\' missing'));
+	if (!body.lastName)
+		return next(createError(422, 'field \'lastName\' missing'));
+	if (!body.email || !EmailValidator.validate(body.email))
+		return next(createError(422, 'field \'email\' missing or invalid'));
+	if (!body.password)
+		return next(createError(422, 'field \'password\' missing'));
+	if (!body.inami)
+		return next(createError(422, 'field \'inami\' missing'));
 
-    let doctor_qrCodeToken = "";
-    const connectable: IConnectableDoc = new Connectable({
-        email: body.email,
-        password: body.password,
-        doctor_firstname: body.firstName,
-        doctor_lastname: body.lastName,
-        doctor_inami: body.inami,
-        doctor_qrCodeToken
-    });
+	const connectable: IConnectableDoc = new Connectable({
+		email: body.email,
+		password: body.password,
+		doctor_firstName: body.firstName,
+		doctor_lastName: body.lastName,
+		doctor_inami: body.inami
+	});
 
-    doctor_qrCodeToken = sign({
-        doctor: connectable._id
-    });
-    connectable.doctor_qrCodeToken = doctor_qrCodeToken;
-
-    register(req, res, next, connectable, 'field \'email\' or \'inami\' already used');
+	register(req, res, next, connectable, 'field \'email\' or \'inami\' already used');
 });
 
 /**
- * Handle request to login
- * Delegated to ConnectableUtility connect method
- * @return response with the doctor that asked to connect, or with an error
+ * Handle request to get public infos of a doctor
  */
-router.post('/session', (req: Request, res: Response, next: NextFunction) => {
-    return connect(req, res, next);
+router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
+	const id = req.params.id;
+	if (id === 'me')
+		return next();
+	if (id.length !== 24)
+		next(createError(400, 'param \'id\' incorrect'));
+
+	Connectable
+		.findById(id)
+		.then(doc => {
+			if (!doc || !doc.doctor_inami)
+				return next(createError(404, 'unknown doctor'));
+			res.json({
+				id: doc._id,
+				firstName: doc.doctor_firstName,
+				lastName: doc.doctor_lastName
+			});
+		})
+		.catch(() => sendError(next));
 });
 
 /**
  * Middleware to check if a session has been sent
+ * Delegated to ConnectableUtility verifySession method
  * @return response delegated to the next endpoint, or with an error
  */
-router.use(router.use(verifySession));
+router.use(verifySession);
 
 /**
- * Handle request to get the QR Code Token of the doctor
+ * Handle request to get infos of a doctor
  */
-router.get('/qrCodeToken', (req: Request, res: Response, next: NextFunction) => {
-    const session = <ISession><unknown>res.locals.session;
-    if (session.type !== Connectable.collection.collectionName)
-        return next(createError(401, 'user must be a doctor'));
-    const id = session.id;
-
-    Connectable
-        .findById(id)
-        .then((d: IDoctorDoc) => {
-            if (d)
-                return res.json({qrCodeToken: d.doctor_qrCodeToken});
-            return next(createError(404, 'doctor not found'));
-        })
-        .catch(() => sendError(next));
+router.get('/me', (req: Request, res: Response, next: NextFunction) => {
+	Connectable
+		.findById(res.locals.session.id)
+		.then(doc => {
+			if (!doc || !doc.doctor_inami)
+				return next(createError(404, 'unknown doctor'));
+			res.json(doc);
+		})
+		.catch(() => sendError(next));
 });
 
 module.exports = router;
