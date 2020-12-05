@@ -4,7 +4,8 @@ import {
   Button,
   Grid,
   Container,
-  Paper
+  Paper,
+  FormControl
 } from "@material-ui/core";
 import { Redirect, useHistory } from "react-router-dom";
 import {SignIn} from "../utils/backend";
@@ -23,7 +24,7 @@ export default function Login({setAuth} : any) {
         console.log(response);
         localStorage.setItem("Token", String(response.data.session))
         setAuth(true);
-      }) .catch(error => {
+      }).catch(error => {
         console.log(error.response.status)
         if (error.response.status === 401){
           setAuthFailed(true);
@@ -38,7 +39,7 @@ export default function Login({setAuth} : any) {
       <Container maxWidth="xs" disableGutters >
         <Grid container justify='space-around' alignItems='center' direction='column' style={{minHeight:"100vh"}} >
         <Paper elevation={15} >
-          <form onSubmit={handleSubmit}>
+          <FormControl onSubmit={handleSubmit}>
           <Grid container >
             <Grid item container xs={12} style={{padding : "0px"}} justify="space-around">
               <div className={"badge-promo"}>
@@ -85,7 +86,7 @@ export default function Login({setAuth} : any) {
               </Grid>
             </Grid>
           </Grid>
-          </form>
+          </FormControl>
         </Paper>
         </Grid>
       </Container>

@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Login from "user/Login";
 import Logout from "user/Logout";
 import Register from "user/Register";
-import Acount from "user/Acount";
+import Account from "user/Account";
 import HomeDoctor from "components/HomeDoctor";
 //import HomeInstitution from "components/HomeInstitution";
 
@@ -31,8 +31,8 @@ export default function Router(){
           <Route exact path="/logout">
             <Logout setAuth={setAuth}/>
           </Route>
-          <Route exact path="/acount">
-            <Acount />
+          <Route exact path="/account">
+            <Account />
           </Route>
           <Redirect to="/home" />
         </Switch>

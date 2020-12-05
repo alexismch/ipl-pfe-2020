@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Grid, Container, Paper, Button, Typography, TextField} from "@material-ui/core";
+import {Grid, Container, Paper, Button, Typography, TextField, FormControl} from "@material-ui/core";
 import { Redirect, useHistory } from "react-router-dom";
 import {doctorRegistration, institutionRegistration} from "../utils/backend";
 //import {response} from "express";
@@ -120,7 +120,7 @@ export default function Register() {
           </Grid>
         </Grid>
 
-        <form onSubmit={handleSubmit}>
+        <FormControl onSubmit={handleSubmit}>
           {
             //DOCTOR FORM!!
             (registrationAs === "doctor")?
@@ -283,7 +283,7 @@ export default function Register() {
             </Grid> : null
 
           }
-        </form>
+        </FormControl>
       </Paper>
       </Grid>
     </Container>
