@@ -6,7 +6,7 @@ const locationSchemaFields: Record<keyof ILocation, any> = {
 	owner_id: {type: Schema.Types.ObjectId, required: true},
 	owner_name: {type: String, required: true},
 	name: {type: String, required: true},
-	description: {type: String, required: true}
+	description: {type: String, required: true},
 };
 
 const locationSchema: Schema = new Schema(locationSchemaFields);
@@ -18,7 +18,7 @@ locationSchema.set('toJSON', {
 		returnedObject.id = returnedObject._id.toString();
 		delete returnedObject._id;
 		delete returnedObject.__v;
-	}
+	},
 });
 
 export default model<ILocationDoc>('Location', locationSchema);

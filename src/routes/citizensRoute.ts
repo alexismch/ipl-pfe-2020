@@ -19,27 +19,24 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 
 	const sendCitizen = (status, id) => {
 		res.status(status).json({
-			session: generateSessionToken(id, '')
+			session: generateSessionToken(id, ''),
 		});
 	};
 
-	const save = (citizen) =>
+	const save = citizen =>
 		citizen
 			.save()
 			.then(cit => sendCitizen(201, cit._id))
 			.catch(() => sendError(next));
 
 	if (device)
-		Citizen
-			.findOne({device: device})
+		Citizen.findOne({device: device})
 			.then(cit => {
-				if (cit)
-					return sendCitizen(200, cit._id);
+				if (cit) return sendCitizen(200, cit._id);
 				save(citizen);
 			})
 			.catch(() => sendError(next));
-	else
-		save(citizen);
+	else save(citizen);
 });
 
 router.post('/history', (req: Request, res: Response, next: NextFunction) => {

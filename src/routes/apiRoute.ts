@@ -30,7 +30,6 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 // Handle if error
 router.use((error, req: Request, res: Response, next: NextFunction) => {
 	res.status(error.status).json({error: error.message});
-	next();
 });
 
 module.exports = router;

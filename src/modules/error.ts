@@ -8,6 +8,10 @@ const createError = require('http-errors');
  * @param code the error code
  * @param msg the error message
  */
-export function sendError(next: NextFunction, code: number = 500, msg: string = 'a server error occurred'): void {
+export function sendError(
+	next: NextFunction,
+	code: number = 500,
+	msg: string = 'a server error occurred'
+): void {
 	next(createError(code, msg));
 }

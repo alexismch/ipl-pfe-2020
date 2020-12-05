@@ -14,25 +14,29 @@ const router = express.Router();
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	const body = req.body;
 	console.log(body);
-	if (!body)
-		return next(createError(422, 'body missing'));
-	if (!body.name)
-		return next(createError(422, 'field \'name\' missing'));
+	if (!body) return next(createError(422, 'body missing'));
+	if (!body.name) return next(createError(422, "field 'name' missing"));
 	if (!body.no || !/^(\s*?\.*?-*?)(\d\s*\.*-*){10}$/.test(body.no))
-		return next(createError(422, 'field \'no\' missing or invalid'));
+		return next(createError(422, "field 'no' missing or invalid"));
 	if (!body.email || !EmailValidator.validate(body.email))
-		return next(createError(422, 'field \'email\' missing or invalid'));
+		return next(createError(422, "field 'email' missing or invalid"));
 	if (!body.password)
-		return next(createError(422, 'field \'password\' missing'));
+		return next(createError(422, "field 'password' missing"));
 
 	const institution: IConnectableDoc = new Connectable({
 		institution_name: body.name,
 		institution_no: body.no,
 		email: body.email,
-		password: body.password
+		password: body.password,
 	});
 
-	register(req, res, next, institution, 'field \'email\' or \'name\' already used');
+	register(
+		req,
+		res,
+		next,
+		institution,
+		"field 'email' or 'name' already used"
+	);
 });
 
 module.exports = router;

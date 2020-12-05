@@ -14,28 +14,32 @@ const router = express.Router();
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	const body = req.body;
-	if (!body)
-		return next(createError(422, 'body missing'));
+	if (!body) return next(createError(422, 'body missing'));
 	if (!body.firstName)
-		return next(createError(422, 'field \'firstName\' missing'));
+		return next(createError(422, "field 'firstName' missing"));
 	if (!body.lastName)
-		return next(createError(422, 'field \'lastName\' missing'));
+		return next(createError(422, "field 'lastName' missing"));
 	if (!body.email || !EmailValidator.validate(body.email))
-		return next(createError(422, 'field \'email\' missing or invalid'));
+		return next(createError(422, "field 'email' missing or invalid"));
 	if (!body.password)
-		return next(createError(422, 'field \'password\' missing'));
-	if (!body.inami)
-		return next(createError(422, 'field \'inami\' missing'));
+		return next(createError(422, "field 'password' missing"));
+	if (!body.inami) return next(createError(422, "field 'inami' missing"));
 
 	const connectable: IConnectableDoc = new Connectable({
 		email: body.email,
 		password: body.password,
 		doctor_firstName: body.firstName,
 		doctor_lastName: body.lastName,
-		doctor_inami: body.inami
+		doctor_inami: body.inami,
 	});
 
-	register(req, res, next, connectable, 'field \'email\' or \'inami\' already used');
+	register(
+		req,
+		res,
+		next,
+		connectable,
+		"field 'email' or 'inami' already used"
+	);
 });
 
 /**
@@ -43,20 +47,17 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  */
 router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
 	const id = req.params.id;
-	if (id === 'me')
-		return next();
-	if (id.length !== 24)
-		next(createError(400, 'param \'id\' incorrect'));
+	if (id === 'me') return next();
+	if (id.length !== 24) next(createError(400, "param 'id' incorrect"));
 
-	Connectable
-		.findById(id)
+	Connectable.findById(id)
 		.then(doc => {
 			if (!doc || !doc.doctor_inami)
 				return next(createError(404, 'unknown doctor'));
 			res.json({
 				id: doc._id,
 				firstName: doc.doctor_firstName,
-				lastName: doc.doctor_lastName
+				lastName: doc.doctor_lastName,
 			});
 		})
 		.catch(() => sendError(next));
@@ -73,8 +74,7 @@ router.use(verifySession);
  * Handle request to get infos of a doctor
  */
 router.get('/me', (req: Request, res: Response, next: NextFunction) => {
-	Connectable
-		.findById(res.locals.session.id)
+	Connectable.findById(res.locals.session.id)
 		.then(doc => {
 			if (!doc || !doc.doctor_inami)
 				return next(createError(404, 'unknown doctor'));

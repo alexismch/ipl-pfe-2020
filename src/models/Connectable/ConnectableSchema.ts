@@ -21,7 +21,7 @@ const connectableSchemaFields: Record<keyof IConnectable, any> = {
 	institution_no: {type: String, required: requiredInstitutionFields},
 	doctor_firstName: {type: String, required: requiredDoctorFields},
 	doctor_lastName: {type: String, required: requiredDoctorFields},
-	doctor_inami: {type: String, required: requiredDoctorFields}
+	doctor_inami: {type: String, required: requiredDoctorFields},
 };
 
 const connectableSchema: Schema = new Schema(connectableSchemaFields);
@@ -37,7 +37,7 @@ const connectableSchema: Schema = new Schema(connectableSchemaFields);
 			delete returnedObject._id;
 			delete returnedObject.__v;
 			delete returnedObject.password;
-		}
+		},
 	};
 	const saltRounds = 10;
 
