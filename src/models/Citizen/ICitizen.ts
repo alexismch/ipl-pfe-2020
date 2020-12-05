@@ -1,3 +1,3 @@
 export default interface ICitizen {
-    device: string;
+	device: string;
 }

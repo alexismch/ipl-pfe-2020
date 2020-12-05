@@ -1,5 +1,5 @@
-import {NextFunction, Request, Response} from "express";
-import {connect} from "@modules/connectable";
+import {connect} from '@modules/connectable';
+import {NextFunction, Request, Response} from 'express';
 
 const express = require('express');
 const router = express.Router();
@@ -10,7 +10,7 @@ const router = express.Router();
  * @return response with the connectable that asked to connect, or with an error
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
-    return connect(req, res, next);
+	return connect(req, res, next);
 });
 
 module.exports = router;

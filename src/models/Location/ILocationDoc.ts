@@ -1,5 +1,5 @@
-import {Document} from "mongoose";
-import ILocation from "@models/Location/ILocation";
+import ILocation from '@models/Location/ILocation';
+import {Document} from 'mongoose';
 
 export default interface ILocationDoc extends Document, ILocation {
 }

@@ -1,5 +1,5 @@
+import {NextFunction, Request, Response} from 'express';
 import 'module-alias/register';
-import {NextFunction, Request, Response} from "express";
 
 require('dotenv').config();
 require('@models/dbInit');
@@ -12,7 +12,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const morgan = require('morgan');
-const cors = require('cors')
+const cors = require('cors');
 server.listen(process.env.PORT || 4000);
 
 /**
@@ -35,19 +35,19 @@ app.use(express.static('front_end/build'));
 /**
  * Routes definition
  */
-app.use("/api/authenticate", authenticateRoute);
-app.use("/api/doctors", doctorsRoute);
-app.use("/api/institutions", institutionsRoute);
-app.use("/api/citizens", citizensRoute);
-app.use("/api/locations", locationsRoute);
+app.use('/api/authenticate', authenticateRoute);
+app.use('/api/doctors', doctorsRoute);
+app.use('/api/institutions', institutionsRoute);
+app.use('/api/citizens', citizensRoute);
+app.use('/api/locations', locationsRoute);
 
 // Handle if no route found
 app.use((req: Request, res: Response, next: NextFunction) => {
-    next(createError(404, 'unsupported request'));
+	next(createError(404, 'unsupported request'));
 });
 
 // Handle if error
 app.use((error, req: Request, res: Response, next: NextFunction) => {
-    res.status(error.status).json({error: error.message});
-    next();
+	res.status(error.status).json({error: error.message});
+	next();
 });
