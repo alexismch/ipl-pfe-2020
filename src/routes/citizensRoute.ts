@@ -1,10 +1,10 @@
 import Citizen from '@models/Citizen/CitizenSchema';
 import ICitizenDoc from '@models/Citizen/ICitizenDoc';
-import {generateSessionToken} from '@modules/connectable';
+import {generateSessionToken, verifySession} from '@modules/connectable';
 import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
-import * as mongoose from 'mongoose';
 
+const createError = require('http-errors');
 const express = require('express');
 const router = express.Router();
 
@@ -39,10 +39,23 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	else save(citizen);
 });
 
+/**
+ * Middleware to check if a session has been sent
+ * Delegated to ConnectableUtility verifySession method
+ * @return response delegated to the next endpoint, or with an error
+ */
+router.use(verifySession);
+
 router.post('/history', (req: Request, res: Response, next: NextFunction) => {
-	console.log(Citizen.collection.collectionName);
-	mongoose.connection.collection('doctors');
-	next();
+	const id = res.locals.session.id;
+
+	Citizen.findById(id)
+		.then(cit => {
+			if (!cit) return next(createError(404, 'unknown citizen'));
+
+			//TODO
+		})
+		.catch(() => sendError(next));
 });
 
 module.exports = router;

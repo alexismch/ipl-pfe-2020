@@ -1,5 +1,4 @@
 import Connectable from '@models/Connectable/ConnectableSchema';
-import ISession from '@models/Connectable/ISession';
 import ILocationDoc from '@models/Location/ILocationDoc';
 import Location from '@models/Location/LocationSchema';
 import {verifySession} from '@modules/connectable';
@@ -40,8 +39,7 @@ router.use(verifySession);
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	const body = req.body;
-	const session = <ISession>(<unknown>res.locals.session);
-	const id = session.id;
+	const id = res.locals.session.id;
 
 	if (!body) return next(createError(422, 'body missing'));
 	if (!body.name) return next(createError(422, "field 'name' missing"));
@@ -83,8 +81,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * @return response with the list of locations, or a no content
  */
 router.get('/', (req: Request, res: Response) => {
-	const session = <ISession>(<unknown>res.locals.session);
-	const id = session.id;
+	const id = res.locals.session.id;
 
 	Location.find({owner_id: id}).then(locs => {
 		if (!locs || locs.length === 0) return res.status(204).send();

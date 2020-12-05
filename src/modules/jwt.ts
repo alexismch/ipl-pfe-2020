@@ -1,5 +1,3 @@
-import ISession from '@models/Connectable/ISession';
-
 const secret = 'IPL_PFE_2020';
 const jwt = require('jsonwebtoken');
 
@@ -12,6 +10,6 @@ export function sign(payload: object, options: object = {}): string {
 	return jwt.sign(payload, secret, options);
 }
 
-export function getSessionConnectableId(sessionToken: string): ISession {
+export function getSessionConnectableId(sessionToken: string): object {
 	return jwt.verify(sessionToken, secret);
 }
