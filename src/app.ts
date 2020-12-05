@@ -1,12 +1,12 @@
-import {NextFunction, Request, Response} from 'express';
+import {Request, Response} from 'express';
 import 'module-alias/register';
+import * as path from 'path';
 
 require('@models/dbInit');
 
 /**
  * Web server
  */
-const createError = require('http-errors');
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
@@ -14,40 +14,30 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 /**
- * Routes imports
+ * api route import
  */
-const authenticateRoute = require('@routes/authenticateRoute');
-const doctorsRoute = require('@routes/doctorsRoute');
-const institutionsRoute = require('@routes/institutionsRoute');
-const citizensRoute = require('@routes/citizensRoute');
-const locationsRoute = require('@routes/locationsRoute');
+const apiRoute = require('@routes/apiRoute');
 
 /**
  * Middlewares
  */
 app.use(cors());
 app.use(express.json());
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+app.use(
+	morgan(':method :url :status :res[content-length] - :response-time ms')
+);
 app.use(express.static('front_end/build'));
 
 /**
- * Routes definition
+ * api route definition
  */
-app.use('/api/authenticate', authenticateRoute);
-app.use('/api/doctors', doctorsRoute);
-app.use('/api/institutions', institutionsRoute);
-app.use('/api/citizens', citizensRoute);
-app.use('/api/locations', locationsRoute);
+app.use('/api', apiRoute);
 
-// Handle if no route found
-app.use((req: Request, res: Response, next: NextFunction) => {
-	next(createError(404, 'unsupported request'));
-});
-
-// Handle if error
-app.use((error, req: Request, res: Response, next: NextFunction) => {
-	res.status(error.status).json({error: error.message});
-	next();
+/**
+ * redirect all non-api unknown requests to index
+ */
+app.use((req: Request, res: Response) => {
+	res.sendFile(path.join(__dirname, '../front_end/build', 'index.html'));
 });
 
 export default server;
