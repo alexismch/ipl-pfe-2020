@@ -1,9 +1,6 @@
 import IConnectable from '@models/Connectable/IConnectable';
 import IConnectableDoc from '@models/Connectable/IConnectableDoc';
 import {model, Schema} from 'mongoose';
-import * as con from '@modules/connectable';
-
-console.log(con.generateSessionToken('test'))
 
 function requiredDoctorFields(me = this): boolean {
 	return (
