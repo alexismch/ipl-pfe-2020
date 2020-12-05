@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
 import 'module-alias/register';
 
-require('dotenv').config();
 require('@models/dbInit');
 
 /**
@@ -13,7 +12,6 @@ const app = express();
 const server = require('http').Server(app);
 const morgan = require('morgan');
 const cors = require('cors');
-server.listen(process.env.PORT || 4000);
 
 /**
  * Routes imports
@@ -51,3 +49,5 @@ app.use((error, req: Request, res: Response, next: NextFunction) => {
 	res.status(error.status).json({error: error.message});
 	next();
 });
+
+export default server;
