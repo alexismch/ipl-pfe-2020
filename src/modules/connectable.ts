@@ -30,7 +30,10 @@ export function connect(req: Request, res: Response, next: NextFunction): any {
         .then((connectable: IConnectableDoc) => {
             if (!connectable || !connectable.verifyPassword(body.password))
                 return next(createError(401, 'field \'email\' or \'password\' incorrect'));
-            res.json({session: generateSessionToken(connectable._id)});
+            res.json({
+                session: generateSessionToken(connectable._id),
+                connectable
+            });
         })
         .catch(() => sendError(next));
 }
@@ -49,6 +52,7 @@ export function register(req: Request, res: Response, next: NextFunction, connec
         .then(connectable => {
             res.status(201).json({
                 session: generateSessionToken(connectable._id),
+                connectable
             });
         })
         .catch((e) => {
