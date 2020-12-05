@@ -74,3 +74,22 @@ export function getQRCodeToken(token:string){
       })
   })
 }
+
+export function locationRegistration(token:string, name:string, description:string){
+  const data = {
+    token,
+    name,
+    description
+  };
+
+  return new Promise((resolve, reject) => {
+
+    Axios.post(`/api/locations/`, data)
+      .then(response => {
+        resolve(response);
+      })
+      .catch(error => {
+        reject(error);
+      })
+  })
+}

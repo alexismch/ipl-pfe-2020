@@ -6,6 +6,7 @@ import Register from "user/Register";
 import Account from "user/Account";
 import HomeDoctor from "components/HomeDoctor";
 //import HomeInstitution from "components/HomeInstitution";
+import CodesList from "components/CodesList";
 
 export default function Router(){
 //TODO JWT TOKEN
@@ -27,6 +28,9 @@ export default function Router(){
           <Route exact path="/home">
             <HomeDoctor/>
             {/* <HomeInstitution/> */}
+          </Route>
+          <Route exact path="/codesList">
+            <CodesList />
           </Route>
           <Route exact path="/logout">
             <Logout setAuth={setAuth}/>
