@@ -31,7 +31,7 @@ export function connect(req: Request, res: Response, next: NextFunction): any {
 					createError(401, "field 'email' or 'password' incorrect")
 				);
 			res.json({
-				session: generateSessionToken(connectable._id),
+				token: generateSessionToken(connectable._id),
 				type: connectable.institution_name ? 'institution' : 'doctor',
 			});
 		})
@@ -57,7 +57,7 @@ export function register(
 		.save()
 		.then(connectable => {
 			res.status(201).json({
-				session: generateSessionToken(connectable._id),
+				token: generateSessionToken(connectable._id),
 				type: connectable.institution_name ? 'institution' : 'doctor',
 			});
 		})
