@@ -1,4 +1,5 @@
 import Axios from "axios";
+import {promises} from "dns";
 //import {receiveMessageOnPort} from "worker_threads";
 
 export function doctorRegistration(firstName : string, lastName : string, email : string, password : string, inami : string){
@@ -40,34 +41,21 @@ export function institutionRegistration(name : string, email : string, password 
   })
 }
 
-export function SignIn(email : string, password : string, isDoctor : boolean){
+export function SignIn(email : string, password : string){
 
   const data = {
     email,
     password
   }
 
-  if(isDoctor){
-    return new Promise((resolve, reject) => {
-      Axios.post(`/api/doctors/session`, data)
-        .then(response => {
-          resolve(response);
-        })
-        .catch(error => {
-          reject(error);
-        })
+  return new Promise ((resolve, reject) => {
+    Axios.post("/api/doctors/session", data)
+      .then(response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error);
     })
-  } else {
-    return new Promise((resolve, reject) => {
-      Axios.post(`/api/institutions/session`, data)
-        .then(response => {
-          resolve(response);
-        })
-        .catch(error => {
-          reject(error);
-        })
-    })
-  }
+  })
 }
 
 export function getQRCodeToken(token:string){

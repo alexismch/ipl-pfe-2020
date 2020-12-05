@@ -7,6 +7,7 @@ import {
   Paper
 } from "@material-ui/core";
 import { Redirect, useHistory } from "react-router-dom";
+import {SignIn} from "../utils/backend";
 
 export default function Login({setAuth} : any) {
   const [email, setEmail] = useState("");
@@ -17,7 +18,19 @@ export default function Login({setAuth} : any) {
 
   const handleSubmit = (e : any) => {
     e.preventDefault();
-    console.log("Clicked");
+    SignIn(email, password)
+      .then((response : any) => {
+        console.log(response);
+        localStorage.setItem("Token", String(response.data.session))
+        setAuth(true);
+      }) .catch(error => {
+        console.log(error.response.status)
+        if (error.response.status === 401){
+          setAuthFailed(true);
+        } else {
+
+        }
+    })
   };
 
   return (<div >
@@ -35,7 +48,7 @@ export default function Login({setAuth} : any) {
             {
               authFailed ?
               <Grid item xs={12} >
-                <p style={{color:"#ff0000"}}>Erreur durant la tentative de connexion. Veuillez réessayer.</p>
+                <p style={{color:"#ff0000"}}>Adresse E-mail ou mot de passe incorrect.</p>
               </Grid>
               : null
             }
@@ -54,7 +67,7 @@ export default function Login({setAuth} : any) {
             </Grid>
             <Grid item xs={12} >
               <TextField
-                type="Mot de passe"
+                type="password"
                 fullWidth
                 placeholder="Mot de passe"
                 label="Entrez votre mot de passe"

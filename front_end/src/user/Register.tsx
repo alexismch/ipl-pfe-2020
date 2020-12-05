@@ -172,6 +172,7 @@ export default function Register() {
                                  fullWidth
                                  placeholder="Mot de passe"
                                  label="MDP"
+                                 type={"password"}
                                  onChange={event => setDocPassword(event.target.value)}
                                  variant="outlined"/>
                     </Grid>
@@ -180,6 +181,7 @@ export default function Register() {
                                  fullWidth
                                  placeholder="Répéter mot de passe"
                                  label="Répéter MDP"
+                                 type={"password"}
                                  onChange={event => setDocRepeatPwd(event.target.value)}
                                  variant="outlined"/>
                     </Grid>
@@ -240,6 +242,7 @@ export default function Register() {
                                  fullWidth
                                  placeholder="Mot de passe"
                                  label="MDP"
+                                 type={"password"}
                                  onChange={event => setInstPwd(event.target.value)}
                                  variant="outlined"/>
                     </Grid>
@@ -248,6 +251,7 @@ export default function Register() {
                                  fullWidth
                                  placeholder="Répéter mot de passe"
                                  label="Répéter MDP"
+                                 type={"password"}
                                  onChange={event => setInstRepeatPwd(event.target.value)}
                                  variant="outlined"/>
                     </Grid>
@@ -257,8 +261,8 @@ export default function Register() {
                   <TextField value={instNoTVA}
                              fullWidth
                              style={{width: "96%", paddingLeft:"2%"}}
-                             placeholder="Numéro inami"
-                             label="Numéro inami"
+                             placeholder="Numéro TVA"
+                             label="Numéro TVA"
                              onChange={event => setInstNoTVA(event.target.value)}
                              variant="outlined"/>
                 </Grid>
@@ -279,7 +283,6 @@ export default function Register() {
             </Grid> : null
 
           }
-
         </form>
       </Paper>
       </Grid>
