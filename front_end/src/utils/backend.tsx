@@ -1,4 +1,5 @@
 import Axios from "axios";
+import {response} from "express";
 //import {receiveMessageOnPort} from "worker_threads";
 
 export function doctorRegistration(firstName : string, lastName : string, email : string, password : string, inami : string){
@@ -72,6 +73,23 @@ export function getQRCodeToken(token:string){
       .catch(error => {
         reject(error);
       })
+  })
+}
+
+export function getCurrentDoctorInfo(token:string){
+  const data = {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+    Axios.get("/api/doctors/me", data)
+      .then(response => {
+        resolve (response)
+      }).catch(error => {
+        reject(error)
+    })
   })
 }
 
