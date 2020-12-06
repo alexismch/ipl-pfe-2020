@@ -19,14 +19,10 @@ const router = express.Router();
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	const body = req.body;
-	if (!body) return next(createError(422, 'body missing'));
-	if (!body.notifToken)
-		return next(
-			createError(422, "field 'notifToken' missing or incorrect")
-		);
-	const device = req.body?.device;
+	const device = body?.device;
+	const fcmToken = body?.fcmToken;
 	const citizen: ICitizenDoc = new Citizen({
-		notifToken: body.notifToken,
+		fcmToken,
 		device,
 	});
 
@@ -44,10 +40,10 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 			.catch(() => sendError(next));
 
 	if (device)
-		Citizen.findOne({device: device})
+		Citizen.findOne({device})
 			.then(cit => {
 				if (cit) {
-					cit.notifToken = body.notifToken;
+					cit.fcmToken = fcmToken;
 					cit.save()
 						.then(cit => sendCitizen(200, cit._id))
 						.catch(() => sendError(next));
@@ -171,20 +167,14 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 					next(createError(422, "field 'type' incorrect"));
 			}
 		})
-		.catch(e => {
-			console.log(e);
-			sendError(next);
-		});
+		.catch(() => sendError(next));
 });
 
 function saveHistory(history: IHistoryDoc, res: Response, next: NextFunction) {
 	history
 		.save()
 		.then(hist => res.json(hist))
-		.catch(e => {
-			console.log(e);
-			sendError(next);
-		});
+		.catch(() => sendError(next));
 }
 
 function locationCase(
@@ -203,10 +193,7 @@ function locationCase(
 			history.owner_name = loc.owner_name;
 			saveHistory(history, res, next);
 		})
-		.catch(e => {
-			console.log(e);
-			sendError(next);
-		});
+		.catch(() => sendError(next));
 }
 
 function doctorCase(
@@ -226,10 +213,7 @@ function doctorCase(
 			//TODO: process contacts
 			console.log(doc);
 		})
-		.catch(e => {
-			console.log(e);
-			sendError(next);
-		});
+		.catch(() => sendError(next));
 }
 
 module.exports = router;
