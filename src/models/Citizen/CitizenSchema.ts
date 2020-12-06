@@ -4,7 +4,7 @@ import {model, Schema} from 'mongoose';
 
 const citizenSchemaFields: Record<keyof ICitizen, any> = {
 	device: {type: String},
-	notifToken: {type: String, required: true},
+	fcmToken: {type: String},
 };
 
 const citizenSchema: Schema = new Schema(citizenSchemaFields);
