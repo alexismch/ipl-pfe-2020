@@ -77,7 +77,7 @@ router.get('/me', (req: Request, res: Response, next: NextFunction) => {
 	Connectable.findById(res.locals.session.id)
 		.then(doc => {
 			if (!doc || !doc.doctor_inami)
-				return next(createError(404, 'unknown doctor'));
+				return next(createError(401, 'unknown doctor'));
 			res.json(doc);
 		})
 		.catch(() => sendError(next));

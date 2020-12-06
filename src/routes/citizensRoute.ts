@@ -1,5 +1,9 @@
 import Citizen from '@models/Citizen/CitizenSchema';
 import ICitizenDoc from '@models/Citizen/ICitizenDoc';
+import Connectable from '@models/Connectable/ConnectableSchema';
+import History from '@models/History/HistorySchema';
+import IHistoryDoc from '@models/History/IHistoryDoc';
+import Location from '@models/Location/LocationSchema';
 import {generateSessionToken, verifySession} from '@modules/connectable';
 import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
@@ -46,6 +50,9 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  */
 router.use(verifySession);
 
+/**
+ * Handle request to add an scan event to the history
+ */
 router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 	const body = req.body;
 	if (!body) return next(createError(422, 'body missing'));
@@ -59,15 +66,89 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 		)
 	)
 		return next(createError(422, "field 'scanDate' missing or incorrect"));
+	//TODO: verify time
 	const scanDate = new Date(body.scanDate);
 	const citizen_id = res.locals.session.id;
 
 	Citizen.findById(citizen_id)
 		.then(cit => {
 			if (!cit) return next(createError(401, 'unknown citizen'));
-			//TODO
+			const history = new History({
+				citizen: citizen_id,
+				scanDate,
+			});
+
+			console.log(history);
+			switch (body.type) {
+				case 'location':
+					locationCase(body.id, history, res, next);
+					break;
+				case 'doctor':
+					doctorCase(body.id, history, res, next);
+					break;
+				default:
+					next(createError(422, "field 'type' incorrect"));
+			}
 		})
-		.catch(() => sendError(next));
+		.catch(e => {
+			console.log(e);
+			sendError(next);
+		});
 });
+
+function saveHistory(history: IHistoryDoc, res: Response, next: NextFunction) {
+	history
+		.save()
+		.then(hist => res.json(hist))
+		.catch(e => {
+			console.log(e);
+			sendError(next);
+		});
+}
+
+function locationCase(
+	id,
+	history: IHistoryDoc,
+	res: Response,
+	next: NextFunction
+) {
+	Location.findById(id)
+		.then(loc => {
+			if (!loc) return next(createError(422, "field 'id' incorrect"));
+			history.location_id = loc._id;
+			history.location_name = loc.name;
+			history.location_description = loc.description;
+			history.owner_id = loc.owner_id;
+			history.owner_name = loc.owner_name;
+			saveHistory(history, res, next);
+		})
+		.catch(e => {
+			console.log(e);
+			sendError(next);
+		});
+}
+
+function doctorCase(
+	id,
+	history: IHistoryDoc,
+	res: Response,
+	next: NextFunction
+) {
+	Connectable.findById(id)
+		.then(doc => {
+			if (!doc || !doc.doctor_inami)
+				return next(createError(422, "field 'id' incorrect"));
+			history.doctor_id = doc._id;
+			history.doctor_firstName = doc.doctor_firstName;
+			history.doctor_lastName = doc.doctor_lastName;
+			saveHistory(history, res, next);
+			//TODO: process contacts
+			console.log(doc);
+		})
+		.catch(e => {
+			console.log(e);
+			sendError(next);
+		});
+}
 
 module.exports = router;
