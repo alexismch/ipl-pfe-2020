@@ -1,6 +1,7 @@
 import Connectable from '@models/Connectable/ConnectableSchema';
 import IConnectableDoc from '@models/Connectable/IConnectableDoc';
-import {register} from '@modules/connectable';
+import {register, verifySession} from '@modules/connectable';
+import {sendError} from '@modules/error';
 import * as EmailValidator from 'email-validator';
 import {NextFunction, Request, Response} from 'express';
 
@@ -31,6 +32,26 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	});
 
 	register(req, res, next, institution, "field 'email' or 'no' already used");
+});
+
+/**
+ * Middleware to check if a session has been sent
+ * Delegated to ConnectableUtility verifySession method
+ * @return response delegated to the next endpoint, or with an error
+ */
+router.use(verifySession);
+
+/**
+ * Handle request to get infos of an institution
+ */
+router.get('/me', (req: Request, res: Response, next: NextFunction) => {
+	Connectable.findById(res.locals.session.id)
+		.then(inst => {
+			if (!inst || !inst.institution_no)
+				return next(createError(401, 'unknown institution'));
+			res.json(inst);
+		})
+		.catch(() => sendError(next));
 });
 
 module.exports = router;
