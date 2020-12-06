@@ -12,7 +12,7 @@ import {response} from "express";
 const generateQRCode = () => {
     getQRCodeToken(String(localStorage.getItem("Token")))
         .then((response:any) => {
-        console.log(String(response.data.qrCodeToken));
+        console.log("Clicked on the button");
     })
 }
 

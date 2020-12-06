@@ -10,7 +10,7 @@ import {
 import { Redirect, useHistory } from "react-router-dom";
 import {SignIn} from "../utils/backend";
 
-export default function Login({setAuth} : any) {
+export default function Login({setAuthAsDoctor, setAuthAsInstitution} : any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authFailed, setAuthFailed] = useState(false);
@@ -22,8 +22,14 @@ export default function Login({setAuth} : any) {
     SignIn(email, password)
       .then((response : any) => {
         console.log(response);
-        localStorage.setItem("Token", String(response.data.session))
-        setAuth(true);
+        localStorage.setItem("Token", response.data.token);
+        if (response.data.type === "doctor"){
+          localStorage.setItem("Type_BlockCovid", "doctor");
+          setAuthAsDoctor(true);
+        } else if (response.data.type === "institution"){
+          localStorage.setItem("Type_BlockCovid", "institution");
+          setAuthAsInstitution(true);
+        }
       }).catch(error => {
         console.log(error.response.status)
         if (error.response.status === 401){
@@ -39,7 +45,7 @@ export default function Login({setAuth} : any) {
       <Container maxWidth="xs" disableGutters >
         <Grid container justify='space-around' alignItems='center' direction='column' style={{minHeight:"100vh"}} >
         <Paper elevation={15} >
-          <FormControl onSubmit={handleSubmit}>
+          <FormControl >
           <Grid container >
             <Grid item container xs={12} style={{padding : "0px"}} justify="space-around">
               <div className={"badge-promo"}>
@@ -82,7 +88,7 @@ export default function Login({setAuth} : any) {
                   <Button onClick={() => history.push("/register")} variant="contained" >S'enregistrer</Button>
               </Grid>
               <Grid item>
-                  <Button type="submit" variant="contained" >Se connecter</Button>
+                  <Button onClick={handleSubmit} variant="contained" >Se connecter</Button>
               </Grid>
             </Grid>
           </Grid>
