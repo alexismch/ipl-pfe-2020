@@ -82,8 +82,10 @@ export function verifySession(
 	if (!req.headers.authorization)
 		return next(createError(401, "no header 'Authorization' provided"));
 
-	//TODO: catch Bearer
-	const session: string = <string>req.headers.authorization;
+	const [bearer, token] = req.headers.authorization.split(' ');
+	if (bearer !== 'Bearer')
+		return next(createError(401, "header 'Authorization' invalid"));
+	const session: string = <string>token;
 	try {
 		res.locals.session = <string[]>(
 			(<unknown>getSessionConnectableId(session))
