@@ -1,8 +1,16 @@
 import {Request, Response} from 'express';
 import 'module-alias/register';
 import * as path from 'path';
+import * as admin from 'firebase-admin';
 
 require('@models/dbInit');
+
+/**
+ * Initialize firebase
+ */
+admin.initializeApp({
+	credential: admin.credential.applicationDefault(),
+});
 
 /**
  * Web server

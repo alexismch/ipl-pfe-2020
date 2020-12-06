@@ -7,6 +7,7 @@ import Location from '@models/Location/LocationSchema';
 import {generateSessionToken, verifySession} from '@modules/connectable';
 import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
+import * as admin from 'firebase-admin';
 
 const createError = require('http-errors');
 const express = require('express');
@@ -20,6 +21,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	const device = req.body?.device;
 	const body = device ? {device} : {};
 	const citizen: ICitizenDoc = new Citizen(body);
+
 
 	const sendCitizen = (status, id) => {
 		res.status(status).json({
@@ -68,6 +70,39 @@ router.get('/history', (req: Request, res: Response, next: NextFunction) => {
 			res.json(hist);
 		})
 		.catch(() => sendError(next));
+});
+
+/**
+ * Test send notif wia API
+ */
+router.get('/sendNotif', (req: Request, res: Response) => {
+
+	//Get ID form session
+	//Get corresponding token
+	//etwM22wLrywUB--1-apXpS:APA91bGU3QTch3yqUILh7fzgDWjfrKH0POftSgI1iJHiHRlhD4lH-oVMy0o3jyVXcyq70kGPc071KxexiUWN3hngSwVIDAM1MfaCq7AHslQuu7s98aqrwL1wfMnNFggNXSe8qfabX5Mi
+	let registrationToken = 'etwM22wLrywUB--1-apXpS:APA91bGU3QTch3yqUILh7fzgDWjfrKH0POftSgI1iJHiHRlhD4lH-oVMy0o3jyVXcyq70kGPc071KxexiUWN3hngSwVIDAM1MfaCq7AHslQuu7s98aqrwL1wfMnNFggNXSe8qfabX5Mi';
+	let message = {
+		notification: {
+			"title": "Test notification via API",
+			"body": "Essai pour gsm"
+		},
+		token: registrationToken
+	};
+// Send a message to the device corresponding to the provided
+// registration token.
+	admin.messaging().send(message)
+		.then((response) => {
+			// Response is a message ID string.
+			console.log('Successfully sent message:', response);
+		})
+		.catch((error) => {
+			console.log('Error sending message:', error);
+		});
+
+	res.json({
+		"test" : "reussi"
+	})
+
 });
 
 /**
