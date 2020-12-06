@@ -49,7 +49,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 				owner_id: id,
 				owner_name:
 					con.institution_name ||
-					con.doctor_firstName + con.doctor_lastName,
+					con.doctor_firstName + ' ' + con.doctor_lastName,
 				name: body.name,
 				description: body.description,
 			});
