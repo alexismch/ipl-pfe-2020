@@ -1,10 +1,16 @@
 import {useEffect} from "react";
 
-export default function Logout({setAuth}:any){
+export default function Logout({authAsDoctor, setAuthAsDoctor, setAuthAsInstitution}:any){
 
   localStorage.removeItem("Token");
+  localStorage.removeItem("ID_BlockCovid");
+  localStorage.removeItem("Type_BlockCovid");
   useEffect(() => {
-    setAuth(false);
+    if (authAsDoctor){
+      setAuthAsDoctor(false);
+    } else {
+      setAuthAsInstitution(false);
+    }
   })
 
   return null;

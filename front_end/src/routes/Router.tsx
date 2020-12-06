@@ -5,35 +5,44 @@ import Logout from "user/Logout";
 import Register from "user/Register";
 import Account from "user/Account";
 import HomeDoctor from "components/HomeDoctor";
-//import HomeInstitution from "components/HomeInstitution";
+import HomeInstitution from "components/HomeInstitution";
 import CodesList from "components/CodesList";
 
 export default function Router(){
-//TODO JWT TOKEN
+  //const [auth, setAuth] = useState(false);
+  const [authAsDoctor, setAuthAsDoctor] = useState(false);
+  const [authAsInstitution, setAuthAsInstitution] = useState(false);
 
-  const [auth, setAuth] = useState(false);
+
   useEffect(() => {
-    if (localStorage.getItem("Token")){
-
-      //If valid token... To be continued.
-
+    /*if (localStorage.getItem("Token")){
+      //TODO If valid token... To be continued.
       setAuth(true);
+    }*/
+
+    if (localStorage.getItem("Type_BlockCovid") === "doctor"){
+      setAuthAsDoctor(true);
+    } else if (localStorage.getItem("Type_BlockCovid") === "institution"){
+      setAuthAsInstitution(true);
     }
   }, [])
 
   return (
     <BrowserRouter>
-        {auth ? 
+        {authAsDoctor || authAsInstitution ?
         <Switch>
           <Route exact path="/home">
-            <HomeDoctor/>
-            {/* <HomeInstitution/> */}
+            {
+              (authAsDoctor)?
+                <HomeDoctor/>
+              : <HomeInstitution/>
+            }
           </Route>
           <Route exact path="/codesList">
             <CodesList />
           </Route>
           <Route exact path="/logout">
-            <Logout setAuth={setAuth}/>
+            <Logout authAsDoctor={authAsDoctor} setAuthAsDoctor={setAuthAsDoctor} setAuthAsInstitution={setAuthAsInstitution}/>
           </Route>
           <Route exact path="/account">
             <Account />
@@ -43,7 +52,7 @@ export default function Router(){
         : 
         <Switch>
           <Route exact path="/login">
-            <Login setAuth={setAuth}/>
+            <Login setAuthAsDoctor={setAuthAsDoctor} setAuthAsInstitution={setAuthAsInstitution}/>
           </Route>
           <Route exact path="/register">
             <Register />
