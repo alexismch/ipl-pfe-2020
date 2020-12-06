@@ -18,10 +18,17 @@ const router = express.Router();
  * Verify if the citizen's device already has logged in before and return a citizen in all cases
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
+	const body = req.body;
+	if (!body) return next(createError(422, 'body missing'));
+	if (!body.notifToken)
+		return next(
+			createError(422, "field 'notifToken' missing or incorrect")
+		);
 	const device = req.body?.device;
-	const body = device ? {device} : {};
-	const citizen: ICitizenDoc = new Citizen(body);
-
+	const citizen: ICitizenDoc = new Citizen({
+		notifToken: body.notifToken,
+		device,
+	});
 
 	const sendCitizen = (status, id) => {
 		res.status(status).json({
@@ -38,8 +45,12 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	if (device)
 		Citizen.findOne({device: device})
 			.then(cit => {
-				if (cit) return sendCitizen(200, cit._id);
-				save(citizen);
+				if (cit) {
+					cit.notifToken = body.notifToken;
+					cit.save()
+						.then(cit => sendCitizen(200, cit._id))
+						.catch(() => sendError(next));
+				} else save(citizen);
 			})
 			.catch(() => sendError(next));
 	else save(citizen);
@@ -49,33 +60,37 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * Test send notif wia API
  */
 router.get('/sendNotif', (req: Request, res: Response) => {
-
 	//Get ID form session
 	//Get corresponding token
+	//Huy
 	//etwM22wLrywUB--1-apXpS:APA91bGU3QTch3yqUILh7fzgDWjfrKH0POftSgI1iJHiHRlhD4lH-oVMy0o3jyVXcyq70kGPc071KxexiUWN3hngSwVIDAM1MfaCq7AHslQuu7s98aqrwL1wfMnNFggNXSe8qfabX5Mi
-	let registrationToken = 'etwM22wLrywUB--1-apXpS:APA91bGU3QTch3yqUILh7fzgDWjfrKH0POftSgI1iJHiHRlhD4lH-oVMy0o3jyVXcyq70kGPc071KxexiUWN3hngSwVIDAM1MfaCq7AHslQuu7s98aqrwL1wfMnNFggNXSe8qfabX5Mi';
+	//Bruno
+	//epxR-mvbRDKuaIUI0a9-sD:APA91bFHopq8Xe0UGTIHerdw5rpze4jYeyhgMXSBAVi28rVJ1UXekNoC1h5SLMsEOi5HlWw95j6zKZQQ4eat-yK0wDbYCB-BIom7Q7aoleWDS7swFlcvuC3B6HB2MvdpANU6Jmpq0Nmj
+	let registrationToken =
+		'dJxaI6gttnEiwPNtXMW1Bv:APA91bEKwtUwzNaH3Bez2PAWgzyW1sKg9tnX9TH-_zXLzGoLTChp6bffiIXHh8UqfRvw6RntXT-YbeViiyzbC5YIPShCxqThOb8d-xuVSpOZ31DParpsDZYRFbDGTuTWskFAY_EHRs5n';
 	let message = {
 		notification: {
-			"title": "Test notification via API",
-			"body": "Essai pour gsm"
+			title: 'Test notification via API',
+			body: 'Essai pour gsm',
 		},
-		token: registrationToken
+		token: registrationToken,
 	};
-// Send a message to the device corresponding to the provided
-// registration token.
-	admin.messaging().send(message)
-		.then((response) => {
+	// Send a message to the device corresponding to the provided
+	// registration token.
+	admin
+		.messaging()
+		.send(message)
+		.then(response => {
 			// Response is a message ID string.
 			console.log('Successfully sent message:', response);
 		})
-		.catch((error) => {
+		.catch(error => {
 			console.log('Error sending message:', error);
 		});
 
 	res.json({
-		"test" : "reussi"
-	})
-
+		test: 'reussi',
+	});
 });
 
 /**
@@ -104,8 +119,6 @@ router.get('/history', (req: Request, res: Response, next: NextFunction) => {
 		})
 		.catch(() => sendError(next));
 });
-
-
 
 /**
  * Handle request to add an scan event to the history
