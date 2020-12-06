@@ -136,8 +136,18 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 		)
 	)
 		return next(createError(422, "field 'scanDate' missing or incorrect"));
-	//TODO: verify time
+
 	const scanDate = new Date(body.scanDate);
+	const nowDate = new Date();
+	const maxPastDate = new Date();
+	maxPastDate.setDate(nowDate.getDate() - 2);
+
+	if (nowDate.valueOf() - scanDate.valueOf() < 0)
+		return next(createError(422, "field 'scanDate' is in the future"));
+	if (maxPastDate.valueOf() - scanDate.valueOf() > 0)
+		return next(
+			createError(422, "field 'scanDate' is too far in the past")
+		);
 	const citizen_id = res.locals.session.id;
 
 	Citizen.findById(citizen_id)
