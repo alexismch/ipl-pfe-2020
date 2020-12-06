@@ -46,33 +46,6 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 /**
- * Middleware to check if a session has been sent
- * Delegated to ConnectableUtility verifySession method
- * @return response delegated to the next endpoint, or with an error
- */
-router.use(verifySession);
-
-/**
- * Handle request to get the citizen history
- * @return response with the history, or a no content
- */
-router.get('/history', (req: Request, res: Response, next: NextFunction) => {
-	const id = res.locals.session.id;
-
-	Citizen.findById(id)
-		.then(doc => {
-			if (!doc) return next(createError(401, 'unknown citizen'));
-		})
-		.catch(() => sendError(next));
-
-	History.find({citizen: id})
-		.then(hist => {
-			res.json(hist);
-		})
-		.catch(() => sendError(next));
-});
-
-/**
  * Test send notif wia API
  */
 router.get('/sendNotif', (req: Request, res: Response) => {
@@ -104,6 +77,35 @@ router.get('/sendNotif', (req: Request, res: Response) => {
 	})
 
 });
+
+/**
+ * Middleware to check if a session has been sent
+ * Delegated to ConnectableUtility verifySession method
+ * @return response delegated to the next endpoint, or with an error
+ */
+router.use(verifySession);
+
+/**
+ * Handle request to get the citizen history
+ * @return response with the history, or a no content
+ */
+router.get('/history', (req: Request, res: Response, next: NextFunction) => {
+	const id = res.locals.session.id;
+
+	Citizen.findById(id)
+		.then(doc => {
+			if (!doc) return next(createError(401, 'unknown citizen'));
+		})
+		.catch(() => sendError(next));
+
+	History.find({citizen: id})
+		.then(hist => {
+			res.json(hist);
+		})
+		.catch(() => sendError(next));
+});
+
+
 
 /**
  * Handle request to add an scan event to the history
