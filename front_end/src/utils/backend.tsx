@@ -1,5 +1,5 @@
 import Axios from "axios";
-import {response} from "express";
+//import {response} from "express";
 //import {receiveMessageOnPort} from "worker_threads";
 
 export function doctorRegistration(firstName : string, lastName : string, email : string, password : string, inami : string){
@@ -76,7 +76,7 @@ export function getQRCodeToken(token:string){
   })
 }
 
-export function getCurrentDoctorInfo(token:string){
+export function getCurrentDoctorQRCodeValue(token:string){
   const data = {
     headers: {
       Authorization: "Bearer " + token

@@ -6,7 +6,7 @@ import {
     Collapse
 } from "@material-ui/core";
 import Overlay from "./Overlay";
-import {getCurrentDoctorInfo} from "../utils/backend";
+import {getCurrentDoctorQRCodeValue} from "../utils/backend";
 import QRCodeListItem from "components/QRCodeListItem";
 var QRCode = require('qrcode.react');
 
@@ -15,12 +15,14 @@ var QRCode = require('qrcode.react');
 export default function Home(){
     const [showUniqueDoctorCode, setShowUniqueDoctorCode] = useState(true);
     const [doctorUniqueQRCodeValue, setDoctorUniqueQRCodeValue] = useState("");
-    const [shown, setShown] = useState(false);
     useEffect(() => {
-        getCurrentDoctorInfo(String(localStorage.getItem("Token")))
+        getCurrentDoctorQRCodeValue(String(localStorage.getItem("Token")))
             .then((response:any) => {
                 var id = String(response.data.id);
-                setDoctorUniqueQRCodeValue("{\"id\":\""+ id +"\", \"type\":\"doctor\"}") //{"id":id, "type":"doctor"}
+                var type = "d";
+                console.log(id)
+
+                setDoctorUniqueQRCodeValue("https://ipl-pfe-2020-dev-mobile.herokuapp.com/qr/"+ type +"/"+id) //{"id":id, "type":"doctor"}
             }).catch(error => {
                 console.log("Error")
             })

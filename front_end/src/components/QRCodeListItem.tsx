@@ -4,7 +4,6 @@ import {Button, Collapse, Paper} from "@material-ui/core";
 const QRCodeListItem = () => {
     const [shown, setShown] = useState(false);
 
-
     return (
         <Paper elevation={12} style={{marginTop:"1%"}}>
             <Collapse collapsedHeight={"60px"} in={shown}>
