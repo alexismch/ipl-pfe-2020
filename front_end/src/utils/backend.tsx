@@ -1,6 +1,4 @@
 import Axios from "axios";
-//import {response} from "express";
-//import {receiveMessageOnPort} from "worker_threads";
 
 export function doctorRegistration(firstName : string, lastName : string, email : string, password : string, inami : string){
   const data = {
@@ -58,25 +56,7 @@ export function SignIn(email : string, password : string){
   })
 }
 
-export function getQRCodeToken(token:string){
-  const config = {
-    headers: { session: token }
-  };
-
-  //console.log(config.headers)
-  return new Promise((resolve, reject) => {
-
-    Axios.get(`/api/doctors/qrCodeToken`, config)
-      .then(response => {
-        resolve(response);
-      })
-      .catch(error => {
-        reject(error);
-      })
-  })
-}
-
-export function getCurrentDoctorQRCodeValue(token:string){
+export function getCurrentDoctorData(token:string){
   const data = {
     headers: {
       Authorization: "Bearer " + token
@@ -93,21 +73,20 @@ export function getCurrentDoctorQRCodeValue(token:string){
   })
 }
 
-export function locationRegistration(token:string, name:string, description:string){
+export function getDoctorInstitutions(token:string){
   const data = {
-    token,
-    name,
-    description
-  };
+    headers: {
+      authorization : "Bearer " + token
+    }
+  }
 
   return new Promise((resolve, reject) => {
-
-    Axios.post(`/api/locations/`, data)
+    Axios.get("/api/locations", data)
       .then(response => {
-        resolve(response);
-      })
-      .catch(error => {
+        resolve(response)
+      }).catch(error => {
         reject(error);
-      })
+    })
   })
 }
+

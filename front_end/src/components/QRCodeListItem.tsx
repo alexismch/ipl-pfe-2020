@@ -1,22 +1,54 @@
 import React, { useState } from "react";
-import {Button, Collapse, Paper} from "@material-ui/core";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary, createStyles,
+    Grid, makeStyles,
+    Theme,
+    Typography
+} from "@material-ui/core";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+var QRCode = require('qrcode.react');
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        heading: {
+            fontSize: theme.typography.pxToRem(15),
+            flexBasis: '33.33%',
+            flexShrink: 0,
+        },
+        secondaryHeading: {
+            fontSize: theme.typography.pxToRem(15),
+            color: theme.palette.text.secondary,
+        },
+    }),
+);
 
-const QRCodeListItem = () => {
-    const [shown, setShown] = useState(false);
+const QRCodeListItem = ({id, name, description, expanded, handleChange}:any) => {
+    const baseURL = "https://ipl-pfe-2020-dev-mobile.herokuapp.com/qr/d/";
+    const classes = useStyles();
 
     return (
-        <Paper elevation={12} style={{marginTop:"1%"}}>
-            <Collapse collapsedHeight={"60px"} in={shown}>
-                <Button onClick={() => setShown(!shown)} variant="contained" style={{marginTop:"1%", marginRight:"1%"}}>
-                    Show
-                </Button>
-                <h2>Put list of QRCodes here.</h2>
-                <p>This is such a beautiful test</p>
-                <p>I love coding.</p>
-                <p>Internship coming soon!</p>
-                <p>Let's have som fun.</p>
-            </Collapse>
-        </Paper>
+        <div>
+            <Accordion elevation={12} expanded={expanded === id} onChange={handleChange(id)} >
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={id + "-content"}
+                    id={id +"-header"}
+                >
+                    <Typography className={classes.heading}>{name}</Typography>
+                    <Typography className={classes.secondaryHeading}>{description}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Grid container alignContent={"center"}>
+                        <Grid item xs={12}>
+                            <Typography style={{textAlign:"center"}}>
+                                <QRCode size={256} value={baseURL + id} />
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </AccordionDetails>
+            </Accordion>
+        </div>
     )
 }
 

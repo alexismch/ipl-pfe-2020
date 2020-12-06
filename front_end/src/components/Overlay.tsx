@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Button, List, ListItem, Popover, Box, Grid} from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-export default function Overlay(){
-    const user = "Name to retrieve";
+export default function Overlay({doctorName}:any){
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;
@@ -24,7 +23,7 @@ export default function Overlay(){
                 <Grid container direction="row" alignItems="center" justify="space-between">
                     <span className={"app-title"}>BLOCKCOVID</span>
                     <Box ml={1} >
-                        <Button onClick={handleOpen} variant="contained" >{user}</Button>
+                        <Button onClick={handleOpen} variant="contained" >{String(doctorName)}</Button>
                         <Popover
                             id={id}
                             open={open}

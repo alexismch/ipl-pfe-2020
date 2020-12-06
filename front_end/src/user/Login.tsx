@@ -21,7 +21,6 @@ export default function Login({setAuthAsDoctor, setAuthAsInstitution} : any) {
     e.preventDefault();
     SignIn(email, password)
       .then((response : any) => {
-        console.log(response);
         localStorage.setItem("Token", response.data.token);
         if (response.data.type === "doctor"){
           localStorage.setItem("Type_BlockCovid", "doctor");

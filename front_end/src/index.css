@@ -111,3 +111,13 @@ body {
 .Register-button{
   width: 180px;
 }
+
+.qrCode-Description{
+  margin-left: 5%;
+  font-size: 1.2em;
+}
+
+.description-bottom-line{
+  border-top: 1px solid lightgrey;
+  margin-bottom: 1%;
+}
