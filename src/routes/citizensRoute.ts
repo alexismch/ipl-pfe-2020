@@ -51,6 +51,26 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 router.use(verifySession);
 
 /**
+ * Handle request to get the citizen history
+ * @return response with the history, or a no content
+ */
+router.get('/history', (req: Request, res: Response, next: NextFunction) => {
+	const id = res.locals.session.id;
+
+	Citizen.findById(id)
+		.then(doc => {
+			if (!doc) return next(createError(401, 'unknown citizen'));
+		})
+		.catch(() => sendError(next));
+
+	History.find({citizen: id})
+		.then(hist => {
+			res.json(hist);
+		})
+		.catch(() => sendError(next));
+});
+
+/**
  * Handle request to add an scan event to the history
  */
 router.post('/history', (req: Request, res: Response, next: NextFunction) => {
