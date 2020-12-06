@@ -43,6 +43,13 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 /**
+ * Middleware to check if a session has been sent
+ * Delegated to ConnectableUtility verifySession method
+ * @return response delegated to the next endpoint, or with an error
+ */
+router.use(verifySession);
+
+/**
  * Handle request to get public infos of a doctor
  */
 router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
@@ -62,13 +69,6 @@ router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
 		})
 		.catch(() => sendError(next));
 });
-
-/**
- * Middleware to check if a session has been sent
- * Delegated to ConnectableUtility verifySession method
- * @return response delegated to the next endpoint, or with an error
- */
-router.use(verifySession);
 
 /**
  * Handle request to get infos of a doctor

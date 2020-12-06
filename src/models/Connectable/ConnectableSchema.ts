@@ -18,10 +18,14 @@ const connectableSchemaFields: Record<keyof IConnectable, any> = {
 	email: {type: String, required: true, unique: true},
 	password: {type: String, required: true, unique: true},
 	institution_name: {type: String, required: requiredInstitutionFields},
-	institution_no: {type: String, required: requiredInstitutionFields},
+	institution_no: {
+		type: String,
+		unique: true,
+		required: requiredInstitutionFields,
+	},
 	doctor_firstName: {type: String, required: requiredDoctorFields},
 	doctor_lastName: {type: String, required: requiredDoctorFields},
-	doctor_inami: {type: String, required: requiredDoctorFields},
+	doctor_inami: {type: String, unique: true, required: requiredDoctorFields},
 };
 
 const connectableSchema: Schema = new Schema(connectableSchemaFields);

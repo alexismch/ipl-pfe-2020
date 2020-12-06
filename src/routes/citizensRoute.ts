@@ -47,12 +47,24 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 router.use(verifySession);
 
 router.post('/history', (req: Request, res: Response, next: NextFunction) => {
-	const id = res.locals.session.id;
+	const body = req.body;
+	if (!body) return next(createError(422, 'body missing'));
+	if (!body.type) return next(createError(422, "field 'type' missing"));
+	if (!body.id || body.id.length !== 24)
+		return next(createError(422, "field 'id' missing or incorrect"));
+	if (
+		!body.scanDate ||
+		!/^\d\d\d\d-(0[1-9]|1[012])-([012]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(Z)$/.test(
+			body.scanDate
+		)
+	)
+		return next(createError(422, "field 'scanDate' missing or incorrect"));
+	const scanDate = new Date(body.scanDate);
+	const citizen_id = res.locals.session.id;
 
-	Citizen.findById(id)
+	Citizen.findById(citizen_id)
 		.then(cit => {
-			if (!cit) return next(createError(404, 'unknown citizen'));
-
+			if (!cit) return next(createError(401, 'unknown citizen'));
 			//TODO
 		})
 		.catch(() => sendError(next));

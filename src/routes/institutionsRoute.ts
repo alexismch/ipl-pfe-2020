@@ -30,13 +30,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 		password: body.password,
 	});
 
-	register(
-		req,
-		res,
-		next,
-		institution,
-		"field 'email' or 'name' already used"
-	);
+	register(req, res, next, institution, "field 'email' or 'no' already used");
 });
 
 module.exports = router;

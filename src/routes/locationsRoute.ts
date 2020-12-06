@@ -9,6 +9,13 @@ const createError = require('http-errors');
 const express = require('express');
 const router = express.Router();
 
+/**
+ * Middleware to check if a session has been sent
+ * Delegated to ConnectableUtility verifySession method
+ * @return response delegated to the next endpoint, or with an error
+ */
+router.use(verifySession);
+
 router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
 	const id = req.params.id;
 	if (id.length !== 24) next(createError(400, "param 'id' incorrect"));
@@ -16,22 +23,10 @@ router.get('/:id', (req: Request, res: Response, next: NextFunction) => {
 	Location.findById(id)
 		.then(loc => {
 			if (!loc) return next(createError(404, 'unknown location'));
-			res.json({
-				id: loc._id,
-				name: loc.name,
-				description: loc.description,
-				ownerName: loc.owner_name,
-			});
+			res.json(loc);
 		})
 		.catch(() => sendError(next));
 });
-
-/**
- * Middleware to check if a session has been sent
- * Delegated to ConnectableUtility verifySession method
- * @return response delegated to the next endpoint, or with an error
- */
-router.use(verifySession);
 
 /**
  * Handle request to create a location
@@ -67,7 +62,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 						return next(
 							createError(
 								409,
-								"location's name already used for this institution"
+								"location's name already used for this institution or doctor"
 							)
 						);
 					sendError(next);
@@ -80,13 +75,20 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * Handle request to get the connectable locations
  * @return response with the list of locations, or a no content
  */
-router.get('/', (req: Request, res: Response) => {
+router.get('/', (req: Request, res: Response, next: NextFunction) => {
 	const id = res.locals.session.id;
 
-	Location.find({owner_id: id}).then(locs => {
-		if (!locs || locs.length === 0) return res.status(204).send();
-		res.json(locs);
-	});
+	Connectable.findById(id)
+		.then(doc => {
+			if (!doc) return next(createError(401, 'unknown connectable'));
+		})
+		.catch(() => sendError(next));
+
+	Location.find({owner_id: id})
+		.then(locs => {
+			res.json(locs);
+		})
+		.catch(() => sendError(next));
 });
 
 module.exports = router;
