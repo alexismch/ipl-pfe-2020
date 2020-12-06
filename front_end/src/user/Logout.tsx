@@ -12,7 +12,6 @@ export default function Logout({authAsDoctor, setAuthAsDoctor, setAuthAsInstitut
       setAuthAsInstitution(false);
     }
   })
-
   return null;
   
 };

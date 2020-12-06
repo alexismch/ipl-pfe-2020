@@ -9,17 +9,11 @@ import HomeInstitution from "components/HomeInstitution";
 import CodesList from "components/CodesList";
 
 export default function Router(){
-  //const [auth, setAuth] = useState(false);
   const [authAsDoctor, setAuthAsDoctor] = useState(false);
   const [authAsInstitution, setAuthAsInstitution] = useState(false);
 
 
   useEffect(() => {
-    /*if (localStorage.getItem("Token")){
-      //TODO If valid token... To be continued.
-      setAuth(true);
-    }*/
-
     if (localStorage.getItem("Type_BlockCovid") === "doctor"){
       setAuthAsDoctor(true);
     } else if (localStorage.getItem("Type_BlockCovid") === "institution"){

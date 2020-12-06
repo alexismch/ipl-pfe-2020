@@ -1,35 +1,56 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
     Grid,
-    Container,
     Paper,
-    Button
+    Button,
+    Collapse
 } from "@material-ui/core";
 import Overlay from "./Overlay";
-import {getQRCodeToken} from "../utils/backend";
-import {response} from "express";
+import {getCurrentDoctorQRCodeValue} from "../utils/backend";
+import QRCodeListItem from "components/QRCodeListItem";
+var QRCode = require('qrcode.react');
 
-const generateQRCode = () => {
-    getQRCodeToken(String(localStorage.getItem("Token")))
-        .then((response:any) => {
-        console.log("Clicked on the button");
-    })
-}
+
 
 export default function Home(){
+    const [showUniqueDoctorCode, setShowUniqueDoctorCode] = useState(true);
+    const [doctorUniqueQRCodeValue, setDoctorUniqueQRCodeValue] = useState("");
+    useEffect(() => {
+        getCurrentDoctorQRCodeValue(String(localStorage.getItem("Token")))
+            .then((response:any) => {
+                var id = String(response.data.id);
+                var type = "d";
+                console.log(id)
+
+                setDoctorUniqueQRCodeValue("https://ipl-pfe-2020-dev-mobile.herokuapp.com/qr/"+ type +"/"+id) //{"id":id, "type":"doctor"}
+            }).catch(error => {
+                console.log("Error")
+            })
+    }, [])
 
     return (<div>
-      <Overlay />
-      <Container maxWidth="xs" disableGutters >
-        <Grid container justify='space-around' alignItems='center' direction='column' >
-        <Paper elevation={12} >
-            <Grid item>
-                <Button onClick={generateQRCode} variant="contained" >Generate Code</Button>
-            </Grid>
-            <p></p>
-            <p>Put list of QRCodes here.</p>
+    <Overlay />
+    <Grid container style={{width:"100%"}} direction={"column"}>
+
+
+        <Paper elevation={12} style={{marginTop:"1%"}}>
+            <Collapse collapsedHeight={"80px"} in={showUniqueDoctorCode}>
+                <Grid container direction={"column"} style={{alignContent:"center"}}>
+                    <Button onClick={() => setShowUniqueDoctorCode(!showUniqueDoctorCode)} variant={"outlined"} style={{backgroundColor:"#6ccf7b", marginBottom:"10px"}}>{
+                        showUniqueDoctorCode?
+                            <p>Hide my doctor QR code</p>
+                        : <p>Show my doctor QR code</p>
+                    }</Button>
+                    <QRCode value={doctorUniqueQRCodeValue} size={256}/>
+                </Grid>
+            </Collapse>
         </Paper>
-        </Grid>
-      </Container>
+
+
+        <QRCodeListItem />
+        <QRCodeListItem />
+        <QRCodeListItem />
+
+    </Grid>
     </div>)       
 };

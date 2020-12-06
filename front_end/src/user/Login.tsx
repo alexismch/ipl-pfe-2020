@@ -59,7 +59,6 @@ export default function Login({setAuthAsDoctor, setAuthAsInstitution} : any) {
               </Grid>
               : null
             }
-
             <Grid item xs={12} >
               <TextField
                 id="E-mail"
