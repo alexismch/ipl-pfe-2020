@@ -33,6 +33,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	const sendCitizen = (status, id) => {
 		res.status(status).json({
 			session: generateSessionToken(id, ''),
+			type: 'citizen',
 		});
 	};
 
@@ -108,8 +109,8 @@ router.get('/history', (req: Request, res: Response, next: NextFunction) => {
 	const id = res.locals.session.id;
 
 	Citizen.findById(id)
-		.then(doc => {
-			if (!doc) return next(createError(401, 'unknown citizen'));
+		.then(cit => {
+			if (!cit) return next(createError(401, 'unknown citizen'));
 		})
 		.catch(() => sendError(next));
 
