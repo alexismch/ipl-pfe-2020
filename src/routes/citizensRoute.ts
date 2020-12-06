@@ -28,7 +28,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 
 	const sendCitizen = (status, id) => {
 		res.status(status).json({
-			session: generateSessionToken(id, ''),
+			token: generateSessionToken(id, ''),
 			type: 'citizen',
 		});
 	};
