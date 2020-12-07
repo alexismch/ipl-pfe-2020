@@ -53,7 +53,11 @@ const Authenticate = () => {
 					>
 						Authenticate
 					</Button>
-					<Grid container justify="center">
+					<Grid
+						container
+						justify="center"
+						className={'change-form-text'}
+					>
 						<Grid item>
 							<Link component={RouterLink} to="/register">
 								Don't have an account yet? Register

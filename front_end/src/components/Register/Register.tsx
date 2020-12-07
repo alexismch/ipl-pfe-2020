@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import RegisterStepper from './RegisterStepper';
+import CustomizedTabs from './Tabs';
 
 const Register = () => {
 	return (
@@ -20,8 +20,8 @@ const Register = () => {
 				<Typography component="h1" variant="h5">
 					Register
 				</Typography>
-				<RegisterStepper />
-				<Grid container justify="center">
+				<CustomizedTabs />
+				<Grid container justify="center" className={'change-form-text'}>
 					<Grid item>
 						<Link component={RouterLink} to="/authenticate">
 							Already have an account? Authenticate
