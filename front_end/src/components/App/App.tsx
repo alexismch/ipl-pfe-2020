@@ -37,14 +37,22 @@ const App = () => {
 	return (
 		<div>
 			<Switch>
-				<Route path="/register">
+				<Route path="/register" exact>
 					<Register />
 				</Route>
-				<Route path="/authenticate">
+				<Route path="/authenticate" exact>
 					<Authenticate />
 				</Route>
+
 				<Route path="/">
-					<Redirect to="/authenticate" />
+					<Switch>
+						<Route path="/home" exact>
+							<Authenticate />
+						</Route>
+						<Route path="/">
+							<Redirect to="/home" />
+						</Route>
+					</Switch>
 				</Route>
 			</Switch>
 			<Box mt={8}>
