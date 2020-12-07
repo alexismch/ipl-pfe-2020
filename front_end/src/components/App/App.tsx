@@ -1,11 +1,10 @@
 import {Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import Authenticate from 'components/Authenticate/Authenticate';
 import Copyright from 'components/Copyright/Copytight';
-import Register from 'components/Register/Register';
+import {AlertContext} from 'contexts/Alert/AlertContext';
 import React from 'react';
-import {Redirect, Route, Switch} from 'react-router-dom';
-import {AlertContext} from "../../contexts/Alert/AlertContext";
+import ConnectedSwitch from './ConnectedSwitch';
+import UnconnectedSwitch from './UnconnectedSwitch';
 
 const useStyles = makeStyles(theme => ({
 	'@global': {
@@ -38,29 +37,15 @@ const useStyles = makeStyles(theme => ({
 
 const App = () => {
 	useStyles();
-
+	const connectedType = ''; // soit '', soit 'doctor', soit 'institution'
 	return (
 		<div>
 			<AlertContext>
-				<Switch>
-					<Route path="/register" exact>
-						<Register />
-					</Route>
-					<Route path="/authenticate" exact>
-						<Authenticate />
-					</Route>
-
-					<Route path="/">
-						<Switch>
-							<Route path="/home" exact>
-								<Authenticate />
-							</Route>
-							<Route path="/">
-								<Redirect to="/home" />
-							</Route>
-						</Switch>
-					</Route>
-				</Switch>
+				{connectedType ? (
+					<ConnectedSwitch connectedType={connectedType} />
+				) : (
+					<UnconnectedSwitch />
+				)}
 				<Box mt={8}>
 					<Copyright />
 				</Box>
