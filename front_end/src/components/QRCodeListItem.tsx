@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import {
     Accordion,
     AccordionDetails,
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const QRCodeListItem = ({id, name, description, expanded, handleChange}:any) => {
-    const baseURL = "https://ipl-pfe-2020-dev-mobile.herokuapp.com/qr/d/";
+    const baseURL = "https://ipl-pfe-2020-dev-mobile.herokuapp.com/qr/l/";
     const classes = useStyles();
 
     return (

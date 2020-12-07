@@ -31,7 +31,7 @@ export default function Home(){
     }, [])
 
     return (<div>
-    <Overlay doctorName={doctorName} />
+    <Overlay doctorName={doctorName} setDoctorName={setDoctorName} />
     <Grid container style={{width:"100%"}} direction={"column"}>
 
         <Paper elevation={12} style={{marginTop:"1%", marginBottom:"1%"}}>

@@ -90,3 +90,25 @@ export function getDoctorInstitutions(token:string){
   })
 }
 
+export function createNewDoctorLocation (token:string, locationName:string, locationDescription:string){
+  const data = {
+    "name": locationName,
+    "description": locationDescription
+  }
+
+  const config = {
+    headers:{
+      Authorization: "Bearer " + token
+    },
+  }
+
+  return new Promise((resolve, reject) => {
+    Axios.post("/api/locations", data, config)
+      .then(response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+    })
+  })
+}
+
