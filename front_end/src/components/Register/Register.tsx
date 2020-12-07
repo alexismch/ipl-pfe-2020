@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
-import RegisterStepper from './RegisterStepper';
+import CustomizedTabs from './Tabs';
 
 const Register = ({useStyles}) => {
 	const classes = useStyles();
@@ -22,7 +22,7 @@ const Register = ({useStyles}) => {
 				<Typography component="h1" variant="h5">
 					Register
 				</Typography>
-				<RegisterStepper useStyles={useStyles} />
+				<CustomizedTabs useStyles={useStyles} />
 				<Grid container justify="center">
 					<Grid item>
 						<Link component={RouterLink} to="/authenticate">
