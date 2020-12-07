@@ -5,6 +5,7 @@ import Copyright from 'components/Copyright/Copytight';
 import Register from 'components/Register/Register';
 import React from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
+import {AlertContext} from "../../contexts/Alert/AlertContext";
 
 const useStyles = makeStyles(theme => ({
 	'@global': {
@@ -40,28 +41,30 @@ const App = () => {
 
 	return (
 		<div>
-			<Switch>
-				<Route path="/register" exact>
-					<Register />
-				</Route>
-				<Route path="/authenticate" exact>
-					<Authenticate />
-				</Route>
+			<AlertContext>
+				<Switch>
+					<Route path="/register" exact>
+						<Register />
+					</Route>
+					<Route path="/authenticate" exact>
+						<Authenticate />
+					</Route>
 
-				<Route path="/">
-					<Switch>
-						<Route path="/home" exact>
-							<Authenticate />
-						</Route>
-						<Route path="/">
-							<Redirect to="/home" />
-						</Route>
-					</Switch>
-				</Route>
-			</Switch>
-			<Box mt={8}>
-				<Copyright />
-			</Box>
+					<Route path="/">
+						<Switch>
+							<Route path="/home" exact>
+								<Authenticate />
+							</Route>
+							<Route path="/">
+								<Redirect to="/home" />
+							</Route>
+						</Switch>
+					</Route>
+				</Switch>
+				<Box mt={8}>
+					<Copyright />
+				</Box>
+			</AlertContext>
 		</div>
 	);
 };
