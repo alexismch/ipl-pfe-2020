@@ -171,6 +171,7 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 });
 
 function saveHistory(history: IHistoryDoc, res: Response, next: NextFunction) {
+	console.log(history)
 	history
 		.save()
 		.then(hist => res.json(hist))
@@ -191,6 +192,7 @@ function locationCase(
 			history.location_description = loc.description;
 			history.owner_id = loc.owner_id;
 			history.owner_name = loc.owner_name;
+			history.type = "location"
 			saveHistory(history, res, next);
 		})
 		.catch(() => sendError(next));
@@ -209,6 +211,7 @@ function doctorCase(
 			history.doctor_id = doc._id;
 			history.doctor_firstName = doc.doctor_firstName;
 			history.doctor_lastName = doc.doctor_lastName;
+			history.type = "doctor"
 			saveHistory(history, res, next);
 			//TODO: process contacts
 			console.log(doc);
@@ -217,3 +220,4 @@ function doctorCase(
 }
 
 module.exports = router;
+ 
