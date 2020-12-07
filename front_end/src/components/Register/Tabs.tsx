@@ -1,9 +1,8 @@
-import React from 'react';
-import {withStyles, Theme, createStyles} from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import {createStyles, Theme, withStyles} from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import React from 'react';
 import DoctorRegister from './DoctorRegister';
 import InstitutionRegister from './InstitutionRegister';
 
@@ -65,11 +64,7 @@ const TabPanel = (props: TabPanelProps) => {
 			aria-labelledby={`simple-tab-${index}`}
 			{...other}
 		>
-			{value === index && (
-				<Box>
-					<Typography>{children}</Typography>
-				</Box>
-			)}
+			{value === index && <Box>{children}</Box>}
 		</div>
 	);
 };
