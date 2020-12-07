@@ -10,20 +10,18 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 
-const Authenticate = ({useStyles}) => {
-	const classes = useStyles();
-
+const Authenticate = () => {
 	return (
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
+			<div className={'authenticate-paper'}>
+				<Avatar className={'authenticate-avatar'}>
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
 					Authenticate
 				</Typography>
-				<form className={classes.form} noValidate>
+				<form className={'authenticate-form'} noValidate>
 					<TextField
 						variant="outlined"
 						margin="normal"
@@ -51,7 +49,7 @@ const Authenticate = ({useStyles}) => {
 						fullWidth
 						variant="contained"
 						color="primary"
-						className={classes.submit}
+						className={'authenticate-submit'}
 					>
 						Authenticate
 					</Button>

@@ -8,30 +8,17 @@ const getSteps = () => {
 	return ['Select user type', 'Complete infos'];
 };
 
-const getStepContent = (
-	useStyles,
-	stepIndex: number,
-	type: string,
-	setType: Function
-) => {
+const getStepContent = (stepIndex: number, type: string, setType: Function) => {
 	switch (stepIndex) {
 		case 0:
-			return (
-				<SelectUserType
-					useStyles={useStyles}
-					type={type}
-					setType={setType}
-				/>
-			);
+			return <SelectUserType type={type} setType={setType} />;
 		case 1:
-			if (type === 'doctor')
-				return <DoctorRegister useStyles={useStyles} />;
-			return <InstitutionRegister useStyles={useStyles} />;
+			if (type === 'doctor') return <DoctorRegister />;
+			return <InstitutionRegister />;
 	}
 };
 
-const RegisterStepper = ({useStyles}) => {
-	const classes = useStyles();
+const RegisterStepper = () => {
 	const [activeStep, setActiveStep] = React.useState(0);
 	const steps = getSteps();
 	const [type, setType] = React.useState('');
@@ -45,11 +32,11 @@ const RegisterStepper = ({useStyles}) => {
 	};
 
 	return (
-		<div className={classes.stepperBox}>
+		<div className={'register-stepper-box'}>
 			<Stepper
 				activeStep={activeStep}
 				alternativeLabel
-				className={classes.stepper}
+				className={'register-stepper'}
 			>
 				{steps.map(label => (
 					<Step key={label}>
@@ -59,12 +46,13 @@ const RegisterStepper = ({useStyles}) => {
 			</Stepper>
 			<div>
 				<div>
-					{getStepContent(useStyles, activeStep, type, setType)}
+					{getStepContent(activeStep, type, setType)}
 					<div
 						className={
-							activeStep === 0
-								? classes.stepperButtonsBoxEnd
-								: classes.stepperButtonsBoxStart
+							'register-stepper-buttons-box ' +
+							(activeStep === 0
+								? 'register-stepper-buttons-box-end'
+								: 'register-stepper-buttons-box-start')
 						}
 					>
 						{activeStep === 0 ? (
@@ -80,7 +68,6 @@ const RegisterStepper = ({useStyles}) => {
 							<Button
 								disabled={activeStep === 0}
 								onClick={handleBack}
-								className={classes.backButton}
 							>
 								Back
 							</Button>

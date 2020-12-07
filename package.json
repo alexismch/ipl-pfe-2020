@@ -15,6 +15,7 @@
     "firebase-admin": "^9.4.1",
     "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
+    "jss-plugin-global": "^10.5.0",
     "module-alias": "^2.2.2",
     "mongoose": "^5.10.18",
     "morgan": "^1.10.0",

@@ -9,20 +9,18 @@ import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import RegisterStepper from './RegisterStepper';
 
-const Register = ({useStyles}) => {
-	const classes = useStyles();
-
+const Register = () => {
 	return (
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
+			<div className={'authenticate-paper'}>
+				<Avatar className={'authenticate-avatar'}>
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
 					Register
 				</Typography>
-				<RegisterStepper useStyles={useStyles} />
+				<RegisterStepper />
 				<Grid container justify="center">
 					<Grid item>
 						<Link component={RouterLink} to="/authenticate">
