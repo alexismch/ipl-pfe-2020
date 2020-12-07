@@ -8,6 +8,7 @@ import {generateSessionToken, verifySession} from '@modules/connectable';
 import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
 import * as admin from 'firebase-admin';
+import {formatDate} from '@modules/date';
 
 const createError = require('http-errors');
 const express = require('express');
@@ -113,10 +114,9 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 	Citizen.findById(citizen_id)
 		.then(cit => {
 			if (!cit) return next(createError(401, 'unknown citizen'));
-			//TODO: edit format date
 			const history = new History({
 				citizen: citizen_id,
-				scanDate,
+				scanDate: formatDate(scanDate),
 			});
 
 			console.log(history);
@@ -135,7 +135,7 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 });
 
 function saveHistory(history: IHistoryDoc, res: Response, next: NextFunction) {
-	console.log(history)
+	console.log(history);
 	history
 		.save()
 		.then(hist => res.json(hist))
@@ -156,7 +156,7 @@ function locationCase(
 			history.location_description = loc.description;
 			history.owner_id = loc.owner_id;
 			history.owner_name = loc.owner_name;
-			history.type = "location"
+			history.type = 'location';
 			saveHistory(history, res, next);
 		})
 		.catch(() => sendError(next));
@@ -175,16 +175,16 @@ function doctorCase(
 			history.doctor_id = doc._id;
 			history.doctor_firstName = doc.doctor_firstName;
 			history.doctor_lastName = doc.doctor_lastName;
-			history.type = "doctor"
+			history.type = 'doctor';
 			saveHistory(history, res, next);
 			//TODO: process contacts
 			//TODO: Get all fcmTokens from contacts
-			let registrationTokens =
-				['etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
-					"eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln"
-				]
+			let registrationTokens = [
+				'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
+				'eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln',
+			];
 			//TODO: Add notifications entry to DB
-			sendNotificationsAlert(registrationTokens)
+			sendNotificationsAlert(registrationTokens);
 
 			console.log(doc);
 		})
@@ -193,15 +193,13 @@ function doctorCase(
 
 module.exports = router;
 
-function sendNotificationsAlert(
-	fcmTokens : string[]
-){
+function sendNotificationsAlert(fcmTokens: string[]) {
 	let message = {
 		notification: {
 			title: 'Test notification via API',
 			body: 'Essai pour gsm',
 		},
-		tokens: fcmTokens
+		tokens: fcmTokens,
 	};
 	// Send a message to the device corresponding to the provided
 	// registration token.
