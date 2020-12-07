@@ -7,14 +7,13 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 
-const SelectUserType = ({useStyles, type, setType}) => {
-	const classes = useStyles();
+const SelectUserType = ({type, setType}) => {
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setType((event.target as HTMLInputElement).value);
 	};
 
 	return (
-		<div className={classes.typeSelectorBox}>
+		<div className={'register-type-selector-box'}>
 			<FormControl component="fieldset">
 				<FormLabel component="legend">
 					I'm registering in as :{' '}

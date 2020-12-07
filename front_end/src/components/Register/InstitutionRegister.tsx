@@ -3,11 +3,9 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
 
-const InstitutionRegister = ({useStyles}) => {
-	const classes = useStyles();
-
+const InstitutionRegister = () => {
 	return (
-		<form className={classes.form} noValidate>
+		<form className={'authenticate-form'} noValidate>
 			<Grid container spacing={2}>
 				<Grid item xs={12}>
 					<TextField
@@ -73,7 +71,7 @@ const InstitutionRegister = ({useStyles}) => {
 				fullWidth
 				variant="contained"
 				color="primary"
-				className={classes.submit}
+				className={'authenticate-submit'}
 			>
 				Register
 			</Button>

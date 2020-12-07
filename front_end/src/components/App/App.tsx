@@ -4,57 +4,62 @@ import Authenticate from 'components/Authenticate/Authenticate';
 import Register from 'components/Register/Register';
 import React from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import Copyright from '../Copyright/Copytight';
+import Copyright from 'components/Copyright/Copytight';
 
 const useStyles = makeStyles(theme => ({
-	paper: {
-		marginTop: theme.spacing(8),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-	},
-	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
-	form: {
-		width: '100%', // Fix IE 11 issue.
-		marginTop: theme.spacing(3),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
-	stepper: {
-		backgroundColor: theme.palette.background.default,
-	},
-	stepperBox: {
-		width: '100%',
-	},
-	stepperButtonsBoxStart: {
-		display: 'flex !important',
-		justifyContent: 'flex-start',
-		marginBottom: '16px',
-	},
-	stepperButtonsBoxEnd: {
-		display: 'flex !important',
-		justifyContent: 'flex-end',
-		marginBottom: '16px',
-	},
-	typeSelectorBox: {
-		textAlign: 'center',
-		marginBottom: '16px',
+	'@global': {
+		'.authenticate-paper': {
+			marginTop: theme.spacing(8),
+			display: 'flex',
+			flexDirection: 'column',
+			alignItems: 'center',
+		},
+		'.authenticate-avatar': {
+			margin: theme.spacing(1),
+			backgroundColor: theme.palette.secondary.main,
+		},
+		'.authenticate-form': {
+			width: '100%', // Fix IE 11 issue.
+			marginTop: theme.spacing(3),
+		},
+		'.authenticate-submit': {
+			margin: theme.spacing(3, 0, 2),
+		},
+		'.register-stepper': {
+			backgroundColor: theme.palette.background.default,
+		},
+		'.register-stepper-box': {
+			width: '100%',
+		},
+		'.register-stepper-buttons-box': {
+			display: 'flex',
+			justifyContent: 'flex-start',
+			marginBottom: '16px',
+		},
+		'.register-stepper-buttons-box-start': {
+			justifyContent: 'flex-start',
+		},
+		'.register-stepper-buttons-box-end': {
+			justifyContent: 'flex-end',
+		},
+		'.register-type-selector-box': {
+			textAlign: 'center',
+			marginBottom: '16px',
+		},
 	},
 }));
 
 const App = () => {
+	useStyles();
+
 	return (
 		<div>
 			<Switch>
 				<Route path="/register">
-					<Register useStyles={useStyles} />
+					<Register />
 				</Route>
 				<Route path="/authenticate">
-					<Authenticate useStyles={useStyles} />
+					<Authenticate />
 				</Route>
 				<Route path="/">
 					<Redirect to="/authenticate" />
