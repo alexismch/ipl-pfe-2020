@@ -8,7 +8,7 @@ import {
   FormControl
 } from "@material-ui/core";
 import { Redirect, useHistory } from "react-router-dom";
-import {SignIn} from "../utils/backend";
+//import {SignIn} from "../utils/backend";
 
 export default function Login({setAuthAsDoctor, setAuthAsInstitution} : any) {
   const [email, setEmail] = useState("");

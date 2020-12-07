@@ -5,8 +5,6 @@ import Copyright from 'components/Copyright/Copytight';
 import Register from 'components/Register/Register';
 import React from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import Navbar from 'components/Navbar/Navbar';
-import LocationsList from '../LocationsList/LocationsList';
 
 const useStyles = makeStyles(theme => ({
 	'@global': {
@@ -51,10 +49,9 @@ const App = () => {
 				</Route>
 
 				<Route path="/">
-					<Navbar />
 					<Switch>
 						<Route path="/home" exact>
-							<LocationsList />
+							<Authenticate />
 						</Route>
 						<Route path="/">
 							<Redirect to="/home" />
