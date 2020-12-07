@@ -54,7 +54,7 @@ interface TabPanelProps {
 	value: any;
 }
 
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
 	const {children, value, index, ...other} = props;
 
 	return (
@@ -72,9 +72,9 @@ function TabPanel(props: TabPanelProps) {
 			)}
 		</div>
 	);
-}
+};
 
-export default function CustomizedTabs() {
+const CustomizedTabs = () => {
 	const [value, setValue] = React.useState(0);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -99,4 +99,6 @@ export default function CustomizedTabs() {
 			</TabPanel>
 		</div>
 	);
-}
+};
+
+export default CustomizedTabs;
