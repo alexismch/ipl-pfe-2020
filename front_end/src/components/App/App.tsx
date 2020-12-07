@@ -42,6 +42,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	typeSelectorBox: {
 		textAlign: 'center',
+		marginBottom: '16px',
 	},
 }));
 
