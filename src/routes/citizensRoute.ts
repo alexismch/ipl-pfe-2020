@@ -9,6 +9,7 @@ import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import {formatDate} from '@modules/date';
+import IHistory from "@models/History/IHistory";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -61,6 +62,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  */
 router.use(verifySession);
 
+//TODO : getNotification
 /**
  * Handle request to get the citizen history
  * @return response with the history, or a no content
@@ -125,7 +127,8 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 					locationCase(body.id, history, res, next);
 					break;
 				case 'doctor':
-					doctorCase(body.id, history, res, next);
+					//doctorCase(body.id, history, res, next);
+					alertContact(citizen_id)
 					break;
 				default:
 					next(createError(422, "field 'type' incorrect"));
@@ -177,13 +180,12 @@ function doctorCase(
 			history.doctor_lastName = doc.doctor_lastName;
 			history.type = 'doctor';
 			saveHistory(history, res, next);
-			//TODO: process contacts
-			//TODO: Get all fcmTokens from contacts
+
 			let registrationTokens = [
 				'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
 				'eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln',
 			];
-			//TODO: Add notifications entry to DB
+
 			sendNotificationsAlert(registrationTokens);
 
 			console.log(doc);
@@ -193,7 +195,66 @@ function doctorCase(
 
 module.exports = router;
 
+function alertContact(citizen_id: any) {
+	let limitDay = new Date()
+	limitDay.setDate(limitDay.getDate()-10)
+
+	const dateLimite = formatDate(limitDay)
+
+	console.log(dateLimite < '2020-12-6T1:34:42Z')
+	History
+		.find({
+			citizen: citizen_id,
+			scanDate: { $gt: dateLimite},
+			location_id: { $exists: true, $ne: null }
+		})
+		.then(resp => {
+			const conditions = []
+			console.log("yo resp " + resp.length)
+			for (const loc of resp){
+				console.log("yo loc " + loc.location_name)
+
+				let minHourContact = new Date(loc.scanDate)
+				console.log(minHourContact)
+				minHourContact.setHours(minHourContact.getHours()-1)
+				let maxHourContact = new Date(loc.scanDate)
+				maxHourContact.setHours(maxHourContact.getHours()-1)
+
+
+				const condi = {
+					location_id : loc.location_id,
+					scanDate: { $gt: "2020-12-28T0:34:42Z", $lt : "2020-12-28T2:34:42Z"},
+					citizen : {$ne:citizen_id }
+				}
+				console.log(condi)
+
+				conditions.push(condi)
+/*				History.find(condi).then(
+					resp => {
+						console.log("yo",resp.length)
+					})*/
+			}
+
+			History.find({
+				$or : conditions
+			}).select({
+				citizen : 1,
+				_id : 0
+			}).distinct("citizen")
+				.then(
+				resp => {
+					console.log("yo",resp)
+					//TODO: Get all fcmTokens from contacts
+				}
+			)
+		})
+		.catch((e) =>e.toString());
+
+
+}
+
 function sendNotificationsAlert(fcmTokens: string[]) {
+	//TODO: Add notifications entry to DB
 	let message = {
 		notification: {
 			title: 'Test notification via API',
