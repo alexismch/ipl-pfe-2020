@@ -54,43 +54,6 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 /**
- * Test send notif wia API
- */
-router.get('/sendNotif', (req: Request, res: Response) => {
-	//Get ID form session
-	//Get corresponding token
-	//Huy
-	//etwM22wLrywUB--1-apXpS:APA91bGU3QTch3yqUILh7fzgDWjfrKH0POftSgI1iJHiHRlhD4lH-oVMy0o3jyVXcyq70kGPc071KxexiUWN3hngSwVIDAM1MfaCq7AHslQuu7s98aqrwL1wfMnNFggNXSe8qfabX5Mi
-	//Bruno
-	//epxR-mvbRDKuaIUI0a9-sD:APA91bFHopq8Xe0UGTIHerdw5rpze4jYeyhgMXSBAVi28rVJ1UXekNoC1h5SLMsEOi5HlWw95j6zKZQQ4eat-yK0wDbYCB-BIom7Q7aoleWDS7swFlcvuC3B6HB2MvdpANU6Jmpq0Nmj
-	let registrationToken =
-		'dJxaI6gttnEiwPNtXMW1Bv:APA91bEKwtUwzNaH3Bez2PAWgzyW1sKg9tnX9TH-_zXLzGoLTChp6bffiIXHh8UqfRvw6RntXT-YbeViiyzbC5YIPShCxqThOb8d-xuVSpOZ31DParpsDZYRFbDGTuTWskFAY_EHRs5n';
-	let message = {
-		notification: {
-			title: 'Test notification via API',
-			body: 'Essai pour gsm',
-		},
-		token: registrationToken,
-	};
-	// Send a message to the device corresponding to the provided
-	// registration token.
-	admin
-		.messaging()
-		.send(message)
-		.then(response => {
-			// Response is a message ID string.
-			console.log('Successfully sent message:', response);
-		})
-		.catch(error => {
-			console.log('Error sending message:', error);
-		});
-
-	res.json({
-		test: 'reussi',
-	});
-});
-
-/**
  * Middleware to check if a session has been sent
  * Delegated to ConnectableUtility verifySession method
  * @return response delegated to the next endpoint, or with an error
@@ -214,10 +177,41 @@ function doctorCase(
 			history.type = "doctor"
 			saveHistory(history, res, next);
 			//TODO: process contacts
+			//TODO: Get all fcmTokens from contacts
+			let registrationTokens =
+				['etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
+					"eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln"
+				]
+			//TODO: Add notifications entry to DB
+			sendNotificationsAlert(registrationTokens)
+
 			console.log(doc);
 		})
 		.catch(() => sendError(next));
 }
 
 module.exports = router;
- 
+
+function sendNotificationsAlert(
+	fcmTokens : string[]
+){
+	let message = {
+		notification: {
+			title: 'Test notification via API',
+			body: 'Essai pour gsm',
+		},
+		tokens: fcmTokens
+	};
+	// Send a message to the device corresponding to the provided
+	// registration token.
+	admin
+		.messaging()
+		.sendMulticast(message)
+		.then(response => {
+			// Response is a message ID string.
+			console.log('Successfully sent message:', response);
+		})
+		.catch(error => {
+			console.log('Error sending message:', error);
+		});
+}
