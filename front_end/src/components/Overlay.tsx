@@ -9,11 +9,12 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogContentText, TextField, DialogActions, TextareaAutosize
+    DialogContentText, 
+    TextField, 
+    DialogActions
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import {createNewDoctorLocation} from "../utils/backend";
-import {response} from "express";
 
 export default function Overlay({doctorName, setDoctorName}:any){
     const [anchorEl, setAnchorEl] = useState(null);
@@ -61,26 +62,7 @@ export default function Overlay({doctorName, setDoctorName}:any){
             <div className={"big-badge-promo-content"}>
                 <Grid container direction="row" alignItems="center" justify="space-between">
                     <span className={"app-title"}>BLOCKCOVID</span>
-                    <Box ml={1} >
-                        <Button onClick={handleOpen} variant="contained" >{String(doctorName)}</Button>
-                        <Popover
-                            id={id}
-                            open={open}
-                            anchorEl={anchorEl}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "center",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "center",
-                            }}
-                        >
-                            <List disablePadding>
-                                <ListItem disableGutters>
-
-                                    <div>
+                    <div>
                                         <Button style={{backgroundColor:"#6ccf7b", color:"#5a5c5a"}} variant="outlined" color="primary" onClick={handleFormOpen}>
                                             Nouveau QR code!
                                         </Button>
@@ -122,9 +104,24 @@ export default function Overlay({doctorName, setDoctorName}:any){
                                             </DialogActions>
                                         </Dialog>
                                     </div>
-
-                                </ListItem>
-                                <ListItem disableGutters style={{paddingLeft:"30%"}}>
+                    <Box ml={1} >
+                        <Button onClick={handleOpen} variant="contained" >{String(doctorName)}</Button>
+                        <Popover
+                            id={id}
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "center",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "center",
+                            }}
+                        >
+                            <List disablePadding>
+                                <ListItem disableGutters>
                                     <Button onClick={() => history.push("/logout")} variant="contained">
                                         Logout
                                     </Button>
@@ -135,5 +132,5 @@ export default function Overlay({doctorName, setDoctorName}:any){
                 </Grid>
             </div>
         </div>
-        );
+    );
 }
