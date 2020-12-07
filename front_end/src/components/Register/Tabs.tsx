@@ -54,7 +54,7 @@ interface TabPanelProps {
 	value: any;
 }
 
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
 	const {children, value, index, ...other} = props;
 
 	return (
@@ -72,9 +72,9 @@ function TabPanel(props: TabPanelProps) {
 			)}
 		</div>
 	);
-}
+};
 
-export default function CustomizedTabs({useStyles}) {
+const CustomizedTabs = () => {
 	const [value, setValue] = React.useState(0);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -82,7 +82,7 @@ export default function CustomizedTabs({useStyles}) {
 	};
 
 	return (
-		<div style={{paddingBottom: '20px'}}>
+		<div>
 			<StyledTabs
 				value={value}
 				onChange={handleChange}
@@ -92,11 +92,13 @@ export default function CustomizedTabs({useStyles}) {
 				<StyledTab label="Institution" />
 			</StyledTabs>
 			<TabPanel value={value} index={0}>
-				<DoctorRegister useStyles={useStyles} />
+				<DoctorRegister />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
-				<InstitutionRegister useStyles={useStyles} />
+				<InstitutionRegister />
 			</TabPanel>
 		</div>
 	);
-}
+};
+
+export default CustomizedTabs;
