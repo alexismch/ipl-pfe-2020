@@ -1,14 +1,17 @@
+import {createMuiTheme, MuiThemeProvider} from '@material-ui/core';
+import App from 'components/App/App';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from 'components/App';
+import {BrowserRouter} from 'react-router-dom';
+import themeJson from 'theme.json';
 
-//Visuals
-import 'index.css';
+const theme = createMuiTheme(themeJson);
 
 ReactDOM.render(
-  // <React.StrictMode>
-    <App />
-  // </React.StrictMode>
-  ,
-  document.getElementById('root')
+	<MuiThemeProvider theme={theme}>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</MuiThemeProvider>,
+	document.getElementById('root')
 );

@@ -113,6 +113,7 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 	Citizen.findById(citizen_id)
 		.then(cit => {
 			if (!cit) return next(createError(401, 'unknown citizen'));
+			//TODO: edit format date
 			const history = new History({
 				citizen: citizen_id,
 				scanDate,
