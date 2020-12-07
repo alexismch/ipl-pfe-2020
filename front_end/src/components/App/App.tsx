@@ -46,6 +46,9 @@ const useStyles = makeStyles(theme => ({
 			textAlign: 'center',
 			marginBottom: '16px',
 		},
+		'.change-form': {
+			marginTop: '16px',
+		},
 	},
 }));
 
