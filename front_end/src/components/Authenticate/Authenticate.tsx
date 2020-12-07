@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 
-export default function Authenticate({useStyles}) {
+const Authenticate = ({useStyles}) => {
 	const classes = useStyles();
 
 	return (
@@ -66,4 +66,6 @@ export default function Authenticate({useStyles}) {
 			</div>
 		</Container>
 	);
-}
+};
+
+export default Authenticate;

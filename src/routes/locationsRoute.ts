@@ -58,6 +58,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 				.save()
 				.then(loc => res.status(201).send(loc))
 				.catch(e => {
+					console.log(e);
 					if (e.code === 11000)
 						return next(
 							createError(
