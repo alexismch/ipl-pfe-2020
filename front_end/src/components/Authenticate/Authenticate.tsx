@@ -4,71 +4,75 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import MuiAlert, {AlertProps} from '@material-ui/lab/Alert';
+import {SignIn} from 'components/utils/backend';
 import React, {SyntheticEvent, useState} from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
-import {SignIn} from "../utils/backend";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import {Link as RouterLink} from 'react-router-dom';
 
 function Alert(props: AlertProps) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const Authenticate = () => {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 	const [authFailed, setAuthFailed] = useState(false);
 	const [openErrorMessage, setOpenErrorMessage] = useState(false);
 	const [openWarningMessage, setOpenWarningMessage] = useState(false);
 	//const isAuthenticated = false;
 	//const history = useHistory();
 
-
-	const handleCloseErrorMessage = (event?: React.SyntheticEvent, reason?: string) => {
+	const handleCloseErrorMessage = (
+		event?: React.SyntheticEvent,
+		reason?: string
+	) => {
 		if (reason === 'clickaway') {
 			return;
 		}
 		setOpenErrorMessage(false);
 	};
 
-	const handleCloseWarningMessage = (event?: SyntheticEvent, reason?: string) => {
-		if (reason === 'clickaway'){
+	const handleCloseWarningMessage = (
+		event?: SyntheticEvent,
+		reason?: string
+	) => {
+		if (reason === 'clickaway') {
 			return;
 		}
 		setOpenWarningMessage(false);
-	}
+	};
 
-	const handleSubmit = (e : any) => {
+	const handleSubmit = (e: any) => {
 		e.preventDefault();
 		SignIn(email, password)
-			.then((response : any) => {
-				localStorage.setItem("Token", response.data.token);
-				if (response.data.type === "doctor"){
+			.then((response: any) => {
+				localStorage.setItem('Token', response.data.token);
+				if (response.data.type === 'doctor') {
 					setAuthFailed(false);
-					console.log("Connected as doctor!!")
+					console.log('Connected as doctor!!');
 					//localStorage.setItem("Type_BlockCovid", "doctor");
 					//setAuthAsDoctor(true);
-				} else if (response.data.type === "institution"){
-					console.log("Connected as institution!!")
+				} else if (response.data.type === 'institution') {
+					console.log('Connected as institution!!');
 					//localStorage.setItem("Type_BlockCovid", "institution");
 					//setAuthAsInstitution(true);
 				}
-			}).catch(error => {
-			console.log(error.response.status)
-			if (error.response.status === 401){
-				setAuthFailed(true);
-				setOpenErrorMessage(true);
-			} else if (error.response.status === 422) {
-				setAuthFailed(true);
-				setOpenWarningMessage(true);
-			}
-		})
+			})
+			.catch(error => {
+				console.log(error.response.status);
+				if (error.response.status === 401) {
+					setAuthFailed(true);
+					setOpenErrorMessage(true);
+				} else if (error.response.status === 422) {
+					setAuthFailed(true);
+					setOpenWarningMessage(true);
+				}
+			});
 	};
-
-
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -81,7 +85,11 @@ const Authenticate = () => {
 					Authenticate
 				</Typography>
 
-				<form className={'authenticate-form'} noValidate onSubmit={handleSubmit}>
+				<form
+					className={'authenticate-form'}
+					noValidate
+					onSubmit={handleSubmit}
+				>
 					<TextField
 						variant="outlined"
 						margin="normal"
@@ -92,7 +100,7 @@ const Authenticate = () => {
 						name="email"
 						autoComplete="email"
 						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						onChange={e => setEmail(e.target.value)}
 						autoFocus
 						error={authFailed}
 					/>
@@ -108,7 +116,7 @@ const Authenticate = () => {
 						autoComplete="current-password"
 						value={password}
 						error={authFailed}
-						onChange={(e) => setPassword(e.target.value)}
+						onChange={e => setPassword(e.target.value)}
 					/>
 					<Button
 						type="submit"
@@ -147,7 +155,9 @@ const Authenticate = () => {
 					autoHideDuration={6000}
 					onClose={handleCloseWarningMessage}
 				>
-					<Alert severity="warning">Please fill in all inputs correctly.</Alert>
+					<Alert severity="warning">
+						Please fill in all inputs correctly.
+					</Alert>
 				</Snackbar>
 			</div>
 		</Container>

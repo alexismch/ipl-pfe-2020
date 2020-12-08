@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 const App = () => {
 	useStyles();
-	const connectedType = ''; // soit '', soit 'doctor', soit 'institution'
+	const connectedType = 'doctor'; // soit '', soit 'doctor', soit 'institution'
 	return (
 		<div>
 			<AlertContext>
