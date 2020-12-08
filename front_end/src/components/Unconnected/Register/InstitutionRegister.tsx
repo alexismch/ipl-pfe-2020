@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import {institutionRegistration} from 'components/utils/backend';
+import {institutionRegistration} from 'services/backend';
 import {useAlert} from 'contexts/Alert/AlertContext';
 import React, {useState} from 'react';
 

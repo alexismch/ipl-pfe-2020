@@ -1,8 +1,8 @@
-import LocationsList from 'components/LocationsList/LocationsList';
+import LocationsList from 'components/Connected/LocationsList/LocationsList';
+import {getDoctorInstitutions} from 'services/backend';
 import React, {useEffect, useState} from 'react';
-import {getDoctorInstitutions} from 'components/utils/backend';
 
-const DoctorHome = () => {
+const Home = () => {
 	const [locations, setLocations] = useState([]);
 
 	useEffect(() => {
@@ -26,4 +26,4 @@ const DoctorHome = () => {
 	);
 };
 
-export default DoctorHome;
+export default Home;

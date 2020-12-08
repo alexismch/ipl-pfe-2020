@@ -18,11 +18,16 @@ const Footer = () => {
 	return (
 		<Typography variant="body2" color="textSecondary" align="center">
 			{'Made with '}
-			<FavoriteBorderOutlinedIcon
-				color={'primary'}
-				fontSize={'small'}
-				className={classes.love}
-			/>
+			<a
+				href="https://www.youtube.com/watch?v=tmSzRx9RYLk"
+				target="_blank"
+			>
+				<FavoriteBorderOutlinedIcon
+					color={'primary'}
+					fontSize={'small'}
+					className={classes.love}
+				/>
+			</a>
 			{' by Group 1.'}
 		</Typography>
 	);

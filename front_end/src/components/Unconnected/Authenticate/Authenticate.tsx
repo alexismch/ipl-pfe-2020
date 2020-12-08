@@ -7,7 +7,7 @@ import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {SignIn} from 'components/utils/backend';
+import {SignIn} from 'services/backend';
 import {useAlert} from 'contexts/Alert/AlertContext';
 import React, {useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';

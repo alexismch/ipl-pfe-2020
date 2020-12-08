@@ -1,10 +1,10 @@
 import {Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
+import ConnectedSwitch from 'components/Connected/ConnectedSwitch';
 import Copyright from 'components/Footer/Footer';
+import UnconnectedSwitch from 'components/Unconnected/UnconnectedSwitch';
 import {AlertContext} from 'contexts/Alert/AlertContext';
 import React, {useEffect, useState} from 'react';
-import ConnectedSwitch from './ConnectedSwitch';
-import UnconnectedSwitch from './UnconnectedSwitch';
 
 const useStyles = makeStyles(theme => ({
 	'@global': {
