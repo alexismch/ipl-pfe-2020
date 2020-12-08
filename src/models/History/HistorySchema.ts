@@ -18,7 +18,7 @@ function requiredLocationFields(): boolean {
 }
 
 const historySchemaFields: Record<keyof IHistory, any> = {
-	citizen: {type: Schema.Types.ObjectId, required: true},
+	citizen: {type: Schema.Types.ObjectId, required: true, ref : 'Citizen'},
 	scanDate: {type: String, required: true},
 	type: {type: String, required: true},
 	doctor_id: {type: Schema.Types.ObjectId, required: requiredDoctorFields},

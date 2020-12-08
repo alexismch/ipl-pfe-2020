@@ -9,7 +9,6 @@ import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import {formatDate} from '@modules/date';
-import IHistory from "@models/History/IHistory";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -62,7 +61,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  */
 router.use(verifySession);
 
-//TODO : getNotification
+//TODO : getAllNotifications
 /**
  * Handle request to get the citizen history
  * @return response with the history, or a no content
@@ -127,10 +126,11 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 					locationCase(body.id, history, res, next);
 					break;
 				case 'doctor':
-					//doctorCase(body.id, history, res, next);
-					alertContact(citizen_id)
+					doctorCase(body.id, history, res, next);
+					alertNearContact(citizen_id)
 					break;
 				default:
+
 					next(createError(422, "field 'type' incorrect"));
 			}
 		})
@@ -181,12 +181,10 @@ function doctorCase(
 			history.type = 'doctor';
 			saveHistory(history, res, next);
 
-			let registrationTokens = [
+/*			let registrationTokens = [
 				'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
 				'eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln',
-			];
-
-			sendNotificationsAlert(registrationTokens);
+			];*/
 
 			console.log(doc);
 		})
@@ -195,7 +193,7 @@ function doctorCase(
 
 module.exports = router;
 
-function alertContact(citizen_id: any) {
+function alertNearContact(citizen_id: any) {
 	let limitDay = new Date()
 	limitDay.setDate(limitDay.getDate()-10)
 
@@ -212,61 +210,68 @@ function alertContact(citizen_id: any) {
 			const conditions = []
 			console.log("yo resp " + resp.length)
 			for (const loc of resp){
-				console.log("yo loc " + loc.location_name)
 
 				let minHourContact = new Date(loc.scanDate)
-				console.log(minHourContact)
-				minHourContact.setHours(minHourContact.getHours()-1)
+				minHourContact.setMinutes(minHourContact.getMinutes()-60)
 				let maxHourContact = new Date(loc.scanDate)
-				maxHourContact.setHours(maxHourContact.getHours()-1)
-
+				maxHourContact.setMinutes(maxHourContact.getMinutes()+60)
 
 				const condi = {
 					location_id : loc.location_id,
-					scanDate: { $gt: "2020-12-28T0:34:42Z", $lt : "2020-12-28T2:34:42Z"},
+					scanDate: { $gt: formatDate(minHourContact), $lt : formatDate(maxHourContact)},
 					citizen : {$ne:citizen_id }
 				}
-				console.log(condi)
-
 				conditions.push(condi)
-/*				History.find(condi).then(
-					resp => {
-						console.log("yo",resp.length)
-					})*/
 			}
-
-			History.find({
+/*			History.find({
 				$or : conditions
 			}).select({
 				citizen : 1,
 				_id : 0
-			}).distinct("citizen")
-				.then(
-				resp => {
-					console.log("yo",resp)
-					//TODO: Get all fcmTokens from contacts
+			}).populate({
+				path : 'citizen',
+				select : 'fcmToken -_id'
+			})
+				.then(resp => {
+					for(const entry of resp){
+						console.log(entry.citizen)
+						sendNotificationsAlert(entry.citizen['fcmToken'])
+					}
 				}
-			)
+
+			)*/
+			History.find({
+				$or : conditions
+			}).distinct("citizen")
+				.then((citizenList) => {
+					for ( const citizen of citizenList)
+						Citizen.findOne({
+							_id : citizen
+						}).then((citizen) =>{
+							sendNotificationsAlert(citizen.fcmToken)
+							}
+						)
+				})
 		})
 		.catch((e) =>e.toString());
 
 
 }
 
-function sendNotificationsAlert(fcmTokens: string[]) {
+function sendNotificationsAlert(fcmToken: string) {
 	//TODO: Add notifications entry to DB
 	let message = {
 		notification: {
-			title: 'Test notification via API',
-			body: 'Essai pour gsm',
+			title: 'IMPORTANT BLOCKCOVID',
+			body: 'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine',
 		},
-		tokens: fcmTokens,
+		token: fcmToken,
 	};
 	// Send a message to the device corresponding to the provided
 	// registration token.
 	admin
 		.messaging()
-		.sendMulticast(message)
+		.send(message)
 		.then(response => {
 			// Response is a message ID string.
 			console.log('Successfully sent message:', response);
