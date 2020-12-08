@@ -17,6 +17,7 @@ const Authenticate = ({setConnectedType}) => {
 	const [password, setPassword] = useState('');
 
 	//Error handling
+	const {sendErrorMessage, sendWarningMessage} = useAlert();
 	const [authFailed, setAuthFailed] = useState(false);
 	const [filledFields, setFilledFields] = useState<{
 		'password': boolean,
@@ -25,8 +26,6 @@ const Authenticate = ({setConnectedType}) => {
 		'password': true,
 		'email': true
 	})
-
-	const {sendErrorMessage, sendWarningMessage} = useAlert();
 
 	const resetErrors = () => {
 		const newFields = {

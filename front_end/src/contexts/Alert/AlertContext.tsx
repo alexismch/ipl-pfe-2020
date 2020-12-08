@@ -2,12 +2,11 @@ import Snackbar from '@material-ui/core/Snackbar';
 import {Alert} from '@material-ui/lab';
 import {createCtx} from 'contexts/utils';
 import React, {useEffect, useState} from 'react';
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from '@material-ui/icons/Close';
 
 const [useAlert, CtxProvider] = createCtx<{
 	sendErrorMessage: (message: string) => void;
 	sendWarningMessage: (message: string) => void;
+	sendSuccessMessage: (message: string) => void;
 }>();
 
 export interface SnackbarMessage {
@@ -71,9 +70,14 @@ const AlertContext = ({children}) => {
 		handleClick(message, 'warning');
 	};
 
+	const sendSuccessMessage = (message: string) => {
+		handleClick(message, 'success');
+	};
+
 	const exposed = {
 		sendErrorMessage,
 		sendWarningMessage,
+		sendSuccessMessage
 	};
 
 	return (
