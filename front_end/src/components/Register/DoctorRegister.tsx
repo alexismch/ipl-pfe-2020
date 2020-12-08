@@ -5,7 +5,7 @@ import {doctorRegistration} from 'components/utils/backend';
 import {useAlert} from 'contexts/Alert/AlertContext';
 import React, {useState} from 'react';
 
-const DoctorRegister = () => {
+const DoctorRegister = ({setConnectedType}) => {
 	const [doctorFirstName, setDoctorFirstName] = useState('');
 	const [doctorLastName, setDoctorLastName] = useState('');
 	const [doctorEmail, setDoctorEmail] = useState('');
@@ -14,18 +14,54 @@ const DoctorRegister = () => {
 	const [doctorInami, setDoctorInami] = useState('');
 	const {sendErrorMessage, sendWarningMessage} = useAlert();
 
-	const [emailAlreadyExistsError, setEmailAlreadyExistsError] = useState(
-		false
-	);
-	const [passwordsInputErrorError, setPasswordsInputErrorError] = useState(
-		false
-	);
+	const [emailAlreadyExistsError, setEmailAlreadyExistsError] = useState(false);
+	const [passwordsInputErrorError, setPasswordsInputErrorError] = useState(false);
+
+	const [filledFields, setFilledFields] = useState<{
+		'firstName': boolean,
+		'lastName':boolean,
+		'email':boolean,
+		'password': boolean,
+		'repeatPassword':boolean,
+		'inami':boolean
+	}>({ //No errors on arrival on page.
+		'firstName': true,
+		'lastName':true,
+		'email':true,
+		'password': true,
+		'repeatPassword':true,
+		'inami':true
+	})
+
+	const resetErrors = () => {
+		const newFields= {
+			'firstName': true,
+			'lastName':true,
+			'email':true,
+			'password': true,
+			'repeatPassword':true,
+			'inami':true
+		}
+		setFilledFields(newFields);
+		setPasswordsInputErrorError(false);
+		setEmailAlreadyExistsError(false)
+	}
+
+	const checkFields = () => {
+		const newFields= {
+			'firstName': Boolean(doctorFirstName),
+			'lastName':Boolean(doctorLastName),
+			'email':Boolean(doctorEmail),
+			'password': Boolean(doctorPassword),
+			'repeatPassword':Boolean(doctorRepeatPassword),
+			'inami':Boolean(doctorInami)
+		}
+		setFilledFields(newFields);
+	}
 
 	const handleRegisterClick = (e: any) => {
+		resetErrors();
 		e.preventDefault();
-		//Get rid of old potential error messages.
-		setEmailAlreadyExistsError(false);
-		setPasswordsInputErrorError(false);
 		if (doctorPassword === doctorRepeatPassword) {
 			doctorRegistration(
 				doctorFirstName,
@@ -34,14 +70,19 @@ const DoctorRegister = () => {
 				doctorPassword,
 				doctorInami
 			)
-				.then(response => {
-					console.log(response);
+				.then((response:any) => {
+					localStorage.setItem('Token', response.data.token);
+					localStorage.setItem("Type_BlockCovid", "doctor");
+					setConnectedType("doctor");
 				})
 				.catch(error => {
 					if (error.response.status === 409) {
 						setEmailAlreadyExistsError(true);
 						sendErrorMessage(error.response.data.error);
-					} else sendWarningMessage(error.response.data.error);
+					} else {
+						checkFields();
+						sendWarningMessage(error.response.data.error);
+					}
 				});
 		} else {
 			sendWarningMessage('The passwords do not match.');
@@ -50,108 +91,115 @@ const DoctorRegister = () => {
 	};
 
 	return (
-		<form
-			className={'authenticate-form'}
-			noValidate
-			onSubmit={handleRegisterClick}
-		>
-			<Grid container spacing={2}>
-				<Grid item xs={12} sm={6}>
-					<TextField
-						autoComplete={'off'}
-						name="firstName"
-						variant="outlined"
-						required
-						fullWidth
-						id="firstName"
-						label="First Name"
-						autoFocus
-						value={doctorFirstName}
-						onChange={e => setDoctorFirstName(e.target.value)}
-					/>
-				</Grid>
-				<Grid item xs={12} sm={6}>
-					<TextField
-						variant="outlined"
-						required
-						fullWidth
-						id="lastName"
-						label="Last Name"
-						name="lastName"
-						autoComplete={'off'}
-						value={doctorLastName}
-						onChange={e => setDoctorLastName(e.target.value)}
-					/>
-				</Grid>
-				<Grid item xs={12}>
-					<TextField
-						variant="outlined"
-						required
-						fullWidth
-						id="email"
-						label="Email Address"
-						name="email"
-						type={'email'}
-						autoComplete={'off'}
-						value={doctorEmail}
-						onChange={e => setDoctorEmail(e.target.value)}
-						error={emailAlreadyExistsError}
-					/>
-				</Grid>
-				<Grid item xs={12} sm={6}>
-					<TextField
-						variant="outlined"
-						required
-						fullWidth
-						name="password"
-						label="Password"
-						type="password"
-						id="password"
-						autoComplete={'off'}
-						value={doctorPassword}
-						onChange={e => setDoctorPassword(e.target.value)}
-						error={passwordsInputErrorError}
-					/>
-				</Grid>
-				<Grid item xs={12} sm={6}>
-					<TextField
-						variant="outlined"
-						required
-						fullWidth
-						name="repeatPassword"
-						label="Repeat password"
-						type="password"
-						id="repeatPassword"
-						autoComplete={'off'}
-						value={doctorRepeatPassword}
-						onChange={e => setDoctorRepeatPassword(e.target.value)}
-						error={passwordsInputErrorError}
-					/>
-				</Grid>
-				<Grid item xs={12}>
-					<TextField
-						variant="outlined"
-						required
-						fullWidth
-						name="inami"
-						label="INAMI number"
-						id="inami"
-						autoComplete={'off'}
-						value={doctorInami}
-						onChange={e => setDoctorInami(e.target.value)}
-					/>
-				</Grid>
-			</Grid>
-			<Button
-				type="submit"
-				fullWidth
-				variant="contained"
-				color="primary"
-				className={'authenticate-submit'}
+		<div>
+			<form
+				className={'authenticate-form'}
+				noValidate
+				onSubmit={handleRegisterClick}
 			>
-				Register
-			</Button>
-		</form>
+				<Grid container spacing={2}>
+					<Grid item xs={12} sm={6}>
+						<TextField
+							autoComplete="off"
+							name="firstName"
+							variant="outlined"
+							required
+							fullWidth
+							id="firstName"
+							label="First Name"
+							autoFocus
+							error={!filledFields.firstName}
+							value={doctorFirstName}
+							onChange={e => setDoctorFirstName(e.target.value)}
+						/>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<TextField
+							variant="outlined"
+							required
+							fullWidth
+							id="lastName"
+							label="Last Name"
+							name="lastName"
+							autoComplete="off"
+							value={doctorLastName}
+							error={!filledFields.lastName}
+							onChange={e => setDoctorLastName(e.target.value)}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<TextField
+							variant="outlined"
+							required
+							fullWidth
+							id="email"
+							label="Email Address"
+							name="email"
+							type="email"
+							autoComplete="off"
+							value={doctorEmail}
+							onChange={e => setDoctorEmail(e.target.value)}
+							error={emailAlreadyExistsError  || !filledFields.email}
+						/>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<TextField
+							variant="outlined"
+							required
+							fullWidth
+							name="password"
+							label="Password"
+							type="password"
+							id="password"
+							autoComplete="off"
+							value={doctorPassword}
+							onChange={e => setDoctorPassword(e.target.value)}
+							error={passwordsInputErrorError  || !filledFields.password}
+						/>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<TextField
+							variant="outlined"
+							required
+							fullWidth
+							name="repeatPassword"
+							label="Repeat password"
+							type="password"
+							id="repeatPassword"
+							autoComplete="off"
+							value={doctorRepeatPassword}
+							onChange={e =>
+								setDoctorRepeatPassword(e.target.value)
+							}
+							error={passwordsInputErrorError  || !filledFields.repeatPassword}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<TextField
+							variant="outlined"
+							required
+							fullWidth
+							name="inami"
+							label="INAMI number"
+							id="inami"
+							autoComplete="off"
+							value={doctorInami}
+							onChange={e => setDoctorInami(e.target.value)}
+							error={!filledFields.inami}
+						/>
+					</Grid>
+				</Grid>
+				<Button
+					type="submit"
+					fullWidth
+					variant="contained"
+					color="primary"
+					className={'authenticate-submit'}
+				>
+					Register
+				</Button>
+			</form>
+		</div>
 	);
 };
 

@@ -20,7 +20,7 @@ const Register = ({setConnectedType}) => {
 				<Typography component="h1" variant="h5">
 					Register
 				</Typography>
-				<CustomizedTabs />
+				<CustomizedTabs setConnectedType={setConnectedType}/>
 				<Grid container justify="center" className={'change-form-text'}>
 					<Grid item>
 						<Link component={RouterLink} to="/authenticate">

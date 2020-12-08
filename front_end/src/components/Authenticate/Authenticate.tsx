@@ -16,28 +16,38 @@ const Authenticate = ({setConnectedType}) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const [authFailed, setAuthFailed] = useState(false);
-	const [emailEmpty, setEmailEmpty] = useState(false);
-	const [passwordEmpty, setPasswordEmpty] = useState(false);
-
+	//Error handling
 	const {sendErrorMessage, sendWarningMessage} = useAlert();
+	const [authFailed, setAuthFailed] = useState(false);
+	const [filledFields, setFilledFields] = useState<{
+		'password': boolean,
+		'email': boolean
+	}>({
+		'password': true,
+		'email': true
+	})
+
+	const resetErrors = () => {
+		const newFields = {
+			'password': true,
+			'email': true
+		}
+		setFilledFields(newFields)
+		setAuthFailed(false);
+	}
 
 	const handleSubmit = (e: any) => {
+		resetErrors();
 		e.preventDefault();
-		setEmailEmpty(false);
-		setPasswordEmpty(false);
 		SignIn(email, password)
 			.then((response: any) => {
 				localStorage.setItem('Token', response.data.token);
 				if (response.data.type === 'doctor') {
-					setAuthFailed(false);
-					console.log('Connected as doctor!!');
-					localStorage.setItem('Type_BlockCovid', 'doctor');
-					setConnectedType('doctor');
+					localStorage.setItem("Type_BlockCovid", "doctor");
+					setConnectedType("doctor");
 				} else if (response.data.type === 'institution') {
-					console.log('Connected as institution!!');
-					localStorage.setItem('Type_BlockCovid', 'institution');
-					setConnectedType('institution');
+					localStorage.setItem("Type_BlockCovid", "institution");
+					setConnectedType("institution");
 				}
 			})
 			.catch(error => {
@@ -46,8 +56,12 @@ const Authenticate = ({setConnectedType}) => {
 					sendErrorMessage(error.response.data.error);
 				} else if (error.response.status === 422) {
 					sendWarningMessage(error.response.data.error);
-					if (!email) setEmailEmpty(true);
-					if (!password) setPasswordEmpty(true);
+					const newFields = {
+						'password': Boolean(password),
+						'email': Boolean(email)
+					}
+					console.log(password)
+					setFilledFields(newFields)
 				}
 			});
 	};
@@ -81,7 +95,7 @@ const Authenticate = ({setConnectedType}) => {
 						type={'email'}
 						onChange={e => setEmail(e.target.value)}
 						autoFocus
-						error={authFailed || emailEmpty}
+						error={authFailed || !filledFields.email}
 					/>
 					<TextField
 						variant="outlined"
@@ -94,7 +108,7 @@ const Authenticate = ({setConnectedType}) => {
 						id="password"
 						autoComplete={'off'}
 						value={password}
-						error={authFailed || passwordEmpty}
+						error={authFailed || !filledFields.password}
 						onChange={e => setPassword(e.target.value)}
 					/>
 					<Button

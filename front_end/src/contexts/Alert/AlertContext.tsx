@@ -6,6 +6,7 @@ import React, {SyntheticEvent, useEffect, useState} from 'react';
 const [useAlert, CtxProvider] = createCtx<{
 	sendErrorMessage: (message: string) => void;
 	sendWarningMessage: (message: string) => void;
+	sendSuccessMessage: (message: string) => void;
 }>();
 
 export interface SnackbarMessage {
@@ -69,9 +70,14 @@ const AlertContext = ({children}) => {
 		handleClick(message, 'warning');
 	};
 
+	const sendSuccessMessage = (message: string) => {
+		handleClick(message, 'success');
+	};
+
 	const exposed = {
 		sendErrorMessage,
 		sendWarningMessage,
+		sendSuccessMessage
 	};
 
 	return (

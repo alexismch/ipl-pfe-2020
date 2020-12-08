@@ -6,6 +6,7 @@ import React from 'react';
 import styled from 'styled-components';
 import AddLocationDialog from './AddLocationDialog';
 import Location from './Location';
+import {getDoctorInstitutions} from "../utils/backend";
 
 const Box = styled.div`
 	${breakpoints(compose(spacing, palette))}
@@ -34,9 +35,10 @@ const useStyles = makeStyles(theme => ({
 			alignItems: 'center',
 		},
 	},
+
 }));
 
-const LocationsList = ({locations}) => {
+const LocationsList = ({locations, setLocations}:any) => {
 	useStyles();
 	const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -54,13 +56,13 @@ const LocationsList = ({locations}) => {
 			sm={{paddingLeft: 4, paddingRight: 4}}
 			md={{paddingLeft: 8, paddingRight: 8}}
 		>
-			<AddLocationDialog />
+			<AddLocationDialog setLocations={setLocations}/>
 			{locations.length > 0 ? (
 				locations.map(location => (
 					<Location
 						key={location.id}
 						id={location.id}
-						title={location.title}
+						title={location.name}
 						description={location.description}
 						expanded={expanded}
 						handleChange={handleChange}
