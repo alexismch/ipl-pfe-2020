@@ -8,7 +8,8 @@ import React from 'react';
 import ReactToPrint from 'react-to-print';
 
 const QRCode = require('qrcode.react');
-const BASE_URL = 'https://ipl-pfe-2020-dev-mobile.herokuapp.com/qr/d/';
+const {REACT_APP_QR_CODE_BASE_URL} = process.env;
+const QR_LOCATION_BASE_URL = `${REACT_APP_QR_CODE_BASE_URL}/l/`;
 
 const useStyles = makeStyles(() => ({
 	'@global': {
@@ -31,7 +32,7 @@ const useStyles = makeStyles(() => ({
 const Location = ({id, title, description, expanded, handleChange}) => {
 	useStyles();
 
-	const value = BASE_URL + id;
+	const value = QR_LOCATION_BASE_URL + id;
 	let componentRef;
 	return (
 		<Accordion
