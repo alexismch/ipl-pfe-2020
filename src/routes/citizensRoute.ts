@@ -63,6 +63,23 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 router.use(verifySession);
 
 //TODO : getAllNotifications
+
+/**
+ * Handle request to get the citizen notifications
+ * @return response with the notifications, or a no content
+ */
+router.get('/notifications', (req: Request, res: Response, next: NextFunction) => {
+	const id = res.locals.session.id;
+	Citizen.findById(id)
+		.then(cit => {
+			if (!cit) return next(createError(401, 'unknown citizen'));
+			res.json(cit.notifications);
+		})
+		.catch(() => sendError(next));
+
+});
+
+
 /**
  * Handle request to get the citizen history
  * @return response with the history, or a no content
