@@ -85,7 +85,10 @@ const AlertContext = ({children}) => {
 				onClose={handleClose}
 				onExited={handleExited}
 			>
-				<Alert severity={messageInfo ? messageInfo.type : undefined}>
+				<Alert
+					severity={messageInfo ? messageInfo.type : undefined}
+					onClose={handleClose}
+				>
 					{messageInfo ? messageInfo.message : undefined}
 				</Alert>
 			</Snackbar>
