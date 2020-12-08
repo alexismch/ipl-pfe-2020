@@ -57,6 +57,7 @@ const Location = ({id, title, description, expanded, handleChange}) => {
 					value={value}
 					bgColor={'rgba(0, 0, 0, 0)'}
 					style={{marginLeft: 'auto', marginRight: 'auto'}}
+					includeMargin={true}
 				/>
 			</AccordionDetails>
 			<Divider className={'print-hidden'} />
