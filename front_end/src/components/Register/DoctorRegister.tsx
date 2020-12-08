@@ -14,50 +14,55 @@ const DoctorRegister = ({setConnectedType}) => {
 	const [doctorInami, setDoctorInami] = useState('');
 	const {sendErrorMessage, sendWarningMessage} = useAlert();
 
-	const [emailAlreadyExistsError, setEmailAlreadyExistsError] = useState(false);
-	const [passwordsInputErrorError, setPasswordsInputErrorError] = useState(false);
+	const [emailAlreadyExistsError, setEmailAlreadyExistsError] = useState(
+		false
+	);
+	const [passwordsInputErrorError, setPasswordsInputErrorError] = useState(
+		false
+	);
 
 	const [filledFields, setFilledFields] = useState<{
-		'firstName': boolean,
-		'lastName':boolean,
-		'email':boolean,
-		'password': boolean,
-		'repeatPassword':boolean,
-		'inami':boolean
-	}>({ //No errors on arrival on page.
-		'firstName': true,
-		'lastName':true,
-		'email':true,
-		'password': true,
-		'repeatPassword':true,
-		'inami':true
-	})
+		firstName: boolean;
+		lastName: boolean;
+		email: boolean;
+		password: boolean;
+		repeatPassword: boolean;
+		inami: boolean;
+	}>({
+		//No errors on arrival on page.
+		firstName: true,
+		lastName: true,
+		email: true,
+		password: true,
+		repeatPassword: true,
+		inami: true,
+	});
 
 	const resetErrors = () => {
-		const newFields= {
-			'firstName': true,
-			'lastName':true,
-			'email':true,
-			'password': true,
-			'repeatPassword':true,
-			'inami':true
-		}
+		const newFields = {
+			firstName: true,
+			lastName: true,
+			email: true,
+			password: true,
+			repeatPassword: true,
+			inami: true,
+		};
 		setFilledFields(newFields);
 		setPasswordsInputErrorError(false);
-		setEmailAlreadyExistsError(false)
-	}
+		setEmailAlreadyExistsError(false);
+	};
 
 	const checkFields = () => {
-		const newFields= {
-			'firstName': Boolean(doctorFirstName),
-			'lastName':Boolean(doctorLastName),
-			'email':Boolean(doctorEmail),
-			'password': Boolean(doctorPassword),
-			'repeatPassword':Boolean(doctorRepeatPassword),
-			'inami':Boolean(doctorInami)
-		}
+		const newFields = {
+			firstName: Boolean(doctorFirstName),
+			lastName: Boolean(doctorLastName),
+			email: Boolean(doctorEmail),
+			password: Boolean(doctorPassword),
+			repeatPassword: Boolean(doctorRepeatPassword),
+			inami: Boolean(doctorInami),
+		};
 		setFilledFields(newFields);
-	}
+	};
 
 	const handleRegisterClick = (e: any) => {
 		resetErrors();
@@ -70,10 +75,10 @@ const DoctorRegister = ({setConnectedType}) => {
 				doctorPassword,
 				doctorInami
 			)
-				.then((response:any) => {
+				.then((response: any) => {
 					localStorage.setItem('Token', response.data.token);
-					localStorage.setItem("Type_BlockCovid", "doctor");
-					setConnectedType("doctor");
+					localStorage.setItem('Type_BlockCovid', 'doctor');
+					setConnectedType('doctor');
 				})
 				.catch(error => {
 					if (error.response.status === 409) {
@@ -139,7 +144,9 @@ const DoctorRegister = ({setConnectedType}) => {
 							autoComplete="off"
 							value={doctorEmail}
 							onChange={e => setDoctorEmail(e.target.value)}
-							error={emailAlreadyExistsError  || !filledFields.email}
+							error={
+								emailAlreadyExistsError || !filledFields.email
+							}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -154,7 +161,10 @@ const DoctorRegister = ({setConnectedType}) => {
 							autoComplete="off"
 							value={doctorPassword}
 							onChange={e => setDoctorPassword(e.target.value)}
-							error={passwordsInputErrorError  || !filledFields.password}
+							error={
+								passwordsInputErrorError ||
+								!filledFields.password
+							}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -171,7 +181,10 @@ const DoctorRegister = ({setConnectedType}) => {
 							onChange={e =>
 								setDoctorRepeatPassword(e.target.value)
 							}
-							error={passwordsInputErrorError  || !filledFields.repeatPassword}
+							error={
+								passwordsInputErrorError ||
+								!filledFields.repeatPassword
+							}
 						/>
 					</Grid>
 					<Grid item xs={12}>

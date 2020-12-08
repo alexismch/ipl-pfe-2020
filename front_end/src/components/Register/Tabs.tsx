@@ -87,10 +87,10 @@ const CustomizedTabs = ({setConnectedType}) => {
 				<StyledTab label="Institution" />
 			</StyledTabs>
 			<TabPanel value={value} index={0}>
-				<DoctorRegister setConnectedType={setConnectedType}/>
+				<DoctorRegister setConnectedType={setConnectedType} />
 			</TabPanel>
 			<TabPanel value={value} index={1}>
-				<InstitutionRegister setConnectedType={setConnectedType}/>
+				<InstitutionRegister setConnectedType={setConnectedType} />
 			</TabPanel>
 		</div>
 	);

@@ -14,50 +14,56 @@ const InstitutionRegister = ({setConnectedType}) => {
 	);
 	const [institutionNumber, setInstitutionNumber] = useState('');
 
-	const [emailOrNoAlreadyExistsError, setEmailOrNoAlreadyExistsError,] = useState(false);
-	const [passwordsInputErrorError, setPasswordsInputErrorError] = useState(false);
+	const [
+		emailOrNoAlreadyExistsError,
+		setEmailOrNoAlreadyExistsError,
+	] = useState(false);
+	const [passwordsInputErrorError, setPasswordsInputErrorError] = useState(
+		false
+	);
 	const {sendErrorMessage, sendWarningMessage} = useAlert();
 
 	const [filledFields, setFilledFields] = useState<{
-		'name':boolean,
-		'email':boolean,
-		'password': boolean,
-		'repeatPassword':boolean,
-		'number':boolean
-	}>({ //No errors on arrival on page.
-		'name':true,
-		'email':true,
-		'password': true,
-		'repeatPassword':true,
-		'number':true
-	})
+		name: boolean;
+		email: boolean;
+		password: boolean;
+		repeatPassword: boolean;
+		number: boolean;
+	}>({
+		//No errors on arrival on page.
+		name: true,
+		email: true,
+		password: true,
+		repeatPassword: true,
+		number: true,
+	});
 
 	const resetErrors = () => {
-		const newFields= {
-			'name':true,
-			'email':true,
-			'password': true,
-			'repeatPassword':true,
-			'number':true
-		}
+		const newFields = {
+			name: true,
+			email: true,
+			password: true,
+			repeatPassword: true,
+			number: true,
+		};
 		setFilledFields(newFields);
 		setPasswordsInputErrorError(false);
-		setEmailOrNoAlreadyExistsError(false)
-	}
+		setEmailOrNoAlreadyExistsError(false);
+	};
 
 	const checkFields = () => {
-		const newFields= {
-			'name':Boolean(institutionName),
-			'email':Boolean(institutionEmail),
-			'password': Boolean(institutionPassword),
-			'repeatPassword':Boolean(institutionRepeatPassword),
-			'number':Boolean(institutionNumber)
-		}
+		const newFields = {
+			name: Boolean(institutionName),
+			email: Boolean(institutionEmail),
+			password: Boolean(institutionPassword),
+			repeatPassword: Boolean(institutionRepeatPassword),
+			number: Boolean(institutionNumber),
+		};
 		setFilledFields(newFields);
-	}
+	};
 
 	const handleRegisterClick = (e: any) => {
-		resetErrors()
+		resetErrors();
 		e.preventDefault();
 		if (institutionPassword === institutionRepeatPassword) {
 			institutionRegistration(
@@ -66,10 +72,10 @@ const InstitutionRegister = ({setConnectedType}) => {
 				institutionPassword,
 				institutionNumber
 			)
-				.then((response:any) => {
+				.then((response: any) => {
 					localStorage.setItem('Token', response.data.token);
-					localStorage.setItem("Type_BlockCovid", "institution");
-					setConnectedType("institution");
+					localStorage.setItem('Type_BlockCovid', 'institution');
+					setConnectedType('institution');
 				})
 				.catch(error => {
 					if (error.response.status === 409) {
@@ -119,7 +125,9 @@ const InstitutionRegister = ({setConnectedType}) => {
 						autoComplete={'off'}
 						value={institutionEmail}
 						onChange={e => setInstitutionEmail(e.target.value)}
-						error={emailOrNoAlreadyExistsError || !filledFields.email}
+						error={
+							emailOrNoAlreadyExistsError || !filledFields.email
+						}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={6}>
@@ -134,7 +142,9 @@ const InstitutionRegister = ({setConnectedType}) => {
 						autoComplete={'off'}
 						value={institutionPassword}
 						onChange={e => setInstitutionPassword(e.target.value)}
-						error={passwordsInputErrorError || !filledFields.password}
+						error={
+							passwordsInputErrorError || !filledFields.password
+						}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={6}>
@@ -151,7 +161,10 @@ const InstitutionRegister = ({setConnectedType}) => {
 						onChange={e =>
 							setInstitutionRepeatPassword(e.target.value)
 						}
-						error={passwordsInputErrorError || !filledFields.repeatPassword}
+						error={
+							passwordsInputErrorError ||
+							!filledFields.repeatPassword
+						}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -165,7 +178,9 @@ const InstitutionRegister = ({setConnectedType}) => {
 						autoComplete={'off'}
 						value={institutionNumber}
 						onChange={e => setInstitutionNumber(e.target.value)}
-						error={emailOrNoAlreadyExistsError || !filledFields.number}
+						error={
+							emailOrNoAlreadyExistsError || !filledFields.number
+						}
 					/>
 				</Grid>
 			</Grid>

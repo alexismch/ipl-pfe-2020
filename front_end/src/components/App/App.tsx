@@ -55,7 +55,7 @@ const App = () => {
 				setConnectedType('institution');
 			else setConnectedType('');
 		}
-	});
+	}, [setConnectedType]);
 
 	return (
 		<div>

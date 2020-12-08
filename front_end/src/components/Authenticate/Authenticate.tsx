@@ -20,21 +20,21 @@ const Authenticate = ({setConnectedType}) => {
 	const {sendErrorMessage, sendWarningMessage} = useAlert();
 	const [authFailed, setAuthFailed] = useState(false);
 	const [filledFields, setFilledFields] = useState<{
-		'password': boolean,
-		'email': boolean
+		password: boolean;
+		email: boolean;
 	}>({
-		'password': true,
-		'email': true
-	})
+		password: true,
+		email: true,
+	});
 
 	const resetErrors = () => {
 		const newFields = {
-			'password': true,
-			'email': true
-		}
-		setFilledFields(newFields)
+			password: true,
+			email: true,
+		};
+		setFilledFields(newFields);
 		setAuthFailed(false);
-	}
+	};
 
 	const handleSubmit = (e: any) => {
 		resetErrors();
@@ -43,11 +43,11 @@ const Authenticate = ({setConnectedType}) => {
 			.then((response: any) => {
 				localStorage.setItem('Token', response.data.token);
 				if (response.data.type === 'doctor') {
-					localStorage.setItem("Type_BlockCovid", "doctor");
-					setConnectedType("doctor");
+					localStorage.setItem('Type_BlockCovid', 'doctor');
+					setConnectedType('doctor');
 				} else if (response.data.type === 'institution') {
-					localStorage.setItem("Type_BlockCovid", "institution");
-					setConnectedType("institution");
+					localStorage.setItem('Type_BlockCovid', 'institution');
+					setConnectedType('institution');
 				}
 			})
 			.catch(error => {
@@ -57,11 +57,11 @@ const Authenticate = ({setConnectedType}) => {
 				} else if (error.response.status === 422) {
 					sendWarningMessage(error.response.data.error);
 					const newFields = {
-						'password': Boolean(password),
-						'email': Boolean(email)
-					}
-					console.log(password)
-					setFilledFields(newFields)
+						password: Boolean(password),
+						email: Boolean(email),
+					};
+					console.log(password);
+					setFilledFields(newFields);
 				}
 			});
 	};

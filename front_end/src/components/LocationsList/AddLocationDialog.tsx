@@ -6,46 +6,49 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import React, {useState} from 'react';
-import {createNewDoctorLocation, getDoctorInstitutions} from "../utils/backend";
-import {useAlert} from "../../contexts/Alert/AlertContext";
-import {useHistory} from "react-router";
+import {useHistory} from 'react-router';
+import {useAlert} from 'contexts/Alert/AlertContext';
+import {
+	createNewDoctorLocation,
+	getDoctorInstitutions,
+} from 'components/utils/backend';
 
 const AddLocationDialog = ({setLocations}) => {
 	const [open, setOpen] = React.useState(false);
-	const [name, setName] = useState("");
-	const [description, setDescription] = useState("");
+	const [name, setName] = useState('');
+	const [description, setDescription] = useState('');
 	const [nameAlreadyUsed, setNameAlreadyUsed] = useState(false);
 
 	//Error handling.
 	const {sendSuccessMessage, sendWarningMessage} = useAlert();
 
 	//Histotry
-	const history = useHistory()
+	const history = useHistory();
 
 	const [filledFields, setFilledFields] = useState<{
-		'name': boolean,
-		'description': boolean
+		name: boolean;
+		description: boolean;
 	}>({
-		'name': true,
-		'description': true
-	})
+		name: true,
+		description: true,
+	});
 
 	const resetErrors = () => {
 		const newFields = {
-			'name': true,
-			'description': true
-		}
-		setFilledFields(newFields)
+			name: true,
+			description: true,
+		};
+		setFilledFields(newFields);
 		setNameAlreadyUsed(false);
-	}
+	};
 
 	const checkErrors = () => {
 		const newFields = {
-			'name': Boolean(name),
-			'description': Boolean(description)
-		}
-		setFilledFields(newFields)
-	}
+			name: Boolean(name),
+			description: Boolean(description),
+		};
+		setFilledFields(newFields);
+	};
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -57,31 +60,34 @@ const AddLocationDialog = ({setLocations}) => {
 
 	const handleAddButton = () => {
 		resetErrors();
-		createNewDoctorLocation(String(localStorage.getItem("Token")), name, description)
-			.then((response:any) => {
-				sendSuccessMessage("Location correctly created.")
-				getDoctorInstitutions(String(localStorage.getItem("Token")))
-					.then((response:any) => {
-						setLocations(response.data)
-					}).catch((error):any => {
-					console.log(error);
-				})
-			}).catch((error:any) => {
+		createNewDoctorLocation(
+			String(localStorage.getItem('Token')),
+			name,
+			description
+		)
+			.then(() => {
+				sendSuccessMessage('Location correctly created.');
+				getDoctorInstitutions(String(localStorage.getItem('Token')))
+					.then((response: any) => {
+						setLocations(response.data);
+					})
+					.catch((error): any => {
+						console.log(error);
+					});
+			})
+			.catch((error: any) => {
 				console.log(error.response.status);
 				if (error.response.status === 401) {
-					history.push("/logout");
-				}
-				else if (error.response.status === 409) {
-					sendWarningMessage("Location name already used.")
+					history.push('/logout');
+				} else if (error.response.status === 409) {
+					sendWarningMessage('Location name already used.');
 					setNameAlreadyUsed(true);
-				}
-				else if (error.response.status === 422){
-					sendWarningMessage(error.response.data.error)
+				} else if (error.response.status === 422) {
+					sendWarningMessage(error.response.data.error);
 					checkErrors();
 				}
-			}
-		)
-	}
+			});
+	};
 
 	return (
 		<div className={'location-add-box'}>
@@ -112,7 +118,7 @@ const AddLocationDialog = ({setLocations}) => {
 						label="Name"
 						autoFocus
 						value={name}
-						onChange={(e) => setName(e.target.value)}
+						onChange={e => setName(e.target.value)}
 						error={nameAlreadyUsed || !filledFields.name}
 						autoComplete={'off'}
 					/>
@@ -124,7 +130,7 @@ const AddLocationDialog = ({setLocations}) => {
 						id="description"
 						label="Description"
 						value={description}
-						onChange={(e) => setDescription(e.target.value)}
+						onChange={e => setDescription(e.target.value)}
 						error={!filledFields.description}
 						autoComplete={'off'}
 					/>

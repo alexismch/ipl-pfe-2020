@@ -77,7 +77,7 @@ const AlertContext = ({children}) => {
 	const exposed = {
 		sendErrorMessage,
 		sendWarningMessage,
-		sendSuccessMessage
+		sendSuccessMessage,
 	};
 
 	return (
