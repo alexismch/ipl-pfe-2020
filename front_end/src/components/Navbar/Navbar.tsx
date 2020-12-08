@@ -7,6 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import React from 'react';
+import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Navbar = () => {
+	const history = useHistory();
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -35,6 +37,11 @@ const Navbar = () => {
 		setAnchorEl(null);
 	};
 
+	const handleLogout = () => {
+		handleClose();
+		history.push('/logout');
+	};
+
 	return (
 		<div className={classes.root}>
 			<AppBar position="static">
@@ -42,7 +49,6 @@ const Navbar = () => {
 					<Typography variant="h6" className={classes.title}>
 						Block COVID
 					</Typography>
-
 					<div>
 						<IconButton
 							aria-label="account of current user"
@@ -68,7 +74,7 @@ const Navbar = () => {
 							open={open}
 							onClose={handleClose}
 						>
-							<MenuItem onClick={handleClose}>Log out</MenuItem>
+							<MenuItem onClick={handleLogout}>Log out</MenuItem>
 						</Menu>
 					</div>
 				</Toolbar>

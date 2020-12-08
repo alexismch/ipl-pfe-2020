@@ -6,8 +6,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import React from 'react';
 
 const QRCode = require('qrcode.react');
+const BASE_URL = 'https://ipl-pfe-2020-dev-mobile.herokuapp.com/qr/d/';
 
 const Location = ({id, title, description, expanded, handleChange}) => {
+	const value = BASE_URL + id;
 	return (
 		<Accordion expanded={expanded === id} onChange={handleChange(id)}>
 			<AccordionSummary
@@ -23,7 +25,7 @@ const Location = ({id, title, description, expanded, handleChange}) => {
 			<AccordionDetails>
 				<QRCode
 					size={256}
-					value={id}
+					value={value}
 					style={{marginLeft: 'auto', marginRight: 'auto'}}
 					bgColor={'rgba(0, 0, 0, 0)'}
 				/>

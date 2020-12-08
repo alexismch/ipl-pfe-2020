@@ -1,7 +1,10 @@
+import {Paper} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import {breakpoints, compose, palette, spacing} from '@material-ui/system';
 import React from 'react';
 import styled from 'styled-components';
+import AddLocationDialog from './AddLocationDialog';
 import Location from './Location';
 
 const Box = styled.div`
@@ -19,10 +22,21 @@ const useStyles = makeStyles(theme => ({
 			fontSize: theme.typography.pxToRem(15),
 			color: theme.palette.text.secondary,
 		},
+		'.location-add-box': {
+			display: 'flex',
+			justifyContent: 'flex-end',
+			marginBottom: 15,
+		},
+		'.no-location-paper': {
+			minHeight: 48,
+			display: 'flex',
+			justifyContent: 'center',
+			alignItems: 'center',
+		},
 	},
 }));
 
-const LocationsList = () => {
+const LocationsList = ({locations}) => {
 	useStyles();
 	const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -40,27 +54,23 @@ const LocationsList = () => {
 			sm={{paddingLeft: 4, paddingRight: 4}}
 			md={{paddingLeft: 8, paddingRight: 8}}
 		>
-			<Location
-				id={'1'}
-				title={'coucou'}
-				description={'toi'}
-				expanded={expanded}
-				handleChange={handleChange}
-			/>
-			<Location
-				id={'2'}
-				title={'wesh'}
-				description={'alors'}
-				expanded={expanded}
-				handleChange={handleChange}
-			/>
-			<Location
-				id={'3'}
-				title={'smah'}
-				description={'si'}
-				expanded={expanded}
-				handleChange={handleChange}
-			/>
+			<AddLocationDialog />
+			{locations.length > 0 ? (
+				locations.map(location => (
+					<Location
+						key={location.id}
+						id={location.id}
+						title={location.title}
+						description={location.description}
+						expanded={expanded}
+						handleChange={handleChange}
+					/>
+				))
+			) : (
+				<Paper className={'no-location-paper'}>
+					<Typography variant="h5">No location found</Typography>
+				</Paper>
+			)}
 		</Box>
 	);
 };
