@@ -67,6 +67,7 @@ const Location = ({id, title, description, expanded, handleChange}) => {
 						</Button>
 					)}
 					content={() => componentRef}
+					documentTitle={title}
 				/>
 			</AccordionActions>
 		</Accordion>
