@@ -57,7 +57,7 @@ const Navbar = () => {
 					>
 						<img
 							className={classes.logo}
-							src={'/logos/logo-white.png'}
+							src={'/assets/images/logos/logo-white.png'}
 							alt={'logo'}
 						/>
 					</IconButton>

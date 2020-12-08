@@ -1,5 +1,5 @@
-import Authenticate from 'components/Authenticate/Authenticate';
-import Register from 'components/Register/Register';
+import Authenticate from 'components/Unconnected/Authenticate/Authenticate';
+import Register from 'components/Unconnected/Register/Register';
 import React from 'react';
 import {Helmet} from 'react-helmet';
 import {Redirect, Route, Switch} from 'react-router-dom';

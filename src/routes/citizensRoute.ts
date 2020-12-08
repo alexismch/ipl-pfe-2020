@@ -1,15 +1,15 @@
 import Citizen from '@models/Citizen/CitizenSchema';
-import Notification from '@models/Notification/NotificationSchema';
 import ICitizenDoc from '@models/Citizen/ICitizenDoc';
 import Connectable from '@models/Connectable/ConnectableSchema';
 import History from '@models/History/HistorySchema';
 import IHistoryDoc from '@models/History/IHistoryDoc';
 import Location from '@models/Location/LocationSchema';
+import Notification from '@models/Notification/NotificationSchema';
 import {generateSessionToken, verifySession} from '@modules/connectable';
+import {formatDate} from '@modules/date';
 import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
 import * as admin from 'firebase-admin';
-import {formatDate} from '@modules/date';
 
 const createError = require('http-errors');
 const express = require('express');
@@ -117,7 +117,7 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 		return next(createError(422, "field 'id' missing or incorrect"));
 	if (
 		!body.scanDate ||
-		!/^\d\d\d\d-(0[1-9]|1[012])-([012]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)(Z)$/.test(
+		!/^\d\d\d\d-(0[1-9]|1[012])-([012]\d|3[01])T([01]\d|2[0-3]):([0-5]\d):([0-5]\d).\d\d\d(Z)$/.test(
 			body.scanDate
 		)
 	)
@@ -204,9 +204,9 @@ function doctorCase(
 			saveHistory(history, res, next);
 
 			/*			let registrationTokens = [
-				'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
-				'eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln',
-			];*/
+					   'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
+					   'eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln',
+				   ];*/
 
 			console.log(doc);
 		})
