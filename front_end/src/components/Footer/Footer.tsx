@@ -21,6 +21,7 @@ const Footer = () => {
 			<a
 				href="https://www.youtube.com/watch?v=tmSzRx9RYLk"
 				target="_blank"
+				rel="noreferrer"
 			>
 				<FavoriteBorderOutlinedIcon
 					color={'primary'}

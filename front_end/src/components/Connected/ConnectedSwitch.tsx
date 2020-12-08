@@ -14,8 +14,8 @@ const ConnectedSwitch = ({connectedType, setConnectedType}) => {
 					<Helmet>
 						<title>Block COVID - Home</title>
 					</Helmet>
-					<Home />
 					{connectedType === 'doctor' ? 'cc' : ''}
+					<Home />
 				</Route>
 				<Route path="/logout" exact>
 					<Logout setConnectedType={setConnectedType} />

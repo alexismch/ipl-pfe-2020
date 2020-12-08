@@ -15,6 +15,7 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router-dom": "^5.1.6",
     "axios": "^0.21.0",
+    "canvas-to-image": "^2.2.0",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "qrcode.react": "^1.0.0",

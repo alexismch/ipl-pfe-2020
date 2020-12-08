@@ -4,6 +4,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import canvasToImage from 'canvas-to-image';
 import React from 'react';
 import ReactToPrint from 'react-to-print';
 
@@ -31,9 +32,13 @@ const useStyles = makeStyles(() => ({
 
 const Location = ({id, title, description, expanded, handleChange}) => {
 	useStyles();
-
 	const value = QR_LOCATION_BASE_URL + id;
 	let componentRef;
+
+	const handleSave = () => {
+		canvasToImage(`qrcode-${id}`, {name: title});
+	};
+
 	return (
 		<Accordion
 			expanded={expanded === id}
@@ -58,6 +63,7 @@ const Location = ({id, title, description, expanded, handleChange}) => {
 					bgColor={'rgba(0, 0, 0, 0)'}
 					style={{marginLeft: 'auto', marginRight: 'auto'}}
 					includeMargin={true}
+					id={`qrcode-${id}`}
 				/>
 			</AccordionDetails>
 			<Divider className={'print-hidden'} />
@@ -71,6 +77,9 @@ const Location = ({id, title, description, expanded, handleChange}) => {
 					content={() => componentRef}
 					documentTitle={title}
 				/>
+				<Button size="small" color="primary" onClick={handleSave}>
+					Save
+				</Button>
 			</AccordionActions>
 		</Accordion>
 	);
