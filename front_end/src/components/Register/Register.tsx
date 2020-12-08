@@ -9,7 +9,7 @@ import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import CustomizedTabs from './Tabs';
 
-const Register = () => {
+const Register = ({setConnectedType}) => {
 	return (
 		<Container component="main" maxWidth="xs">
 			<CssBaseline />

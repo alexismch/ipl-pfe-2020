@@ -3,8 +3,9 @@ import InstitutionHome from 'components/Homes/InstitutionHome/InstitutionHome';
 import Navbar from 'components/Navbar/Navbar';
 import React from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
+import Logout from "../Logout/Logout";
 
-const ConnectedSwitch = ({connectedType}) => {
+const ConnectedSwitch = ({connectedType, setConnectedType}) => {
 	return (
 		<div>
 			<Navbar />
@@ -17,9 +18,7 @@ const ConnectedSwitch = ({connectedType}) => {
 					)}
 				</Route>
 				<Route path="/logout" exact>
-					{
-						//TODO: en attente du state
-					}
+					<Logout setConnectedType={setConnectedType}/>
 					<Redirect to="/authenticate" />
 				</Route>
 				<Route path="/">

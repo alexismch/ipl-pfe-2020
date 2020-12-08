@@ -12,29 +12,32 @@ import {useAlert} from 'contexts/Alert/AlertContext';
 import React, {useState} from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 
-const Authenticate = () => {
+const Authenticate = ({setConnectedType}) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [authFailed, setAuthFailed] = useState(false);
-	const {sendErrorMessage, sendWarningMessage} = useAlert();
 
-	//const isAuthenticated = false;
-	//const history = useHistory();
+	const [authFailed, setAuthFailed] = useState(false);
+	const [emailEmpty, setEmailEmpty] = useState(false);
+	const [passwordEmpty, setPasswordEmpty] = useState(false);
+
+	const {sendErrorMessage, sendWarningMessage} = useAlert();
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault();
+		setEmailEmpty(false);
+		setPasswordEmpty(false);
 		SignIn(email, password)
 			.then((response: any) => {
 				localStorage.setItem('Token', response.data.token);
 				if (response.data.type === 'doctor') {
 					setAuthFailed(false);
 					console.log('Connected as doctor!!');
-					//localStorage.setItem("Type_BlockCovid", "doctor");
-					//setAuthAsDoctor(true);
+					localStorage.setItem("Type_BlockCovid", "doctor");
+					setConnectedType("doctor");
 				} else if (response.data.type === 'institution') {
 					console.log('Connected as institution!!');
-					//localStorage.setItem("Type_BlockCovid", "institution");
-					//setAuthAsInstitution(true);
+					localStorage.setItem("Type_BlockCovid", "institution");
+					setConnectedType("institution");
 				}
 			})
 			.catch(error => {
@@ -42,8 +45,11 @@ const Authenticate = () => {
 					setAuthFailed(true);
 					sendErrorMessage(error.response.data.error);
 				} else if (error.response.status === 422) {
-					setAuthFailed(true);
 					sendWarningMessage(error.response.data.error);
+					if (!email)
+						setEmailEmpty(true);
+					if (!password)
+						setPasswordEmpty(true);
 				}
 			});
 	};
@@ -76,7 +82,7 @@ const Authenticate = () => {
 						value={email}
 						onChange={e => setEmail(e.target.value)}
 						autoFocus
-						error={authFailed}
+						error={authFailed || emailEmpty}
 					/>
 					<TextField
 						variant="outlined"
@@ -89,7 +95,7 @@ const Authenticate = () => {
 						id="password"
 						autoComplete="current-password"
 						value={password}
-						error={authFailed}
+						error={authFailed || passwordEmpty}
 						onChange={e => setPassword(e.target.value)}
 					/>
 					<Button

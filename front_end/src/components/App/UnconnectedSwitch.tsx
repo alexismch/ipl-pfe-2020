@@ -3,14 +3,14 @@ import Register from 'components/Register/Register';
 import React from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
 
-const UnconnectedSwitch = () => {
+const UnconnectedSwitch = ({setConnectedType}) => {
 	return (
 		<Switch>
 			<Route path="/register" exact>
-				<Register />
+				<Register setConnectedType={setConnectedType}/>
 			</Route>
 			<Route path="/authenticate" exact>
-				<Authenticate />
+				<Authenticate setConnectedType={setConnectedType}/>
 			</Route>
 			<Route path="/">
 				<Redirect to="/authenticate" />

@@ -2,7 +2,7 @@ import {Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import Copyright from 'components/Copyright/Copytight';
 import {AlertContext} from 'contexts/Alert/AlertContext';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ConnectedSwitch from './ConnectedSwitch';
 import UnconnectedSwitch from './UnconnectedSwitch';
 
@@ -37,14 +37,27 @@ const useStyles = makeStyles(theme => ({
 
 const App = () => {
 	useStyles();
-	const connectedType = ''; // soit '', soit 'doctor', soit 'institution'
+	const [connectedType, setConnectedType] = useState<"" | "doctor" | "institution">("");// remember.. important... soit '', soit 'doctor', soit 'institution'
+
+	useEffect(() => {
+		if (localStorage.getItem("Token") && localStorage.getItem("Type_BlockCovid")){
+			if (String(localStorage.getItem("Type_BlockCovid")) === "doctor"){
+				setConnectedType("doctor");
+			} else if (String(localStorage.getItem("Type_BlockCovid")) === "institution"){
+				setConnectedType("institution");
+			} else {
+				setConnectedType("");
+			}
+		}
+	})
+
 	return (
 		<div>
 			<AlertContext>
 				{connectedType ? (
-					<ConnectedSwitch connectedType={connectedType} />
+					<ConnectedSwitch connectedType={connectedType} setConnectedType={setConnectedType}/>
 				) : (
-					<UnconnectedSwitch />
+					<UnconnectedSwitch setConnectedType={setConnectedType}/>
 				)}
 				<Box mt={8}>
 					<Copyright />
