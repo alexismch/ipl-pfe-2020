@@ -40,10 +40,10 @@ const InstitutionRegister = () => {
 					console.log(response);
 				})
 				.catch(error => {
-					sendErrorMessage(error.response.data.error);
 					if (error.response.status === 409) {
+						sendErrorMessage(error.response.data.error);
 						setEmailOrNoAlreadyExistsError(true);
-					}
+					} else sendWarningMessage(error.response.data.error);
 				});
 		} else {
 			sendWarningMessage('The passwords do not match.');

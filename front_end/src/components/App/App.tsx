@@ -37,27 +37,36 @@ const useStyles = makeStyles(theme => ({
 
 const App = () => {
 	useStyles();
-	const [connectedType, setConnectedType] = useState<"" | "doctor" | "institution">("");// remember.. important... soit '', soit 'doctor', soit 'institution'
+	const [connectedType, setConnectedType] = useState<
+		'' | 'doctor' | 'institution'
+	>(''); // remember.. important... soit '', soit 'doctor', soit 'institution'
 
 	useEffect(() => {
-		if (localStorage.getItem("Token") && localStorage.getItem("Type_BlockCovid")){
-			if (String(localStorage.getItem("Type_BlockCovid")) === "doctor"){
-				setConnectedType("doctor");
-			} else if (String(localStorage.getItem("Type_BlockCovid")) === "institution"){
-				setConnectedType("institution");
-			} else {
-				setConnectedType("");
-			}
+		if (
+			localStorage.getItem('Token') &&
+			localStorage.getItem('Type_BlockCovid')
+		) {
+			if (String(localStorage.getItem('Type_BlockCovid')) === 'doctor')
+				setConnectedType('doctor');
+			else if (
+				String(localStorage.getItem('Type_BlockCovid')) ===
+				'institution'
+			)
+				setConnectedType('institution');
+			else setConnectedType('');
 		}
-	})
+	});
 
 	return (
 		<div>
 			<AlertContext>
 				{connectedType ? (
-					<ConnectedSwitch connectedType={connectedType} setConnectedType={setConnectedType}/>
+					<ConnectedSwitch
+						connectedType={connectedType}
+						setConnectedType={setConnectedType}
+					/>
 				) : (
-					<UnconnectedSwitch setConnectedType={setConnectedType}/>
+					<UnconnectedSwitch setConnectedType={setConnectedType} />
 				)}
 				<Box mt={8}>
 					<Copyright />
