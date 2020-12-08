@@ -138,7 +138,6 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 });
 
 function saveHistory(history: IHistoryDoc, res: Response, next: NextFunction) {
-	console.log(history);
 	history
 		.save()
 		.then(hist => res.json(hist))
@@ -192,6 +191,8 @@ function doctorCase(
 }
 
 module.exports = router;
+
+
 
 function alertNearContact(citizen_id: any) {
 	let limitDay = new Date()
@@ -248,7 +249,8 @@ function alertNearContact(citizen_id: any) {
 						Citizen.findOne({
 							_id : citizen
 						}).then((citizen) =>{
-							sendNotificationsAlert(citizen.fcmToken)
+							const message = 'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine'
+							sendNotificationsAlert(citizen,message)
 							}
 						)
 				})
@@ -258,22 +260,26 @@ function alertNearContact(citizen_id: any) {
 
 }
 
-function sendNotificationsAlert(fcmToken: string) {
-	//TODO: Add notifications entry to DB
-	let message = {
+function saveNotification(message : string, citizen_id : string) {
+	//TODO: Add notifications to this citizen
+}
+
+function sendNotificationsAlert(citizen: ICitizenDoc,message : string) {
+	let content = {
 		notification: {
 			title: 'IMPORTANT BLOCKCOVID',
-			body: 'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine',
+			body: message,
 		},
-		token: fcmToken,
+		token: citizen.fcmToken,
 	};
 	// Send a message to the device corresponding to the provided
 	// registration token.
 	admin
 		.messaging()
-		.send(message)
+		.send(content)
 		.then(response => {
 			// Response is a message ID string.
+			saveNotification(message,citizen._id);
 			console.log('Successfully sent message:', response);
 		})
 		.catch(error => {
