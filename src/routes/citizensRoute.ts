@@ -9,6 +9,7 @@ import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import {formatDate} from '@modules/date';
+import {stringify} from "querystring";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -137,6 +138,8 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 		.catch(() => sendError(next));
 });
 
+
+
 function saveHistory(history: IHistoryDoc, res: Response, next: NextFunction) {
 	history
 		.save()
@@ -193,7 +196,10 @@ function doctorCase(
 module.exports = router;
 
 
-
+/**
+ * Search and alert all the people in contact with the scanned citizen
+ * @param citizen_id citizen who is positive to covid
+ */
 function alertNearContact(citizen_id: any) {
 	let limitDay = new Date()
 	limitDay.setDate(limitDay.getDate()-10)
@@ -208,39 +214,8 @@ function alertNearContact(citizen_id: any) {
 			location_id: { $exists: true, $ne: null }
 		})
 		.then(resp => {
-			const conditions = []
-			console.log("yo resp " + resp.length)
-			for (const loc of resp){
-
-				let minHourContact = new Date(loc.scanDate)
-				minHourContact.setMinutes(minHourContact.getMinutes()-60)
-				let maxHourContact = new Date(loc.scanDate)
-				maxHourContact.setMinutes(maxHourContact.getMinutes()+60)
-
-				const condi = {
-					location_id : loc.location_id,
-					scanDate: { $gt: formatDate(minHourContact), $lt : formatDate(maxHourContact)},
-					citizen : {$ne:citizen_id }
-				}
-				conditions.push(condi)
-			}
-/*			History.find({
-				$or : conditions
-			}).select({
-				citizen : 1,
-				_id : 0
-			}).populate({
-				path : 'citizen',
-				select : 'fcmToken -_id'
-			})
-				.then(resp => {
-					for(const entry of resp){
-						console.log(entry.citizen)
-						sendNotificationsAlert(entry.citizen['fcmToken'])
-					}
-				}
-
-			)*/
+			const conditions = createConditionsTime(resp,60,citizen_id)
+			console.log("number location to scan " + resp.length)
 			History.find({
 				$or : conditions
 			}).distinct("citizen")
@@ -254,17 +229,70 @@ function alertNearContact(citizen_id: any) {
 							}
 						)
 				})
+			/*			History.find({
+                            $or : conditions
+                        }).select({
+                            citizen : 1,
+                            _id : 0
+                        }).populate({
+                            path : 'citizen',
+                            select : 'fcmToken -_id'
+                        })
+                            .then(resp => {
+                                for(const entry of resp){
+                                    console.log(entry.citizen)
+                                    sendNotificationsAlert(entry.citizen['fcmToken'])
+                                }
+                            }
+
+                        )*/
 		})
 		.catch((e) =>e.toString());
 
 
 }
 
+/**
+ * Create the conditions for the query accordind to the time
+ * @return the array of conditions
+ * @param collections che collections who needs to be scanned
+ * @param time the range in minutes of the contact time
+ * @param citizen_id the id of the positive citizen
+ */
+function createConditionsTime(collections : IHistoryDoc[], time : number, citizen_id : string){
+	const conditions = [];
+	for (const entry of collections){
+		let minHourContact = new Date(entry.scanDate)
+		minHourContact.setMinutes(minHourContact.getMinutes()-time)
+		let maxHourContact = new Date(entry.scanDate)
+		maxHourContact.setMinutes(maxHourContact.getMinutes()+time)
+
+		const cond = {
+			location_id : entry.location_id,
+			scanDate: { $gt: formatDate(minHourContact), $lt : formatDate(maxHourContact)},
+			citizen : {$ne:citizen_id }
+		}
+		conditions.push(cond)
+	}
+	return conditions
+}
+
+/***
+ * Save the notification to the DB
+ * @param message the message to remember
+ * @param citizen_id citizen who has been sent the notification
+ */
 function saveNotification(message : string, citizen_id : string) {
 	//TODO: Add notifications to this citizen
 }
 
+/**
+ * send the notification to the correct device
+ * @param citizen the citizen who needs to be sent the notification
+ * @param message the message whihc needs to be sent
+ */
 function sendNotificationsAlert(citizen: ICitizenDoc,message : string) {
+
 	let content = {
 		notification: {
 			title: 'IMPORTANT BLOCKCOVID',
@@ -272,13 +300,11 @@ function sendNotificationsAlert(citizen: ICitizenDoc,message : string) {
 		},
 		token: citizen.fcmToken,
 	};
-	// Send a message to the device corresponding to the provided
-	// registration token.
+	// Send a message to the device corresponding to the provided registration token.
 	admin
 		.messaging()
 		.send(content)
 		.then(response => {
-			// Response is a message ID string.
 			saveNotification(message,citizen._id);
 			console.log('Successfully sent message:', response);
 		})
