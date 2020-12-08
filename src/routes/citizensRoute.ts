@@ -1,4 +1,5 @@
 import Citizen from '@models/Citizen/CitizenSchema';
+import Notification from '@models/Notification/NotificationSchema';
 import ICitizenDoc from '@models/Citizen/ICitizenDoc';
 import Connectable from '@models/Connectable/ConnectableSchema';
 import History from '@models/History/HistorySchema';
@@ -9,7 +10,6 @@ import {sendError} from '@modules/error';
 import {NextFunction, Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import {formatDate} from '@modules/date';
-import {stringify} from "querystring";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -62,23 +62,29 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  */
 router.use(verifySession);
 
-//TODO : getAllNotifications
-
 /**
  * Handle request to get the citizen notifications
  * @return response with the notifications, or a no content
  */
-router.get('/notifications', (req: Request, res: Response, next: NextFunction) => {
-	const id = res.locals.session.id;
-	Citizen.findById(id)
-		.then(cit => {
-			if (!cit) return next(createError(401, 'unknown citizen'));
-			res.json(cit.notifications);
-		})
-		.catch(() => sendError(next));
+router.get(
+	'/notifications',
+	(req: Request, res: Response, next: NextFunction) => {
+		const id = res.locals.session.id;
+		Citizen.findById(id)
+			.then(cit => {
+				if (!cit) return next(createError(401, 'unknown citizen'));
+			})
+			.catch(() => sendError(next));
 
-});
-
+		console.log('notiffssss');
+		Notification.find({citizen_id: id})
+			.then(notif => {
+				console.log('notiffssss', notif);
+				res.json(notif);
+			})
+			.catch(() => sendError(next));
+	}
+);
 
 /**
  * Handle request to get the citizen history
@@ -145,17 +151,14 @@ router.post('/history', (req: Request, res: Response, next: NextFunction) => {
 					break;
 				case 'doctor':
 					doctorCase(body.id, history, res, next);
-					alertNearContact(citizen_id)
+					alertNearContact(citizen_id);
 					break;
 				default:
-
 					next(createError(422, "field 'type' incorrect"));
 			}
 		})
 		.catch(() => sendError(next));
 });
-
-
 
 function saveHistory(history: IHistoryDoc, res: Response, next: NextFunction) {
 	history
@@ -200,7 +203,7 @@ function doctorCase(
 			history.type = 'doctor';
 			saveHistory(history, res, next);
 
-/*			let registrationTokens = [
+			/*			let registrationTokens = [
 				'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
 				'eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln',
 			];*/
@@ -212,61 +215,40 @@ function doctorCase(
 
 module.exports = router;
 
-
 /**
  * Search and alert all the people in contact with the scanned citizen
  * @param citizen_id citizen who is positive to covid
  */
 function alertNearContact(citizen_id: any) {
-	let limitDay = new Date()
-	limitDay.setDate(limitDay.getDate()-10)
+	let limitDay = new Date();
+	limitDay.setDate(limitDay.getDate() - 10);
 
-	const dateLimite = formatDate(limitDay)
+	const dateLimite = formatDate(limitDay);
 
-	console.log(dateLimite < '2020-12-6T1:34:42Z')
-	History
-		.find({
-			citizen: citizen_id,
-			scanDate: { $gt: dateLimite},
-			location_id: { $exists: true, $ne: null }
-		})
+	console.log(dateLimite < '2020-12-6T1:34:42Z');
+	History.find({
+		citizen: citizen_id,
+		scanDate: {$gt: dateLimite},
+		location_id: {$exists: true, $ne: null},
+	})
 		.then(resp => {
-			const conditions = createConditionsTime(resp,60,citizen_id)
-			console.log("number location to scan " + resp.length)
+			const conditions = createConditionsTime(resp, 60, citizen_id);
+			console.log('number location to scan ' + resp.length);
 			History.find({
-				$or : conditions
-			}).distinct("citizen")
-				.then((citizenList) => {
-					for ( const citizen of citizenList)
-						Citizen.findOne({
-							_id : citizen
-						}).then((citizen) =>{
-							const message = 'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine'
-							sendNotificationsAlert(citizen,message)
-							}
-						)
-				})
-			/*			History.find({
-                            $or : conditions
-                        }).select({
-                            citizen : 1,
-                            _id : 0
-                        }).populate({
-                            path : 'citizen',
-                            select : 'fcmToken -_id'
-                        })
-                            .then(resp => {
-                                for(const entry of resp){
-                                    console.log(entry.citizen)
-                                    sendNotificationsAlert(entry.citizen['fcmToken'])
-                                }
-                            }
-
-                        )*/
+				$or: conditions,
+			})
+				.distinct('citizen')
+				.then(citizenIdList => {
+					Citizen.find({
+						_id: {$in: citizenIdList},
+					}).then(citizenList => {
+						const message =
+							'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine';
+						sendNotificationsAlert(citizenList, message);
+					});
+				});
 		})
-		.catch((e) =>e.toString());
-
-
+		.catch(e => e.toString());
 }
 
 /**
@@ -276,53 +258,73 @@ function alertNearContact(citizen_id: any) {
  * @param time the range in minutes of the contact time
  * @param citizen_id the id of the positive citizen
  */
-function createConditionsTime(collections : IHistoryDoc[], time : number, citizen_id : string){
+function createConditionsTime(
+	collections: IHistoryDoc[],
+	time: number,
+	citizen_id: string
+) {
 	const conditions = [];
-	for (const entry of collections){
-		let minHourContact = new Date(entry.scanDate)
-		minHourContact.setMinutes(minHourContact.getMinutes()-time)
-		let maxHourContact = new Date(entry.scanDate)
-		maxHourContact.setMinutes(maxHourContact.getMinutes()+time)
+	for (const entry of collections) {
+		let minHourContact = new Date(entry.scanDate);
+		minHourContact.setMinutes(minHourContact.getMinutes() - time);
+		let maxHourContact = new Date(entry.scanDate);
+		maxHourContact.setMinutes(maxHourContact.getMinutes() + time);
 
 		const cond = {
-			location_id : entry.location_id,
-			scanDate: { $gt: formatDate(minHourContact), $lt : formatDate(maxHourContact)},
-			citizen : {$ne:citizen_id }
-		}
-		conditions.push(cond)
+			location_id: entry.location_id,
+			scanDate: {
+				$gt: formatDate(minHourContact),
+				$lt: formatDate(maxHourContact),
+			},
+			citizen: {$ne: citizen_id},
+		};
+		conditions.push(cond);
 	}
-	return conditions
+	return conditions;
 }
 
 /***
  * Save the notification to the DB
  * @param message the message to remember
- * @param citizen_id citizen who has been sent the notification
+ * @param citizens citizens who have been sent the notification
  */
-function saveNotification(message : string, citizen_id : string) {
+function saveNotification(message: string, citizens: ICitizenDoc[]) {
 	//TODO: Add notifications to this citizen
+	for (const cit of citizens) {
+		const newNotif = new Notification({
+			citizen_id: cit._id,
+			message: message,
+			date: formatDate(new Date()),
+		});
+		newNotif
+			.save()
+			.then(hist => console.log(hist))
+			.catch(e => console.log(e));
+	}
 }
 
 /**
- * send the notification to the correct device
- * @param citizen the citizen who needs to be sent the notification
+ * send the notification to the correct devices
+ * @param citizens the citizens who needs to be sent the notification
  * @param message the message whihc needs to be sent
  */
-function sendNotificationsAlert(citizen: ICitizenDoc,message : string) {
-
+function sendNotificationsAlert(citizens: ICitizenDoc[], message: string) {
 	let content = {
 		notification: {
 			title: 'IMPORTANT BLOCKCOVID',
 			body: message,
 		},
-		token: citizen.fcmToken,
+		tokens: citizens.map(cit => {
+			return cit.fcmToken;
+		}),
 	};
+	//etwM22wLrywUB--1-apXpS:APA91bHEK_csunZj1ATtNnJPXQ8ljlYE3kNpV9qwDOsJiWxz1oEVp9VnHDwyRoTH3pvbKzjLTxRTWq_cEwSo3PqtH-1DfnFTRjsdd05PS6kp83aTAVZq2mEm3vyU1yfopPDT80OTre00
 	// Send a message to the device corresponding to the provided registration token.
 	admin
 		.messaging()
-		.send(content)
+		.sendMulticast(content)
 		.then(response => {
-			saveNotification(message,citizen._id);
+			saveNotification(message, citizens);
 			console.log('Successfully sent message:', response);
 		})
 		.catch(error => {
