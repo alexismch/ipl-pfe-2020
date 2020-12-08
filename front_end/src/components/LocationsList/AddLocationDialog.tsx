@@ -46,6 +46,7 @@ const AddLocationDialog = () => {
 						id="name"
 						label="Name"
 						autoFocus
+						autoComplete={'off'}
 					/>
 					<TextField
 						margin="dense"
@@ -54,6 +55,7 @@ const AddLocationDialog = () => {
 						fullWidth
 						id="description"
 						label="Description"
+						autoComplete={'off'}
 					/>
 				</DialogContent>
 				<DialogActions>

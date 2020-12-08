@@ -32,12 +32,12 @@ const Authenticate = ({setConnectedType}) => {
 				if (response.data.type === 'doctor') {
 					setAuthFailed(false);
 					console.log('Connected as doctor!!');
-					localStorage.setItem("Type_BlockCovid", "doctor");
-					setConnectedType("doctor");
+					localStorage.setItem('Type_BlockCovid', 'doctor');
+					setConnectedType('doctor');
 				} else if (response.data.type === 'institution') {
 					console.log('Connected as institution!!');
-					localStorage.setItem("Type_BlockCovid", "institution");
-					setConnectedType("institution");
+					localStorage.setItem('Type_BlockCovid', 'institution');
+					setConnectedType('institution');
 				}
 			})
 			.catch(error => {
@@ -46,10 +46,8 @@ const Authenticate = ({setConnectedType}) => {
 					sendErrorMessage(error.response.data.error);
 				} else if (error.response.status === 422) {
 					sendWarningMessage(error.response.data.error);
-					if (!email)
-						setEmailEmpty(true);
-					if (!password)
-						setPasswordEmpty(true);
+					if (!email) setEmailEmpty(true);
+					if (!password) setPasswordEmpty(true);
 				}
 			});
 	};
@@ -78,8 +76,9 @@ const Authenticate = ({setConnectedType}) => {
 						id="email"
 						label="Email Address"
 						name="email"
-						autoComplete="email"
+						autoComplete={'off'}
 						value={email}
+						type={'email'}
 						onChange={e => setEmail(e.target.value)}
 						autoFocus
 						error={authFailed || emailEmpty}
@@ -93,7 +92,7 @@ const Authenticate = ({setConnectedType}) => {
 						label="Password"
 						type="password"
 						id="password"
-						autoComplete="current-password"
+						autoComplete={'off'}
 						value={password}
 						error={authFailed || passwordEmpty}
 						onChange={e => setPassword(e.target.value)}

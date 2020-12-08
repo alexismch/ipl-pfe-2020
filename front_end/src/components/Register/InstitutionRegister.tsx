@@ -60,7 +60,7 @@ const InstitutionRegister = () => {
 			<Grid container spacing={2}>
 				<Grid item xs={12}>
 					<TextField
-						autoComplete="fname"
+						autoComplete={'off'}
 						name="firstName"
 						variant="outlined"
 						required
@@ -80,7 +80,7 @@ const InstitutionRegister = () => {
 						id="email"
 						label="Email Address"
 						name="email"
-						autoComplete="email"
+						autoComplete={'off'}
 						value={institutionEmail}
 						onChange={e => setInstitutionEmail(e.target.value)}
 						error={emailOrNoAlreadyExistsError}
@@ -95,7 +95,7 @@ const InstitutionRegister = () => {
 						label="Password"
 						type="password"
 						id="password"
-						autoComplete="current-password"
+						autoComplete={'off'}
 						value={institutionPassword}
 						onChange={e => setInstitutionPassword(e.target.value)}
 						error={passwordsInputErrorError}
@@ -110,7 +110,7 @@ const InstitutionRegister = () => {
 						label="Repeat password"
 						type="password"
 						id="repeatPassword"
-						autoComplete="current-password"
+						autoComplete={'off'}
 						value={institutionRepeatPassword}
 						onChange={e =>
 							setInstitutionRepeatPassword(e.target.value)
@@ -126,6 +126,7 @@ const InstitutionRegister = () => {
 						name="no"
 						label="Institution number"
 						id="no"
+						autoComplete={'off'}
 						value={institutionNumber}
 						onChange={e => setInstitutionNumber(e.target.value)}
 						error={emailOrNoAlreadyExistsError}

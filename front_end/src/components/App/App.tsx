@@ -1,6 +1,6 @@
 import {Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import Copyright from 'components/Copyright/Copytight';
+import Copyright from 'components/Footer/Footer';
 import {AlertContext} from 'contexts/Alert/AlertContext';
 import React, {useEffect, useState} from 'react';
 import ConnectedSwitch from './ConnectedSwitch';

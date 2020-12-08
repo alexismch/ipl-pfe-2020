@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import LockOpenOutlinedIcon from '@material-ui/icons/LockOpenOutlined';
 import React from 'react';
 import {Link as RouterLink} from 'react-router-dom';
 import CustomizedTabs from './Tabs';
@@ -15,7 +15,7 @@ const Register = ({setConnectedType}) => {
 			<CssBaseline />
 			<div className={'authenticate-paper'}>
 				<Avatar className={'authenticate-avatar'}>
-					<LockOutlinedIcon />
+					<LockOpenOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
 					Register

@@ -50,111 +50,108 @@ const DoctorRegister = () => {
 	};
 
 	return (
-		<div>
-			<form
-				className={'authenticate-form'}
-				noValidate
-				onSubmit={handleRegisterClick}
-			>
-				<Grid container spacing={2}>
-					<Grid item xs={12} sm={6}>
-						<TextField
-							autoComplete="fname"
-							name="firstName"
-							variant="outlined"
-							required
-							fullWidth
-							id="firstName"
-							label="First Name"
-							autoFocus
-							value={doctorFirstName}
-							onChange={e => setDoctorFirstName(e.target.value)}
-						/>
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						<TextField
-							variant="outlined"
-							required
-							fullWidth
-							id="lastName"
-							label="Last Name"
-							name="lastName"
-							autoComplete="lname"
-							value={doctorLastName}
-							onChange={e => setDoctorLastName(e.target.value)}
-						/>
-					</Grid>
-					<Grid item xs={12}>
-						<TextField
-							variant="outlined"
-							required
-							fullWidth
-							id="email"
-							label="Email Address"
-							name="email"
-							autoComplete="email"
-							value={doctorEmail}
-							onChange={e => setDoctorEmail(e.target.value)}
-							error={emailAlreadyExistsError}
-						/>
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						<TextField
-							variant="outlined"
-							required
-							fullWidth
-							name="password"
-							label="Password"
-							type="password"
-							id="password"
-							autoComplete="current-password"
-							value={doctorPassword}
-							onChange={e => setDoctorPassword(e.target.value)}
-							error={passwordsInputErrorError}
-						/>
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						<TextField
-							variant="outlined"
-							required
-							fullWidth
-							name="repeatPassword"
-							label="Repeat password"
-							type="password"
-							id="repeatPassword"
-							autoComplete="current-password"
-							value={doctorRepeatPassword}
-							onChange={e =>
-								setDoctorRepeatPassword(e.target.value)
-							}
-							error={passwordsInputErrorError}
-						/>
-					</Grid>
-					<Grid item xs={12}>
-						<TextField
-							variant="outlined"
-							required
-							fullWidth
-							name="inami"
-							label="INAMI number"
-							id="inami"
-							autoComplete="current-password"
-							value={doctorInami}
-							onChange={e => setDoctorInami(e.target.value)}
-						/>
-					</Grid>
+		<form
+			className={'authenticate-form'}
+			noValidate
+			onSubmit={handleRegisterClick}
+		>
+			<Grid container spacing={2}>
+				<Grid item xs={12} sm={6}>
+					<TextField
+						autoComplete={'off'}
+						name="firstName"
+						variant="outlined"
+						required
+						fullWidth
+						id="firstName"
+						label="First Name"
+						autoFocus
+						value={doctorFirstName}
+						onChange={e => setDoctorFirstName(e.target.value)}
+					/>
 				</Grid>
-				<Button
-					type="submit"
-					fullWidth
-					variant="contained"
-					color="primary"
-					className={'authenticate-submit'}
-				>
-					Register
-				</Button>
-			</form>
-		</div>
+				<Grid item xs={12} sm={6}>
+					<TextField
+						variant="outlined"
+						required
+						fullWidth
+						id="lastName"
+						label="Last Name"
+						name="lastName"
+						autoComplete={'off'}
+						value={doctorLastName}
+						onChange={e => setDoctorLastName(e.target.value)}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						variant="outlined"
+						required
+						fullWidth
+						id="email"
+						label="Email Address"
+						name="email"
+						type={'email'}
+						autoComplete={'off'}
+						value={doctorEmail}
+						onChange={e => setDoctorEmail(e.target.value)}
+						error={emailAlreadyExistsError}
+					/>
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					<TextField
+						variant="outlined"
+						required
+						fullWidth
+						name="password"
+						label="Password"
+						type="password"
+						id="password"
+						autoComplete={'off'}
+						value={doctorPassword}
+						onChange={e => setDoctorPassword(e.target.value)}
+						error={passwordsInputErrorError}
+					/>
+				</Grid>
+				<Grid item xs={12} sm={6}>
+					<TextField
+						variant="outlined"
+						required
+						fullWidth
+						name="repeatPassword"
+						label="Repeat password"
+						type="password"
+						id="repeatPassword"
+						autoComplete={'off'}
+						value={doctorRepeatPassword}
+						onChange={e => setDoctorRepeatPassword(e.target.value)}
+						error={passwordsInputErrorError}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						variant="outlined"
+						required
+						fullWidth
+						name="inami"
+						label="INAMI number"
+						id="inami"
+						autoComplete={'off'}
+						value={doctorInami}
+						onChange={e => setDoctorInami(e.target.value)}
+					/>
+				</Grid>
+			</Grid>
+			<Button
+				type="submit"
+				fullWidth
+				variant="contained"
+				color="primary"
+				className={'authenticate-submit'}
+			>
+				Register
+			</Button>
+		</form>
 	);
 };
 

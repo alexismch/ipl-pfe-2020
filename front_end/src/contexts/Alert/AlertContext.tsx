@@ -1,7 +1,7 @@
 import Snackbar from '@material-ui/core/Snackbar';
 import {Alert} from '@material-ui/lab';
 import {createCtx} from 'contexts/utils';
-import React, {useEffect, useState} from 'react';
+import React, {SyntheticEvent, useEffect, useState} from 'react';
 
 const [useAlert, CtxProvider] = createCtx<{
 	sendErrorMessage: (message: string) => void;
@@ -23,10 +23,10 @@ export interface State {
 const AlertContext = ({children}) => {
 	//Context provider.
 	const [isOpen, setIsOpen] = useState(false);
-	const [snackPack, setSnackPack] = React.useState<SnackbarMessage[]>([]);
-	const [messageInfo, setMessageInfo] = React.useState<
-		SnackbarMessage | undefined
-	>(undefined);
+	const [snackPack, setSnackPack] = useState<SnackbarMessage[]>([]);
+	const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(
+		undefined
+	);
 
 	useEffect(() => {
 		if (snackPack.length && !messageInfo) {
@@ -48,7 +48,7 @@ const AlertContext = ({children}) => {
 	};
 
 	const handleClose = (
-		event: React.SyntheticEvent | MouseEvent,
+		event: SyntheticEvent | MouseEvent,
 		reason?: string
 	) => {
 		if (reason === 'clickaway') {

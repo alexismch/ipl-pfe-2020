@@ -15,10 +15,13 @@ const useStyles = makeStyles((theme: Theme) =>
 			flexGrow: 1,
 		},
 		menuButton: {
-			marginRight: theme.spacing(2),
+			marginRight: theme.spacing(0.5),
 		},
 		title: {
 			flexGrow: 1,
+		},
+		logo: {
+			maxHeight: 24,
 		},
 	})
 );
@@ -45,7 +48,19 @@ const Navbar = () => {
 	return (
 		<div className={classes.root}>
 			<AppBar position="static">
-				<Toolbar>
+				<Toolbar variant={'dense'}>
+					<IconButton
+						edge="start"
+						className={classes.menuButton}
+						color="inherit"
+						aria-label="menu"
+					>
+						<img
+							className={classes.logo}
+							src={'/logos/logo-white.png'}
+							alt={'logo'}
+						/>
+					</IconButton>
 					<Typography variant="h6" className={classes.title}>
 						Block COVID
 					</Typography>
