@@ -5,7 +5,7 @@ import {institutionRegistration} from 'components/utils/backend';
 import {useAlert} from 'contexts/Alert/AlertContext';
 import React, {useState} from 'react';
 
-const InstitutionRegister = () => {
+const InstitutionRegister = ({setConnectedType}) => {
 	const [institutionName, setInstitutionName] = useState('');
 	const [institutionEmail, setInstitutionEmail] = useState('');
 	const [institutionPassword, setInstitutionPassword] = useState('');
@@ -14,21 +14,51 @@ const InstitutionRegister = () => {
 	);
 	const [institutionNumber, setInstitutionNumber] = useState('');
 
-	const [
-		emailOrNoAlreadyExistsError,
-		setEmailOrNoAlreadyExistsError,
-	] = useState(false);
-	const [passwordsInputErrorError, setPasswordsInputErrorError] = useState(
-		false
-	);
-
+	const [emailOrNoAlreadyExistsError, setEmailOrNoAlreadyExistsError,] = useState(false);
+	const [passwordsInputErrorError, setPasswordsInputErrorError] = useState(false);
 	const {sendErrorMessage, sendWarningMessage} = useAlert();
 
-	const handleRegisterClick = (e: any) => {
-		e.preventDefault();
-		//Get rid of old potential error messages.
-		setEmailOrNoAlreadyExistsError(false);
+	const [filledFields, setFilledFields] = useState<{
+		'name':boolean,
+		'email':boolean,
+		'password': boolean,
+		'repeatPassword':boolean,
+		'number':boolean
+	}>({ //No errors on arrival on page.
+		'name':true,
+		'email':true,
+		'password': true,
+		'repeatPassword':true,
+		'number':true
+	})
+
+	const resetErrors = () => {
+		const newFields= {
+			'name':true,
+			'email':true,
+			'password': true,
+			'repeatPassword':true,
+			'number':true
+		}
+		setFilledFields(newFields);
 		setPasswordsInputErrorError(false);
+		setEmailOrNoAlreadyExistsError(false)
+	}
+
+	const checkFields = () => {
+		const newFields= {
+			'name':Boolean(institutionName),
+			'email':Boolean(institutionEmail),
+			'password': Boolean(institutionPassword),
+			'repeatPassword':Boolean(institutionRepeatPassword),
+			'number':Boolean(institutionNumber)
+		}
+		setFilledFields(newFields);
+	}
+
+	const handleRegisterClick = (e: any) => {
+		resetErrors()
+		e.preventDefault();
 		if (institutionPassword === institutionRepeatPassword) {
 			institutionRegistration(
 				institutionName,
@@ -36,14 +66,19 @@ const InstitutionRegister = () => {
 				institutionPassword,
 				institutionNumber
 			)
-				.then(response => {
-					console.log(response);
+				.then((response:any) => {
+					localStorage.setItem('Token', response.data.token);
+					localStorage.setItem("Type_BlockCovid", "institution");
+					setConnectedType("institution");
 				})
 				.catch(error => {
 					if (error.response.status === 409) {
 						sendErrorMessage(error.response.data.error);
 						setEmailOrNoAlreadyExistsError(true);
-					} else sendWarningMessage(error.response.data.error);
+					} else {
+						checkFields();
+						sendWarningMessage(error.response.data.error);
+					}
 				});
 		} else {
 			sendWarningMessage('The passwords do not match.');
@@ -70,6 +105,7 @@ const InstitutionRegister = () => {
 						autoFocus
 						value={institutionName}
 						onChange={e => setInstitutionName(e.target.value)}
+						error={!filledFields.name}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -83,7 +119,7 @@ const InstitutionRegister = () => {
 						autoComplete="email"
 						value={institutionEmail}
 						onChange={e => setInstitutionEmail(e.target.value)}
-						error={emailOrNoAlreadyExistsError}
+						error={emailOrNoAlreadyExistsError || !filledFields.email}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={6}>
@@ -98,7 +134,7 @@ const InstitutionRegister = () => {
 						autoComplete="current-password"
 						value={institutionPassword}
 						onChange={e => setInstitutionPassword(e.target.value)}
-						error={passwordsInputErrorError}
+						error={passwordsInputErrorError || !filledFields.password}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={6}>
@@ -115,7 +151,7 @@ const InstitutionRegister = () => {
 						onChange={e =>
 							setInstitutionRepeatPassword(e.target.value)
 						}
-						error={passwordsInputErrorError}
+						error={passwordsInputErrorError || !filledFields.repeatPassword}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -128,7 +164,7 @@ const InstitutionRegister = () => {
 						id="no"
 						value={institutionNumber}
 						onChange={e => setInstitutionNumber(e.target.value)}
-						error={emailOrNoAlreadyExistsError}
+						error={emailOrNoAlreadyExistsError || !filledFields.number}
 					/>
 				</Grid>
 			</Grid>

@@ -69,7 +69,7 @@ const TabPanel = (props: TabPanelProps) => {
 	);
 };
 
-const CustomizedTabs = () => {
+const CustomizedTabs = ({setConnectedType}) => {
 	const [value, setValue] = React.useState(0);
 
 	const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -87,10 +87,10 @@ const CustomizedTabs = () => {
 				<StyledTab label="Institution" />
 			</StyledTabs>
 			<TabPanel value={value} index={0}>
-				<DoctorRegister />
+				<DoctorRegister setConnectedType={setConnectedType}/>
 			</TabPanel>
 			<TabPanel value={value} index={1}>
-				<InstitutionRegister />
+				<InstitutionRegister setConnectedType={setConnectedType}/>
 			</TabPanel>
 		</div>
 	);
