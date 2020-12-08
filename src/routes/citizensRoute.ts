@@ -245,11 +245,10 @@ function alertNearContact(citizen_id: any) {
 						console.log('list citizen', citizenList);
 						const message =
 							'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine';
-						if (citizenList.length > 0){
+						if (citizenList.length > 0) {
 							sendNotificationsAlert(citizenList, message);
-							console.log("pas de citizen trouve")
+							console.log('pas de citizen trouve');
 						}
-
 					});
 				});
 		})
