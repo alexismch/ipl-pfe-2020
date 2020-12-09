@@ -3,8 +3,8 @@ import ICitizenDoc from '@models/Citizen/ICitizenDoc';
 import {model, Schema} from 'mongoose';
 
 const citizenSchemaFields: Record<keyof ICitizen, any> = {
-	device: {type: String},
-	fcmToken: {type: String},
+	device: {type: String, trim: true},
+	fcmToken: {type: String, trim: true},
 };
 
 const citizenSchema: Schema = new Schema(citizenSchemaFields);

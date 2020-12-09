@@ -5,10 +5,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import {createNewDoctorLocation, getDoctorInstitutions} from 'services/backend';
 import {useAlert} from 'contexts/Alert/AlertContext';
 import React, {useState} from 'react';
 import {useHistory} from 'react-router';
+import {createNewDoctorLocation, getDoctorInstitutions} from 'services/backend';
 
 const AddLocationDialog = ({setLocations}) => {
 	const [open, setOpen] = React.useState(false);

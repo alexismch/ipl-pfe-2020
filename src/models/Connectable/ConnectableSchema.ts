@@ -15,17 +15,35 @@ function requiredInstitutionFields(): boolean {
 }
 
 const connectableSchemaFields: Record<keyof IConnectable, any> = {
-	email: {type: String, required: true, unique: true},
-	password: {type: String, required: true, unique: true},
-	institution_name: {type: String, required: requiredInstitutionFields},
+	email: {type: String, required: true, unique: true, trim: true},
+	password: {type: String, required: true, unique: true, trim: true},
+	institution_name: {
+		type: String,
+		required: requiredInstitutionFields,
+		trim: true,
+	},
 	institution_no: {
 		type: String,
+		index: true,
 		unique: true,
+		sparse: true,
 		required: requiredInstitutionFields,
+		trim: true,
 	},
-	doctor_firstName: {type: String, required: requiredDoctorFields},
-	doctor_lastName: {type: String, required: requiredDoctorFields},
-	doctor_inami: {type: String, unique: true, required: requiredDoctorFields},
+	doctor_firstName: {
+		type: String,
+		required: requiredDoctorFields,
+		trim: true,
+	},
+	doctor_lastName: {type: String, required: requiredDoctorFields, trim: true},
+	doctor_inami: {
+		type: String,
+		index: true,
+		unique: true,
+		sparse: true,
+		required: requiredDoctorFields,
+		trim: true,
+	},
 };
 
 const connectableSchema: Schema = new Schema(connectableSchemaFields);

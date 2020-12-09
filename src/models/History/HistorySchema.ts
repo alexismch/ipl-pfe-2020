@@ -18,20 +18,42 @@ function requiredLocationFields(): boolean {
 }
 
 const historySchemaFields: Record<keyof IHistory, any> = {
-	citizen: {type: Schema.Types.ObjectId, required: true, ref : 'Citizen'},
-	scanDate: {type: String, required: true},
-	type: {type: String, required: true},
-	doctor_id: {type: Schema.Types.ObjectId, required: requiredDoctorFields},
-	doctor_firstName: {type: String, required: requiredDoctorFields},
-	doctor_lastName: {type: String, required: requiredDoctorFields},
+	citizen: {
+		type: Schema.Types.ObjectId,
+		required: true,
+		ref: 'Citizen',
+		trim: true,
+	},
+	scanDate: {type: String, required: true, trim: true},
+	type: {type: String, required: true, trim: true},
+	doctor_id: {
+		type: Schema.Types.ObjectId,
+		required: requiredDoctorFields,
+		trim: true,
+	},
+	doctor_firstName: {
+		type: String,
+		required: requiredDoctorFields,
+		trim: true,
+	},
+	doctor_lastName: {type: String, required: requiredDoctorFields, trim: true},
 	location_id: {
 		type: Schema.Types.ObjectId,
 		required: requiredLocationFields,
+		trim: true,
 	},
-	location_name: {type: String, required: requiredLocationFields},
-	location_description: {type: String, required: requiredLocationFields},
-	owner_id: {type: Schema.Types.ObjectId, required: requiredLocationFields},
-	owner_name: {type: String, required: requiredLocationFields},
+	location_name: {type: String, required: requiredLocationFields, trim: true},
+	location_description: {
+		type: String,
+		required: requiredLocationFields,
+		trim: true,
+	},
+	owner_id: {
+		type: Schema.Types.ObjectId,
+		required: requiredLocationFields,
+		trim: true,
+	},
+	owner_name: {type: String, required: requiredLocationFields, trim: true},
 };
 
 const historySchema: Schema = new Schema(historySchemaFields);

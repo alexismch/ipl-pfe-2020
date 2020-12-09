@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
+import * as admin from 'firebase-admin';
 import 'module-alias/register';
 import * as path from 'path';
-import * as admin from 'firebase-admin';
 
 require('@models/dbInit');
 
