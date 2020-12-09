@@ -242,9 +242,13 @@ function alertNearContact(citizen_id: any) {
 					Citizen.find({
 						_id: {$in: citizenIdList},
 					}).then(citizenList => {
+						console.log('list citizen', citizenList);
 						const message =
 							'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine';
-						sendNotificationsAlert(citizenList, message);
+						if (citizenList.length > 0) {
+							sendNotificationsAlert(citizenList, message);
+							console.log('pas de citizen trouve');
+						}
 					});
 				});
 		})
@@ -269,6 +273,12 @@ function createConditionsTime(
 		minHourContact.setMinutes(minHourContact.getMinutes() - time);
 		let maxHourContact = new Date(entry.scanDate);
 		maxHourContact.setMinutes(maxHourContact.getMinutes() + time);
+		console.log(
+			'intervalle heure',
+			formatDate(minHourContact),
+			'et',
+			formatDate(maxHourContact)
+		);
 
 		const cond = {
 			location_id: entry.location_id,
@@ -289,7 +299,6 @@ function createConditionsTime(
  * @param citizens citizens who have been sent the notification
  */
 function saveNotification(message: string, citizens: ICitizenDoc[]) {
-	//TODO: Add notifications to this citizen
 	for (const cit of citizens) {
 		const newNotif = new Notification({
 			citizen_id: cit._id,
