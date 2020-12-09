@@ -85,7 +85,7 @@ export function getCurrentDoctorData(token: string) {
 	});
 }
 
-export function getDoctorInstitutions(token: string) {
+export function getInstitutions(token: string) {
 	const data = {
 		headers: {
 			authorization: 'Bearer ' + token,

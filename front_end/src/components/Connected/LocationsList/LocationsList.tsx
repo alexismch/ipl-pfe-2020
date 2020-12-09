@@ -4,10 +4,11 @@ import Typography from '@material-ui/core/Typography';
 import {breakpoints, compose, palette, spacing} from '@material-ui/system';
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import {getDoctorInstitutions} from '../../../services/backend';
+import {getInstitutions} from '../../../services/backend';
 import AddLocationDialog from './AddLocationDialog';
 import ILocation from './ILocation';
 import Location from './Location';
+import {useHistory} from "react-router";
 
 const Box = styled.div`
 	${breakpoints(compose(spacing, palette))}
@@ -44,14 +45,18 @@ const useStyles = makeStyles(theme => ({
 
 const LocationsList = () => {
 	const [locations, setLocations] = useState<[] | null>(null);
+	const history = useHistory();
 
 	useEffect(() => {
-		getDoctorInstitutions(String(localStorage.getItem('Token')))
+		getInstitutions(String(localStorage.getItem('Token')))
 			.then((response: any) => {
 				setLocations(response.data);
 			})
 			.catch((error): any => {
 				console.log(error);
+				if (error.response.status === 401) {
+					history.push("/logout");
+				}
 			});
 	}, []);
 
