@@ -198,7 +198,7 @@ const DoctorRegister = ({setConnectedType}) => {
 							autoComplete="off"
 							value={doctorInami}
 							onChange={e => setDoctorInami(e.target.value)}
-							error={!filledFields.inami}
+							error={emailAlreadyExistsError || !filledFields.inami}
 						/>
 					</Grid>
 				</Grid>
