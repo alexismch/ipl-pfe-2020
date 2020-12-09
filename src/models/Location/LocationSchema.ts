@@ -11,8 +11,7 @@ const locationSchemaFields: Record<keyof ILocation, any> = {
 
 const locationSchema: Schema = new Schema(locationSchemaFields);
 
-//TODO
-locationSchema.index({owner_name: 1, name: 1}, {unique: true});
+locationSchema.index({owner_name: 1, name: -1}, {unique: true});
 
 locationSchema.set('toJSON', {
 	transform: (document, returnedObject) => {

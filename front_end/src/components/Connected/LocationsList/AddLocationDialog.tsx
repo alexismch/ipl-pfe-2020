@@ -52,6 +52,9 @@ const AddLocationDialog = ({setLocations}) => {
 	};
 
 	const handleClose = () => {
+		setName('');
+		setDescription('');
+		setNameAlreadyUsed(false);
 		setOpen(false);
 	};
 
@@ -67,17 +70,17 @@ const AddLocationDialog = ({setLocations}) => {
 				getDoctorInstitutions(String(localStorage.getItem('Token')))
 					.then((response: any) => {
 						setLocations(response.data);
+						handleClose();
 					})
 					.catch((error): any => {
 						console.log(error);
 					});
 			})
 			.catch((error: any) => {
-				console.log(error.response.status);
 				if (error.response.status === 401) {
 					history.push('/logout');
 				} else if (error.response.status === 409) {
-					sendWarningMessage('Location name already used.');
+					sendWarningMessage(error.response.data.error);
 					setNameAlreadyUsed(true);
 				} else if (error.response.status === 422) {
 					sendWarningMessage(error.response.data.error);

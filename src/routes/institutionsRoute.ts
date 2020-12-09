@@ -14,7 +14,6 @@ const router = express.Router();
  */
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
 	const body = req.body;
-	console.log(body);
 	if (!body) return next(createError(422, 'body missing'));
 	if (!body.name) return next(createError(422, "field 'name' missing"));
 	if (!body.no || !/^(\s*?\.*?-*?)(\d\s*\.*-*){10}$/.test(body.no))

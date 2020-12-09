@@ -60,7 +60,6 @@ const Authenticate = ({setConnectedType}) => {
 						password: Boolean(password),
 						email: Boolean(email),
 					};
-					console.log(password);
 					setFilledFields(newFields);
 				}
 			});
