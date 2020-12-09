@@ -68,9 +68,8 @@ const Doctor = () => {
 				setDoctor(response.data);
 			})
 			.catch((error): any => {
-				console.log(error);
 				if (error.response.status === 401) {
-					history.push('/logout');
+					history.push('/logout/e');
 				}
 			});
 	}, [history]);

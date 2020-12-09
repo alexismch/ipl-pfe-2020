@@ -22,6 +22,9 @@ const ConnectedSwitch = ({connectedType, setConnectedType}) => {
 				<Route path="/logout" exact>
 					<Logout setConnectedType={setConnectedType} />
 				</Route>
+				<Route path="/logout/e" exact>
+					<Logout setConnectedType={setConnectedType} error={true} />
+				</Route>
 				<Route path="/">
 					<Redirect to="/home" />
 				</Route>

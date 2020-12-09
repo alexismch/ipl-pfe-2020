@@ -72,7 +72,7 @@ const AddLocationDialog = ({addLocation}) => {
 			})
 			.catch((error: any) => {
 				if (error.response.status === 401) {
-					history.push('/logout');
+					history.push('/logout/e');
 				} else if (error.response.status === 409) {
 					sendWarningMessage(error.response.data.error);
 					setNameAlreadyUsed(true);
