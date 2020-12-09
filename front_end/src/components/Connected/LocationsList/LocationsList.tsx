@@ -1,10 +1,12 @@
-import {Paper} from '@material-ui/core';
+import {CircularProgress, Paper} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import {breakpoints, compose, palette, spacing} from '@material-ui/system';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+import {getDoctorInstitutions} from '../../../services/backend';
 import AddLocationDialog from './AddLocationDialog';
+import ILocation from './ILocation';
 import Location from './Location';
 
 const Box = styled.div`
@@ -33,10 +35,26 @@ const useStyles = makeStyles(theme => ({
 			justifyContent: 'center',
 			alignItems: 'center',
 		},
+		'.locations-waiting': {
+			marginLeft: 'auto',
+			marginRight: 'auto',
+		},
 	},
 }));
 
-const LocationsList = ({locations, setLocations}: any) => {
+const LocationsList = () => {
+	const [locations, setLocations] = useState<[] | null>(null);
+
+	useEffect(() => {
+		getDoctorInstitutions(String(localStorage.getItem('Token')))
+			.then((response: any) => {
+				setLocations(response.data);
+			})
+			.catch((error): any => {
+				console.log(error);
+			});
+	}, []);
+
 	useStyles();
 	const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -55,20 +73,26 @@ const LocationsList = ({locations, setLocations}: any) => {
 			md={{paddingLeft: 8, paddingRight: 8}}
 		>
 			<AddLocationDialog setLocations={setLocations} />
-			{locations.length > 0 ? (
-				locations.map(location => (
-					<Location
-						key={location.id}
-						id={location.id}
-						title={location.name}
-						description={location.description}
-						expanded={expanded}
-						handleChange={handleChange}
-					/>
-				))
+			{locations ? (
+				locations.length > 0 ? (
+					locations.map((location: ILocation) => (
+						<Location
+							key={location.id}
+							id={location.id}
+							title={location.name}
+							description={location.description}
+							expanded={expanded}
+							handleChange={handleChange}
+						/>
+					))
+				) : (
+					<Paper className={'no-location-paper'}>
+						<Typography variant="h5">No location found</Typography>
+					</Paper>
+				)
 			) : (
 				<Paper className={'no-location-paper'}>
-					<Typography variant="h5">No location found</Typography>
+					<CircularProgress className={'locations-waiting'} />
 				</Paper>
 			)}
 		</Box>

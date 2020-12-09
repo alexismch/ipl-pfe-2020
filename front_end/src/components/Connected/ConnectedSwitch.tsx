@@ -4,6 +4,7 @@ import Navbar from 'components/Connected/Navbar/Navbar';
 import React from 'react';
 import {Helmet} from 'react-helmet';
 import {Redirect, Route, Switch} from 'react-router-dom';
+import Doctor from './Doctor/Doctor';
 
 const ConnectedSwitch = ({connectedType, setConnectedType}) => {
 	return (
@@ -14,7 +15,7 @@ const ConnectedSwitch = ({connectedType, setConnectedType}) => {
 					<Helmet>
 						<title>Block COVID - Home</title>
 					</Helmet>
-					{connectedType === 'doctor' ? 'cc' : ''}
+					{connectedType === 'doctor' ? <Doctor /> : ''}
 					<Home />
 				</Route>
 				<Route path="/logout" exact>
