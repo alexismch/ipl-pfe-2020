@@ -8,8 +8,9 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
+      "@controllers/*": ["src/controllers/*"],
+      "@database/*": ["src/database/*"],
       "@routes/*": ["src/routes/*"],
-      "@models/*": ["src/models/*"],
       "@modules/*": ["src/modules/*"]
     }
   },

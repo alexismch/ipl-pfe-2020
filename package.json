@@ -32,8 +32,9 @@
     "npm": "6.x"
   },
   "_moduleAliases": {
+    "@controllers": "dist/controllers",
+    "@database": "dist/database",
     "@routes": "dist/routes",
-    "@models": "dist/models",
     "@modules": "dist/modules"
   },
   "scripts": {

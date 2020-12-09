@@ -2,8 +2,7 @@ import {Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import 'module-alias/register';
 import * as path from 'path';
-
-require('@models/dbInit');
+import api from '@controllers/index';
 
 /**
  * Initialize firebase
@@ -22,11 +21,6 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 /**
- * api route import
- */
-const apiRoute = require('@routes/apiRoute');
-
-/**
  * Middlewares
  */
 app.use(cors());
@@ -39,7 +33,7 @@ app.use(express.static('front_end/build'));
 /**
  * api route definition
  */
-app.use('/api', apiRoute);
+app.use('/api', api);
 
 /**
  * redirect all non-api unknown requests to index

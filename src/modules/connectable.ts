@@ -1,5 +1,5 @@
-import Connectable from '@models/Connectable/ConnectableSchema';
-import IConnectableDoc from '@models/Connectable/IConnectableDoc';
+import ConnectableDoc from '@database/docs/Connectable.doc';
+import Connectable from '@database/models/Connectable.model';
 import {sendError} from '@modules/error';
 import {getSessionConnectableId, sign} from '@modules/jwt';
 import * as EmailValidator from 'email-validator';
@@ -25,7 +25,7 @@ export function connect(req: Request, res: Response, next: NextFunction): any {
 		return next(createError(422, "field 'password' missing"));
 
 	Connectable.findOne({email: body.email})
-		.then((connectable: IConnectableDoc) => {
+		.then((connectable: ConnectableDoc) => {
 			if (!connectable || !connectable.verifyPassword(body.password))
 				return next(
 					createError(401, "field 'email' or 'password' incorrect")
@@ -50,7 +50,7 @@ export function register(
 	req: Request,
 	res: Response,
 	next: NextFunction,
-	connectable: IConnectableDoc,
+	connectable: ConnectableDoc,
 	paramsErrorMsg: string
 ): any {
 	connectable
