@@ -1,4 +1,4 @@
-import {Button, CircularProgress} from '@material-ui/core';
+import {Button, CircularProgress, useTheme} from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -57,6 +57,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Doctor = () => {
+	const theme = useTheme();
+
 	const [doctor, setDoctor] = useState<IDoctor | null>(null);
 
 	useEffect(() => {
@@ -76,6 +78,7 @@ const Doctor = () => {
 	const handleSave = () => {
 		canvasToImage(`qrcode-${doctor?.id}`, {
 			name: `${doctor?.doctor_firstName} ${doctor?.doctor_lastName}`,
+			type: 'jpg',
 		});
 	};
 
@@ -97,7 +100,7 @@ const Doctor = () => {
 					<QRCode
 						size={256}
 						value={value}
-						bgColor={'rgba(0, 0, 0, 0)'}
+						bgColor={theme.palette.background.paper}
 						style={{marginLeft: 'auto', marginRight: 'auto'}}
 						includeMargin={true}
 						id={`qrcode-${doctor?.id}`}

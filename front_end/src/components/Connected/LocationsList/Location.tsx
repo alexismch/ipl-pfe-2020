@@ -1,4 +1,10 @@
-import {AccordionActions, Button, Divider, makeStyles} from '@material-ui/core';
+import {
+	AccordionActions,
+	Button,
+	Divider,
+	makeStyles,
+	useTheme,
+} from '@material-ui/core';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -32,11 +38,12 @@ const useStyles = makeStyles(() => ({
 
 const Location = ({id, title, description, expanded, handleChange}) => {
 	useStyles();
+	const theme = useTheme();
 	const value = QR_LOCATION_BASE_URL + id;
 	let componentRef;
 
 	const handleSave = () => {
-		canvasToImage(`qrcode-${id}`, {name: title});
+		canvasToImage(`qrcode-${id}`, {name: title, type: 'jpg'});
 	};
 
 	return (
@@ -60,7 +67,7 @@ const Location = ({id, title, description, expanded, handleChange}) => {
 				<QRCode
 					size={256}
 					value={value}
-					bgColor={'rgba(0, 0, 0, 0)'}
+					bgColor={theme.palette.background.paper}
 					style={{marginLeft: 'auto', marginRight: 'auto'}}
 					includeMargin={true}
 					id={`qrcode-${id}`}
