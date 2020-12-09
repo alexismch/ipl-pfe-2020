@@ -3,12 +3,12 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import {breakpoints, compose, palette, spacing} from '@material-ui/system';
 import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
+import {getLocations} from 'services/backend';
 import styled from 'styled-components';
-import {getInstitutions} from '../../../services/backend';
 import AddLocationDialog from './AddLocationDialog';
 import ILocation from './ILocation';
 import Location from './Location';
-import {useHistory} from "react-router";
 
 const Box = styled.div`
 	${breakpoints(compose(spacing, palette))}
@@ -44,21 +44,29 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const LocationsList = () => {
-	const [locations, setLocations] = useState<[] | null>(null);
+	const [locations, setLocations] = useState<ILocation[] | null>(null);
 	const history = useHistory();
 
 	useEffect(() => {
-		getInstitutions(String(localStorage.getItem('Token')))
+		getLocations(String(localStorage.getItem('Token')))
 			.then((response: any) => {
 				setLocations(response.data);
 			})
 			.catch((error): any => {
 				console.log(error);
 				if (error.response.status === 401) {
-					history.push("/logout");
+					history.push('/logout');
 				}
 			});
-	}, []);
+	}, [history]);
+
+	const addLocation = (location: ILocation) => {
+		const newLocations: ILocation[] = [
+			...(locations as ILocation[]),
+			location,
+		];
+		setLocations(newLocations);
+	};
 
 	useStyles();
 	const [expanded, setExpanded] = React.useState<string | false>(false);
@@ -77,7 +85,7 @@ const LocationsList = () => {
 			sm={{paddingLeft: 4, paddingRight: 4}}
 			md={{paddingLeft: 8, paddingRight: 8}}
 		>
-			<AddLocationDialog setLocations={setLocations} />
+			<AddLocationDialog addLocation={addLocation} />
 			{locations ? (
 				locations.length > 0 ? (
 					locations.map((location: ILocation) => (

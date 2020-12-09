@@ -85,7 +85,7 @@ export function getCurrentDoctorData(token: string) {
 	});
 }
 
-export function getInstitutions(token: string) {
+export function getLocations(token: string) {
 	const data = {
 		headers: {
 			authorization: 'Bearer ' + token,
@@ -119,7 +119,7 @@ export function createNewDoctorLocation(
 		},
 	};
 
-	return new Promise((resolve, reject) => {
+	return new Promise<any>((resolve, reject) => {
 		Axios.post('/api/locations', data, config)
 			.then(response => {
 				resolve(response);

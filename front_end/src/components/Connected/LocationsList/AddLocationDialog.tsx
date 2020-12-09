@@ -8,9 +8,9 @@ import TextField from '@material-ui/core/TextField';
 import {useAlert} from 'contexts/Alert/AlertContext';
 import React, {useState} from 'react';
 import {useHistory} from 'react-router';
-import {createNewDoctorLocation, getInstitutions} from 'services/backend';
+import {createNewDoctorLocation} from 'services/backend';
 
-const AddLocationDialog = ({setLocations}) => {
+const AddLocationDialog = ({addLocation}) => {
 	const [open, setOpen] = React.useState(false);
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
@@ -65,16 +65,10 @@ const AddLocationDialog = ({setLocations}) => {
 			name,
 			description
 		)
-			.then(() => {
+			.then(response => {
+				addLocation(response.data);
 				sendSuccessMessage('Location correctly created.');
-				getInstitutions(String(localStorage.getItem('Token')))
-					.then((response: any) => {
-						setLocations(response.data);
-						handleClose();
-					})
-					.catch((error): any => {
-						console.log(error);
-					});
+				handleClose();
 			})
 			.catch((error: any) => {
 				if (error.response.status === 401) {
