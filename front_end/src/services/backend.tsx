@@ -85,6 +85,24 @@ export function getCurrentDoctorData(token: string) {
 	});
 }
 
+export function getCurrentInstitutionData(token: string) {
+	const data = {
+		headers: {
+			Authorization: 'Bearer ' + token,
+		},
+	};
+
+	return new Promise((resolve, reject) => {
+		Axios.get('/api/institutions/me', data)
+			.then(response => {
+				resolve(response);
+			})
+			.catch(error => {
+				reject(error);
+			});
+	});
+}
+
 export function getLocations(token: string) {
 	const data = {
 		headers: {

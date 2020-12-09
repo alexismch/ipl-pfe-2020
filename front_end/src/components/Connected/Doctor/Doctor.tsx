@@ -13,7 +13,7 @@ import React, {useEffect, useState} from 'react';
 import ReactToPrint from 'react-to-print';
 import {getCurrentDoctorData} from 'services/backend';
 import IDoctor from './IDoctor';
-import {useHistory} from "react-router";
+import {useHistory} from 'react-router';
 
 const QRCode = require('qrcode.react');
 const {REACT_APP_QR_CODE_BASE_URL} = process.env;
@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
 
 const Doctor = () => {
 	const theme = useTheme();
-	const history = useHistory()
+	const history = useHistory();
 	const [doctor, setDoctor] = useState<IDoctor | null>(null);
 
 	useEffect(() => {
@@ -70,10 +70,10 @@ const Doctor = () => {
 			.catch((error): any => {
 				console.log(error);
 				if (error.response.status === 401) {
-					history.push("/logout");
+					history.push('/logout');
 				}
 			});
-	}, []);
+	}, [history]);
 
 	useStyles();
 	let componentRef;

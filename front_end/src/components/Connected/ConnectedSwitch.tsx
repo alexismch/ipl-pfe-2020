@@ -5,6 +5,7 @@ import React from 'react';
 import {Helmet} from 'react-helmet';
 import {Redirect, Route, Switch} from 'react-router-dom';
 import Doctor from './Doctor/Doctor';
+import Institution from './Institution/Institution';
 
 const ConnectedSwitch = ({connectedType, setConnectedType}) => {
 	return (
@@ -15,7 +16,7 @@ const ConnectedSwitch = ({connectedType, setConnectedType}) => {
 					<Helmet>
 						<title>Block COVID - Home</title>
 					</Helmet>
-					{connectedType === 'doctor' ? <Doctor /> : ''}
+					{connectedType === 'doctor' ? <Doctor /> : <Institution />}
 					<Home />
 				</Route>
 				<Route path="/logout" exact>
