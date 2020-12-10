@@ -262,8 +262,7 @@ async function alertNearContact(citizen_id: any) {
 			_id: {$in: citizenIdList},
 		});
 		console.log('list citizen', citizenList);
-		const message =
-			'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine';
+		const message = 'notification_push.contact';
 		if (citizenList.length > 0) {
 			sendNotificationsAlert(citizenList, message);
 			console.log('pas de citizen trouve');
