@@ -32,6 +32,7 @@ const cors = require('cors');
  */
 if (!process.env.NODE_ENV) app.use(cors());
 else {
+	console.log(`CORS only allowed to ${process.env.MOBILE_ORIGIN}`);
 	app.use(
 		cors({
 			origin: process.env.MOBILE_ORIGIN,
