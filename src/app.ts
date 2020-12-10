@@ -1,8 +1,8 @@
-import api from '@controllers/index';
 import {Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import 'module-alias/register';
 import * as path from 'path';
+import api from '@controllers/index';
 
 /**
  * Initialize firebase
@@ -39,12 +39,9 @@ else {
 	console.log(`CORS only allowed to ${whitelist.join(', ')}`);
 	app.use(
 		cors({
-			origin: function (origin, callback) {
-				if (whitelist.indexOf(origin) !== -1) {
-					callback(null, true);
-				} else {
-					callback(new Error(`${origin}not allowed by CORS`));
-				}
+			origin: (origin, callback) => {
+				if (whitelist.indexOf(origin) !== -1) callback(null, true);
+				else callback(new Error(`${origin} not allowed by CORS.`));
 			},
 		})
 	);
