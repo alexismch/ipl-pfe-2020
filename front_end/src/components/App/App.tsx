@@ -1,10 +1,9 @@
 import {Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import ConnectedSwitch from 'components/Connected/ConnectedSwitch';
+import Router from 'components/Router/Router';
 import Copyright from 'components/Footer/Footer';
-import UnconnectedSwitch from 'components/Unconnected/UnconnectedSwitch';
 import {AlertContext} from 'contexts/Alert/AlertContext';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 const useStyles = makeStyles(theme => ({
 	'@global': {
@@ -37,37 +36,11 @@ const useStyles = makeStyles(theme => ({
 
 const App = () => {
 	useStyles();
-	const [connectedType, setConnectedType] = useState<
-		'' | 'doctor' | 'institution'
-	>(''); // remember.. important... soit '', soit 'doctor', soit 'institution'
-
-	useEffect(() => {
-		if (
-			localStorage.getItem('Token') &&
-			localStorage.getItem('Type_BlockCovid')
-		) {
-			if (String(localStorage.getItem('Type_BlockCovid')) === 'doctor')
-				setConnectedType('doctor');
-			else if (
-				String(localStorage.getItem('Type_BlockCovid')) ===
-				'institution'
-			)
-				setConnectedType('institution');
-			else setConnectedType('');
-		}
-	}, [setConnectedType]);
 
 	return (
 		<div>
 			<AlertContext>
-				{connectedType ? (
-					<ConnectedSwitch
-						connectedType={connectedType}
-						setConnectedType={setConnectedType}
-					/>
-				) : (
-					<UnconnectedSwitch setConnectedType={setConnectedType} />
-				)}
+				<Router />
 				<Box mt={8}>
 					<Copyright />
 				</Box>
