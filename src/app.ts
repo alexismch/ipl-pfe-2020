@@ -1,8 +1,8 @@
+import api from '@controllers/index';
 import {Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import 'module-alias/register';
 import * as path from 'path';
-import api from '@controllers/index';
 
 /**
  * Initialize firebase
@@ -32,10 +32,20 @@ const cors = require('cors');
  */
 if (!process.env.NODE_ENV) app.use(cors());
 else {
-	console.log(`CORS only allowed to ${process.env.MOBILE_ORIGIN}`);
+	const whitelist = [
+		'https://ipl-pfe-2020-api-doc.herokuapp.com',
+		process.env.MOBILE_ORIGIN,
+	];
+	console.log(`CORS only allowed to ${whitelist.join(', ')}`);
 	app.use(
 		cors({
-			origin: process.env.MOBILE_ORIGIN,
+			origin: function (origin, callback) {
+				if (whitelist.indexOf(origin) !== -1) {
+					callback(null, true);
+				} else {
+					callback(new Error(`${origin}not allowed by CORS`));
+				}
+			},
 		})
 	);
 }
