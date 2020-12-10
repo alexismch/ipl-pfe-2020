@@ -30,6 +30,7 @@ const cors = require('cors');
 /**
  * Middlewares
  */
+console.log(process.env);
 if (!process.env.NODE_ENV) app.use(cors());
 else {
 	const whitelist = [
