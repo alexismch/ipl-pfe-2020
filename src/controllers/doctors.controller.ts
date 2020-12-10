@@ -27,13 +27,13 @@ doctorsController.post(
 			return next(createError(422, "field 'password' missing"));
 		if (!body.inami) return next(createError(422, "field 'inami' missing"));
 
-		const connectable: ConnectableDoc = new Connectable({
-			email: body.email,
-			password: body.password,
-			doctor_firstName: body.firstName,
-			doctor_lastName: body.lastName,
-			doctor_inami: body.inami,
-		});
+		const connectable: ConnectableDoc = Connectable.createDoctor(
+			body.email,
+			body.password,
+			body.firstName,
+			body.lastName,
+			body.inami
+		);
 
 		register(
 			req,
@@ -57,22 +57,24 @@ doctorsController.use(verifySession);
  */
 doctorsController.get(
 	'/:id',
-	(req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const id = req.params.id;
 		if (id === 'me') return next();
 		if (id.length !== 24) next(createError(400, "param 'id' incorrect"));
 
-		Connectable.findById(id)
-			.then(doc => {
-				if (!doc || !doc.doctor_inami)
-					return next(createError(404, 'unknown doctor'));
-				res.json({
-					id: doc._id,
-					firstName: doc.doctor_firstName,
-					lastName: doc.doctor_lastName,
-				});
-			})
-			.catch(() => sendError(next));
+		try {
+			const doc = await Connectable.getById(id);
+			if (!doc || !doc.doctor_inami)
+				return next(createError(404, 'unknown doctor'));
+			res.json({
+				id: doc._id,
+				firstName: doc.doctor_firstName,
+				lastName: doc.doctor_lastName,
+			});
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 
@@ -81,14 +83,16 @@ doctorsController.get(
  */
 doctorsController.get(
 	'/me',
-	(req: Request, res: Response, next: NextFunction) => {
-		Connectable.findById(res.locals.session.id)
-			.then(doc => {
-				if (!doc || !doc.doctor_inami)
-					return next(createError(401, 'unknown doctor'));
-				res.json(doc);
-			})
-			.catch(() => sendError(next));
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const doc = await Connectable.getById(res.locals.session.id);
+			if (!doc || !doc.doctor_inami)
+				return next(createError(401, 'unknown doctor'));
+			res.json(doc);
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 

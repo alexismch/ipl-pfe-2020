@@ -10,7 +10,6 @@
     "paths": {
       "@controllers/*": ["src/controllers/*"],
       "@database/*": ["src/database/*"],
-      "@routes/*": ["src/routes/*"],
       "@modules/*": ["src/modules/*"]
     }
   },

@@ -21,14 +21,11 @@ const citizensController = express.Router();
  */
 citizensController.post(
 	'/',
-	(req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const body = req.body;
 		const device = body?.device;
 		const fcmToken = body?.fcmToken;
-		const citizen: CitizenDoc = new Citizen({
-			fcmToken,
-			device,
-		});
+		const citizen: CitizenDoc = Citizen.create(fcmToken, device);
 
 		const sendCitizen = (status, id) => {
 			res.status(status).json({
@@ -37,24 +34,22 @@ citizensController.post(
 			});
 		};
 
-		const save = citizen =>
-			citizen
-				.save()
-				.then(cit => sendCitizen(201, cit._id))
-				.catch(() => sendError(next));
-
-		if (device)
-			Citizen.findOne({device})
-				.then(cit => {
-					if (cit) {
-						cit.fcmToken = fcmToken;
-						cit.save()
-							.then(cit => sendCitizen(200, cit._id))
-							.catch(() => sendError(next));
-					} else save(citizen);
-				})
-				.catch(() => sendError(next));
-		else save(citizen);
+		try {
+			if (device) {
+				let cit = await Citizen.getByDevice(device);
+				if (cit) {
+					cit.fcmToken = fcmToken;
+					cit = await Citizen.save(cit);
+					sendCitizen(200, cit._id);
+				} else {
+					const cit = await Citizen.save(citizen);
+					sendCitizen(201, cit._id);
+				}
+			}
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 
@@ -71,21 +66,21 @@ citizensController.use(verifySession);
  */
 citizensController.get(
 	'/notifications',
-	(req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const id = res.locals.session.id;
-		Citizen.findById(id)
-			.then(cit => {
-				if (!cit) return next(createError(401, 'unknown citizen'));
-			})
-			.catch(() => sendError(next));
 
-		console.log('notiffssss');
-		Notification.find({citizen_id: id})
-			.then(notif => {
-				console.log('notiffssss', notif);
-				res.json(notif);
-			})
-			.catch(() => sendError(next));
+		try {
+			const cit = await Citizen.getById(id);
+			if (!cit) return next(createError(401, 'unknown citizen'));
+			console.log('notiffssss');
+
+			const notif = await Notification.getByCitizenId(id);
+			console.log('notiffssss', notif);
+			res.json(notif);
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 
@@ -95,20 +90,19 @@ citizensController.get(
  */
 citizensController.get(
 	'/history',
-	(req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const id = res.locals.session.id;
 
-		Citizen.findById(id)
-			.then(cit => {
-				if (!cit) return next(createError(401, 'unknown citizen'));
-			})
-			.catch(() => sendError(next));
+		try {
+			const cit = await Citizen.getById(id);
+			if (!cit) return next(createError(401, 'unknown citizen'));
 
-		History.find({citizen: id})
-			.then(hist => {
-				res.json(hist);
-			})
-			.catch(() => sendError(next));
+			const hist = await History.getByCitizenId(id);
+			res.json(hist);
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 
@@ -117,7 +111,7 @@ citizensController.get(
  */
 citizensController.post(
 	'/history',
-	(req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const body = req.body;
 		if (!body) return next(createError(422, 'body missing'));
 		if (!body.type) return next(createError(422, "field 'type' missing"));
@@ -151,28 +145,27 @@ citizensController.post(
 			);
 		const citizen_id = res.locals.session.id;
 
-		Citizen.findById(citizen_id)
-			.then(cit => {
-				if (!cit) return next(createError(401, 'unknown citizen'));
-				const history = new History({
-					citizen: citizen_id,
-					scanDate: formatDate(scanDate),
-				});
+		try {
+			const cit = await Citizen.getById(citizen_id);
+			if (!cit) return next(createError(401, 'unknown citizen'));
+			const history = History.create(citizen_id, scanDate);
 
-				console.log(history);
-				switch (body.type) {
-					case 'location':
-						locationCase(body.id, history, res, next);
-						break;
-					case 'doctor':
-						doctorCase(body.id, history, res, next);
-						alertNearContact(citizen_id);
-						break;
-					default:
-						next(createError(422, "field 'type' incorrect"));
-				}
-			})
-			.catch(() => sendError(next));
+			console.log(history);
+			switch (body.type) {
+				case 'location':
+					await locationCase(body.id, history, res, next);
+					break;
+				case 'doctor':
+					await doctorCase(body.id, history, res, next);
+					await alertNearContact(citizen_id);
+					break;
+				default:
+					next(createError(422, "field 'type' incorrect"));
+			}
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 
@@ -183,90 +176,93 @@ function saveHistory(history: HistoryDoc, res: Response, next: NextFunction) {
 		.catch(() => sendError(next));
 }
 
-function locationCase(
+async function locationCase(
 	id,
 	history: HistoryDoc,
 	res: Response,
 	next: NextFunction
 ) {
-	Location.findById(id)
-		.then(loc => {
-			if (!loc) return next(createError(422, "field 'id' incorrect"));
-			history.location_id = loc._id;
-			history.location_name = loc.name;
-			history.location_description = loc.description;
-			history.owner_id = loc.owner_id;
-			history.owner_name = loc.owner_name;
-			history.type = 'location';
-			saveHistory(history, res, next);
-		})
-		.catch(() => sendError(next));
+	try {
+		const loc = await Location.getById(id);
+		if (!loc) return next(createError(422, "field 'id' incorrect"));
+		history.location_id = loc._id;
+		history.location_name = loc.name;
+		history.location_description = loc.description;
+		history.owner_id = loc.owner_id;
+		history.owner_name = loc.owner_name;
+		history.type = 'location';
+		saveHistory(history, res, next);
+	} catch (e) {
+		console.log(e);
+		sendError(next);
+	}
 }
 
-function doctorCase(
+async function doctorCase(
 	id,
 	history: HistoryDoc,
 	res: Response,
 	next: NextFunction
 ) {
-	Connectable.findById(id)
-		.then(doc => {
-			if (!doc || !doc.doctor_inami)
-				return next(createError(422, "field 'id' incorrect"));
-			history.doctor_id = doc._id;
-			history.doctor_firstName = doc.doctor_firstName;
-			history.doctor_lastName = doc.doctor_lastName;
-			history.type = 'doctor';
-			saveHistory(history, res, next);
+	try {
+		const doc = await Connectable.getById(id);
+		if (!doc || !doc.doctor_inami)
+			return next(createError(422, "field 'id' incorrect"));
+		history.doctor_id = doc._id;
+		history.doctor_firstName = doc.doctor_firstName;
+		history.doctor_lastName = doc.doctor_lastName;
+		history.type = 'doctor';
+		saveHistory(history, res, next);
 
-			/*			let registrationTokens = [
-																 'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
-																 'eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln',
-															 ];*/
+		/*			let registrationTokens = [
+															 'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
+															 'eZpceJz_uYy-6cLWtblzX7:APA91bHY5pq0LxBacVgL_rtZS5gV452aNcBhXQgMTSl0BMu23pq6xBUzaQRAoRoB1gqRn31tvxxdszsufi32l8HWX_qicy63KENd2Lcz-x2_2nSoRrLO3aVHc4muzpyO05OONqczMbln',
+														 ];*/
 
-			console.log(doc);
-		})
-		.catch(() => sendError(next));
+		console.log(doc);
+	} catch (e) {
+		console.log(e);
+		sendError(next);
+	}
 }
 
 /**
  * Search and alert all the people in contact with the scanned citizen
  * @param citizen_id citizen who is positive to covid
  */
-function alertNearContact(citizen_id: any) {
+async function alertNearContact(citizen_id: any) {
 	let limitDay = new Date();
 	limitDay.setDate(limitDay.getDate() - 10);
 
 	const dateLimite = formatDate(limitDay);
 
 	console.log(dateLimite < '2020-12-6T1:34:42Z');
-	History.find({
-		citizen: citizen_id,
-		scanDate: {$gt: dateLimite},
-		location_id: {$exists: true, $ne: null},
-	})
-		.then(resp => {
-			const conditions = createConditionsTime(resp, 60, citizen_id);
-			console.log('number location to scan ' + resp.length);
-			History.find({
-				$or: conditions,
-			})
-				.distinct('citizen')
-				.then(citizenIdList => {
-					Citizen.find({
-						_id: {$in: citizenIdList},
-					}).then(citizenList => {
-						console.log('list citizen', citizenList);
-						const message =
-							'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine';
-						if (citizenList.length > 0) {
-							sendNotificationsAlert(citizenList, message);
-							console.log('pas de citizen trouve');
-						}
-					});
-				});
-		})
-		.catch(e => e.toString());
+	try {
+		const resp = await History.getByConditions({
+			citizen: citizen_id,
+			scanDate: {$gt: dateLimite},
+			location_id: {$exists: true, $ne: null},
+		});
+		const conditions = createConditionsTime(resp, 60, citizen_id);
+		console.log('number location to scan ' + resp.length);
+
+		const citizenIdList = await History.getDistinctCitizens({
+			$or: conditions,
+		});
+
+		const citizenList = await Citizen.getByConditions({
+			_id: {$in: citizenIdList},
+		});
+		console.log('list citizen', citizenList);
+		const message =
+			'Vous êtes entré en contact avec une personne positive, mettez vous en quarantaine';
+		if (citizenList.length > 0) {
+			sendNotificationsAlert(citizenList, message);
+			console.log('pas de citizen trouve');
+		}
+	} catch (e) {
+		console.log(e);
+	}
 }
 
 /**
@@ -312,17 +308,16 @@ function createConditionsTime(
  * @param message the message to remember
  * @param citizens citizens who have been sent the notification
  */
-function saveNotification(message: string, citizens: CitizenDoc[]) {
+async function saveNotification(message: string, citizens: CitizenDoc[]) {
 	for (const cit of citizens) {
-		const newNotif = new Notification({
-			citizen_id: cit._id,
-			message: message,
-			date: formatDate(new Date()),
-		});
-		newNotif
-			.save()
-			.then(hist => console.log(hist))
-			.catch(e => console.log(e));
+		const newNotif = Notification.create(cit._id, message);
+
+		try {
+			const hist = await Notification.save(newNotif);
+			console.log(hist);
+		} catch (e) {
+			console.log(e);
+		}
 	}
 }
 
@@ -347,7 +342,7 @@ function sendNotificationsAlert(citizens: CitizenDoc[], message: string) {
 		.messaging()
 		.sendMulticast(content)
 		.then(response => {
-			saveNotification(message, citizens);
+			saveNotification(message, citizens).then(r => r);
 			console.log('Successfully sent message:', response);
 		})
 		.catch(error => {

@@ -25,12 +25,12 @@ institutionsController.post(
 		if (!body.password)
 			return next(createError(422, "field 'password' missing"));
 
-		const institution: ConnectableDoc = new Connectable({
-			institution_name: body.name,
-			institution_no: body.no,
-			email: body.email,
-			password: body.password,
-		});
+		const institution: ConnectableDoc = Connectable.createInstitution(
+			body.email,
+			body.password,
+			body.name,
+			body.no
+		);
 
 		register(
 			req,
@@ -54,14 +54,16 @@ institutionsController.use(verifySession);
  */
 institutionsController.get(
 	'/me',
-	(req: Request, res: Response, next: NextFunction) => {
-		Connectable.findById(res.locals.session.id)
-			.then(inst => {
-				if (!inst || !inst.institution_no)
-					return next(createError(401, 'unknown institution'));
-				res.json(inst);
-			})
-			.catch(() => sendError(next));
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const inst = await Connectable.getById(res.locals.session.id);
+			if (!inst || !inst.institution_no)
+				return next(createError(401, 'unknown institution'));
+			res.json(inst);
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 

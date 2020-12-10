@@ -28,16 +28,20 @@ authenticateController.use(verifySession);
 
 authenticateController.get(
 	'/',
-	(req: Request, res: Response, next: NextFunction) => {
-		Connectable.findById(res.locals.session.id)
-			.then(con => {
-				if (!con) return next(createError(401, 'unauthorized'));
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const connectable = await Connectable.getById(
+				res.locals.session.id
+			);
+			if (!connectable) return next(createError(401, 'unauthorized'));
 
-				res.json({
-					type: con.institution_name ? 'institution' : 'doctor',
-				});
-			})
-			.catch(() => sendError(next));
+			res.json({
+				type: connectable.institution_name ? 'institution' : 'doctor',
+			});
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 

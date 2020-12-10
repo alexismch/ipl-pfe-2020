@@ -16,7 +16,7 @@ const expIn = '24h';
  * @param next the next middleware
  * @return response with user's data if connection allowed, error if not
  */
-export function connect(req: Request, res: Response, next: NextFunction): any {
+export async function connect(req: Request, res: Response, next: NextFunction) {
 	const body = req.body;
 	if (!body) return next(createError(422, 'body missing'));
 	if (!body.email || !EmailValidator.validate(body.email))
@@ -24,18 +24,22 @@ export function connect(req: Request, res: Response, next: NextFunction): any {
 	if (!body.password)
 		return next(createError(422, "field 'password' missing"));
 
-	Connectable.findOne({email: body.email})
-		.then((connectable: ConnectableDoc) => {
-			if (!connectable || !connectable.verifyPassword(body.password))
-				return next(
-					createError(401, "field 'email' or 'password' incorrect")
-				);
-			res.json({
-				token: generateSessionToken(connectable._id),
-				type: connectable.institution_name ? 'institution' : 'doctor',
-			});
-		})
-		.catch(() => sendError(next));
+	try {
+		const connectable: ConnectableDoc = await Connectable.getByMail(
+			body.email
+		);
+		if (!connectable || !connectable.verifyPassword(body.password))
+			return next(
+				createError(401, "field 'email' or 'password' incorrect")
+			);
+		res.json({
+			token: generateSessionToken(connectable._id),
+			type: connectable.institution_name ? 'institution' : 'doctor',
+		});
+	} catch (e) {
+		console.log(e);
+		sendError(next);
+	}
 }
 
 /**
@@ -46,25 +50,24 @@ export function connect(req: Request, res: Response, next: NextFunction): any {
  * @param connectable the connectable that asked to connect
  * @param paramsErrorMsg the error message to send if error is due to the params
  */
-export function register(
+export async function register(
 	req: Request,
 	res: Response,
 	next: NextFunction,
 	connectable: ConnectableDoc,
 	paramsErrorMsg: string
-): any {
-	connectable
-		.save()
-		.then(connectable => {
-			res.status(201).json({
-				token: generateSessionToken(connectable._id),
-				type: connectable.institution_name ? 'institution' : 'doctor',
-			});
-		})
-		.catch(e => {
-			if (e.code === 11000) return next(createError(409, paramsErrorMsg));
-			sendError(next);
+) {
+	try {
+		connectable = await Connectable.save(connectable);
+		res.status(201).json({
+			token: generateSessionToken(connectable._id),
+			type: connectable.institution_name ? 'institution' : 'doctor',
 		});
+	} catch (e) {
+		console.log(e);
+		if (e.code === 11000) return next(createError(409, paramsErrorMsg));
+		sendError(next);
+	}
 }
 
 /**

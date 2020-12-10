@@ -34,7 +34,6 @@
   "_moduleAliases": {
     "@controllers": "dist/controllers",
     "@database": "dist/database",
-    "@routes": "dist/routes",
     "@modules": "dist/modules"
   },
   "scripts": {

@@ -18,16 +18,18 @@ locationsController.use(verifySession);
 
 locationsController.get(
 	'/:id',
-	(req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const id = req.params.id;
 		if (id.length !== 24) next(createError(400, "param 'id' incorrect"));
 
-		Location.findById(id)
-			.then(loc => {
-				if (!loc) return next(createError(404, 'unknown location'));
-				res.json(loc);
-			})
-			.catch(() => sendError(next));
+		try {
+			const loc = await Location.getById(id);
+			if (!loc) return next(createError(404, 'unknown location'));
+			res.json(loc);
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 
@@ -37,7 +39,7 @@ locationsController.get(
  */
 locationsController.post(
 	'/',
-	(req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const body = req.body;
 		const id = res.locals.session.id;
 
@@ -46,34 +48,32 @@ locationsController.post(
 		if (!body.description)
 			return next(createError(422, "field 'description' missing"));
 
-		Connectable.findById(id)
-			.then(con => {
-				if (!con) return next(createError(401, 'unauthorized'));
+		try {
+			const connectable = await Connectable.getById(id);
+			if (!connectable) return next(createError(401, 'unauthorized'));
 
-				const location: LocationDoc = new Location({
-					owner_id: id,
-					owner_name:
-						con.institution_name ||
-						con.doctor_firstName + ' ' + con.doctor_lastName,
-					name: body.name,
-					description: body.description,
-				});
-
-				location
-					.save()
-					.then(loc => res.status(201).send(loc))
-					.catch(e => {
-						if (e.code === 11000)
-							return next(
-								createError(
-									409,
-									"location's name already used for this institution or doctor"
-								)
-							);
-						sendError(next);
-					});
-			})
-			.catch(() => sendError(next));
+			const location: LocationDoc = Location.create(
+				id,
+				connectable.institution_name ||
+					connectable.doctor_firstName +
+						' ' +
+						connectable.doctor_lastName,
+				body.name,
+				body.description
+			);
+			const loc = await Location.save(location);
+			res.status(201).send(loc);
+		} catch (e) {
+			console.log(e);
+			if (e.code === 11000)
+				return next(
+					createError(
+						409,
+						"location's name already used for this institution or doctor"
+					)
+				);
+			sendError(next);
+		}
 	}
 );
 
@@ -83,20 +83,19 @@ locationsController.post(
  */
 locationsController.get(
 	'/',
-	(req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const id = res.locals.session.id;
 
-		Connectable.findById(id)
-			.then(doc => {
-				if (!doc) return next(createError(401, 'unknown connectable'));
-			})
-			.catch(() => sendError(next));
+		try {
+			const doc = await Connectable.getById(id);
+			if (!doc) return next(createError(401, 'unknown connectable'));
 
-		Location.find({owner_id: id})
-			.then(locs => {
-				res.json(locs);
-			})
-			.catch(() => sendError(next));
+			const locs = await Location.getByOwnerId(id);
+			res.json(locs);
+		} catch (e) {
+			console.log(e);
+			sendError(next);
+		}
 	}
 );
 
