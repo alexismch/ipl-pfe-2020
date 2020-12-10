@@ -31,7 +31,7 @@ const cors = require('cors');
  * Middlewares
  */
 console.log(process.env);
-if (!process.env.NODE_ENV) app.use(cors());
+if (process.env.NODE_ENV) app.use(cors());
 else {
 	const whitelist = [
 		'https://ipl-pfe-2020-api-doc.herokuapp.com',
@@ -40,11 +40,7 @@ else {
 	console.log(`CORS only allowed to ${whitelist.join(', ')}`);
 	app.use(
 		cors({
-			origin: (origin, callback) => {
-				if (!origin || whitelist.indexOf(origin) !== -1)
-					callback(null, true);
-				else callback(new Error(`${origin} not allowed by CORS.`));
-			},
+			origin: whitelist,
 		})
 	);
 }
