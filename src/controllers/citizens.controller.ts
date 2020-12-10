@@ -37,14 +37,15 @@ citizensController.post(
 		try {
 			if (device) {
 				let cit = await Citizen.getByDevice(device);
+				console.log(cit);
 				if (cit) {
 					cit.fcmToken = fcmToken;
 					cit = await Citizen.save(cit);
 					sendCitizen(200, cit._id);
-				} else {
-					const cit = await Citizen.save(citizen);
-					sendCitizen(201, cit._id);
 				}
+			} else {
+				const cit = await Citizen.save(citizen);
+				sendCitizen(201, cit._id);
 			}
 		} catch (e) {
 			console.log(e);
