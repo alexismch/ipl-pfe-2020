@@ -17,7 +17,7 @@ const Authenticate = ({setConnectedType}) => {
 	const [password, setPassword] = useState('');
 
 	//Error handling
-	const {sendErrorMessage, sendWarningMessage} = useAlert();
+	const {sendErrorMessage, sendWarningMessage, sendSuccessMessage} = useAlert();
 	const [authFailed, setAuthFailed] = useState(false);
 	const [filledFields, setFilledFields] = useState<{
 		password: boolean;
@@ -42,6 +42,7 @@ const Authenticate = ({setConnectedType}) => {
 		SignIn(email, password)
 			.then((response: any) => {
 				localStorage.setItem('Token', response.data.token);
+				console.log(response);
 				if (response.data.type === 'doctor') {
 					localStorage.setItem('Type_BlockCovid', 'doctor');
 					setConnectedType('doctor');
@@ -49,6 +50,7 @@ const Authenticate = ({setConnectedType}) => {
 					localStorage.setItem('Type_BlockCovid', 'institution');
 					setConnectedType('institution');
 				}
+				sendSuccessMessage('You have been correctly logged in.');
 			})
 			.catch(error => {
 				if (error.response.status === 401) {
