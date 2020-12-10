@@ -251,8 +251,7 @@ async function alertNearContact(citizen_id: any) {
 			scanDate: {$gt: dateLimite},
 			location_id: {$exists: true, $ne: null},
 		});
-		if(resp.length === 0)
-			return;
+		if (resp.length === 0) return;
 		const conditions = createConditionsTime(resp, 60, citizen_id);
 		console.log('number location to scan ' + resp.length);
 
@@ -264,7 +263,8 @@ async function alertNearContact(citizen_id: any) {
 			_id: {$in: citizenIdList},
 		});
 		console.log('list citizen', citizenList);
-		const message = 'notification_push.contact';
+		const message =
+			'Alert !  You have been in contact with a person tested positive with COVID. Go take a test and stay at home';
 		if (citizenList.length > 0) {
 			sendNotificationsAlert(citizenList, message);
 			console.log('pas de citizen trouve');
