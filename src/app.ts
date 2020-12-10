@@ -7,8 +7,13 @@ import api from '@controllers/index';
 /**
  * Initialize firebase
  */
+const { GOOGLE_FCM_CREDENTIALS } = process.env;
+
+if(!GOOGLE_FCM_CREDENTIALS)
+	throw new Error("Environment variable GOOGLE_FCM_CREDENTIALS is not set");
+
 admin.initializeApp({
-	credential: admin.credential.applicationDefault(),
+	credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_FCM_CREDENTIALS)),
 });
 
 /**

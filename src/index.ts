@@ -1,7 +1,6 @@
+require('dotenv').config();
 import * as mongoose from 'mongoose';
 import server from './app';
-
-require('dotenv').config();
 
 const url = process.env.MONGODB_URI;
 const port = process.env.PORT || 4000;

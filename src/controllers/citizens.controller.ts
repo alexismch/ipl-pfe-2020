@@ -251,6 +251,8 @@ async function alertNearContact(citizen_id: any) {
 			scanDate: {$gt: dateLimite},
 			location_id: {$exists: true, $ne: null},
 		});
+		if(resp.length === 0)
+			return;
 		const conditions = createConditionsTime(resp, 60, citizen_id);
 		console.log('number location to scan ' + resp.length);
 
