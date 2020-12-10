@@ -16,7 +16,7 @@ import ReactToPrint from 'react-to-print';
 
 const QRCode = require('qrcode.react');
 const {REACT_APP_QR_CODE_BASE_URL} = process.env;
-const QR_LOCATION_BASE_URL = REACT_APP_QR_CODE_BASE_URL+'/l/';
+const QR_LOCATION_BASE_URL = `${REACT_APP_QR_CODE_BASE_URL}/l/`;
 
 const useStyles = makeStyles(() => ({
 	'@global': {
