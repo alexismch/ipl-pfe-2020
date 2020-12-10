@@ -40,7 +40,8 @@ else {
 	app.use(
 		cors({
 			origin: (origin, callback) => {
-				if (whitelist.indexOf(origin) !== -1) callback(null, true);
+				if (!origin || whitelist.indexOf(origin) !== -1)
+					callback(null, true);
 				else callback(new Error(`${origin} not allowed by CORS.`));
 			},
 		})
