@@ -1,19 +1,21 @@
+import api from '@controllers/index';
 import {Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import 'module-alias/register';
 import * as path from 'path';
-import api from '@controllers/index';
 
 /**
  * Initialize firebase
  */
-const { GOOGLE_FCM_CREDENTIALS } = process.env;
+const {GOOGLE_FCM_CREDENTIALS} = process.env;
 
-if(!GOOGLE_FCM_CREDENTIALS)
-	throw new Error("Environment variable GOOGLE_FCM_CREDENTIALS is not set");
+if (!GOOGLE_FCM_CREDENTIALS)
+	throw new Error('Environment variable GOOGLE_FCM_CREDENTIALS is not set');
 
 admin.initializeApp({
-	credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_FCM_CREDENTIALS)),
+	credential: admin.credential.cert(
+		JSON.parse(process.env.GOOGLE_FCM_CREDENTIALS)
+	),
 });
 
 /**
@@ -28,7 +30,14 @@ const cors = require('cors');
 /**
  * Middlewares
  */
-app.use(cors());
+if (process.env.NODE_ENV) {
+	const options = {
+		origin: process.env.MOBILE_ORIGIN,
+	};
+	console.log(options);
+	app.use(cors(options));
+} else app.use(cors());
+
 app.use(express.json());
 app.use(
 	morgan(':method :url :status :res[content-length] - :response-time ms')
