@@ -177,7 +177,7 @@ async function saveHistory(
 ) {
 	try {
 		const hist = await History.save(history);
-		res.json(hist);
+		res.status(201).json(hist);
 	} catch (e) {
 		console.log(e);
 		sendError(next);
