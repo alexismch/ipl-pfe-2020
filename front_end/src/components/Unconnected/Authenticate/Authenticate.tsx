@@ -42,7 +42,6 @@ const Authenticate = ({setConnectedType}) => {
 		SignIn(email, password)
 			.then((response: any) => {
 				localStorage.setItem('Token', response.data.token);
-				console.log(response);
 				if (response.data.type === 'doctor') {
 					localStorage.setItem('Type_BlockCovid', 'doctor');
 					setConnectedType('doctor');

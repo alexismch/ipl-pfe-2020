@@ -72,7 +72,6 @@ const Location = ({id, title, description, expanded, handleChange}) => {
 					includeMargin={true}
 					id={`qrcode-${id}`}
 				/>
-				{console.log(value)}
 			</AccordionDetails>
 			<Divider className={'print-hidden'} />
 			<AccordionActions className={'print-hidden'}>
