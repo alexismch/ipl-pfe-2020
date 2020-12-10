@@ -16,8 +16,12 @@ import IDoctor from './IDoctor';
 import {useHistory} from 'react-router';
 
 const QRCode = require('qrcode.react');
-const {REACT_APP_QR_CODE_BASE_URL} = process.env;
-const QR_LOCATION_BASE_URL = `${REACT_APP_QR_CODE_BASE_URL}/d/`;
+const {
+	REACT_APP_QR_CODE_BASE_URL_START,
+	REACT_APP_QR_CODE_BASE_URL_END,
+} = process.env;
+const type = window.location.origin.includes('prod') ? 'prod' : 'dev';
+const QR_LOCATION_BASE_URL = `${REACT_APP_QR_CODE_BASE_URL_START}${type}${REACT_APP_QR_CODE_BASE_URL_END}/d/`;
 
 const useStyles = makeStyles(theme => ({
 	'@global': {

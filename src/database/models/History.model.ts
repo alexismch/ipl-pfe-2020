@@ -13,6 +13,8 @@ interface historyModel {
 	getDistinctCitizens(conditions: object);
 
 	create(citizen: string, scanDate: Date);
+
+	save(history: HistoryDoc);
 }
 
 const history: historyModel = {
@@ -33,6 +35,10 @@ const history: historyModel = {
 			citizen,
 			scanDate: formatDate(scanDate),
 		});
+	},
+
+	async save(history: HistoryDoc) {
+		return await history.save();
 	},
 };
 

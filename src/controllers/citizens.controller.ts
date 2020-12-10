@@ -170,11 +170,18 @@ citizensController.post(
 	}
 );
 
-function saveHistory(history: HistoryDoc, res: Response, next: NextFunction) {
-	history
-		.save()
-		.then(hist => res.json(hist))
-		.catch(() => sendError(next));
+async function saveHistory(
+	history: HistoryDoc,
+	res: Response,
+	next: NextFunction
+) {
+	try {
+		const hist = await History.save(history);
+		res.json(hist);
+	} catch (e) {
+		console.log(e);
+		sendError(next);
+	}
 }
 
 async function locationCase(
@@ -213,7 +220,7 @@ async function doctorCase(
 		history.doctor_firstName = doc.doctor_firstName;
 		history.doctor_lastName = doc.doctor_lastName;
 		history.type = 'doctor';
-		saveHistory(history, res, next);
+		await saveHistory(history, res, next);
 
 		/*			let registrationTokens = [
 															 'etwM22wLrywUB--1-apXpS:APA91bHh2QV69dSUjVP-1Veug4ws-lc45n_D0CNxoDD2msHep-8jh5APNdpEh55dT9YFysMDyaEzL9b7CsVA1fNCWGx1fUqUc6TV4VzAhSZNyCuOm_L7BY3t9Jlk8joICxTlvRhh2GcO',
