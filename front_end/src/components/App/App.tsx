@@ -1,7 +1,7 @@
 import {Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
-import Router from 'components/Router/Router';
 import Copyright from 'components/Footer/Footer';
+import Router from 'components/Router/Router';
 import {AlertContext} from 'contexts/Alert/AlertContext';
 import React from 'react';
 
