@@ -5,11 +5,17 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
 import themeJson from 'theme.json';
 
-const {REACT_APP_QR_CODE_BASE_URL} = process.env;
+const {
+	REACT_APP_QR_CODE_BASE_URL_START,
+	REACT_APP_QR_CODE_BASE_URL_END,
+} = process.env;
 let missingEnvVars: string[] = [];
 
-if (!REACT_APP_QR_CODE_BASE_URL) {
+if (!REACT_APP_QR_CODE_BASE_URL_START) {
 	missingEnvVars = [...missingEnvVars, 'REACT_APP_QR_CODE_BASE_URL'];
+}
+if (!REACT_APP_QR_CODE_BASE_URL_END) {
+	missingEnvVars = [...missingEnvVars, 'REACT_APP_QR_CODE_BASE_URL_END'];
 }
 
 const theme = createMuiTheme(themeJson);
