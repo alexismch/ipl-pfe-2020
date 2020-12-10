@@ -1,8 +1,8 @@
-import api from '@controllers/index';
 import {Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import 'module-alias/register';
 import * as path from 'path';
+import api from '@controllers/index';
 
 /**
  * Initialize firebase
@@ -30,14 +30,14 @@ const cors = require('cors');
 /**
  * Middlewares
  */
-if (process.env.NODE_ENV) {
-	const options = {
-		origin: process.env.MOBILE_ORIGIN,
-	};
-	console.log(options);
-	app.use(cors(options));
-} else app.use(cors());
-
+if (!process.env.NODE_ENV) app.use(cors());
+else {
+	app.use(
+		cors({
+			origin: process.env.MOBILE_ORIGIN,
+		})
+	);
+}
 app.use(express.json());
 app.use(
 	morgan(':method :url :status :res[content-length] - :response-time ms')
