@@ -3,7 +3,7 @@
 # IPL PFE 2020 Group1
 
 ## Context
-BLOCK Covid Web & Mobile apps made for the **PFE** during the school year 2020-2021 at Institut Paul Lambin.
+**BLOCK Covid** Web & Mobile apps made for the __PFE__ during the school year __2020-2021__ at __Institut Paul Lambin__.
 
 ## Group members
 This project has been done by : 
