@@ -10,7 +10,7 @@ This project has been done by :
 * Cosyns Mathieu
 * De Vos Olivier
 * Loverius Bruno
-* Michiels Alexis
+* [Michiels Alexis](https://github.com/alexismch)
 * NGuyen Khac Huy
 
 ## Repositories links
