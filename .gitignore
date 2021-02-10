@@ -121,6 +121,7 @@ dist
 # Editors cache directory
 vs/
 idea/
+.idea/
 .vscode/
 
 
