@@ -66,11 +66,13 @@ const connectableSchema: Schema = new Schema(connectableSchemaFields);
 	connectableSchema.method(
 		'verifyPassword',
 		function (password: string): boolean {
+			// @ts-ignore
 			return bcrypt.compareSync(password, this.password);
 		}
 	);
 
 	connectableSchema.method('hashPassword', function (): void {
+		// @ts-ignore
 		this.password = bcrypt.hashSync(this.password, saltRounds);
 	});
 
